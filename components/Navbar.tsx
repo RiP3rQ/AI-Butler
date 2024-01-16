@@ -10,6 +10,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
+import AIChatButton from "./AIChatBot/AIChatButton";
 
 type Props = {};
 
@@ -45,6 +46,7 @@ const Navbar = (props: Props) => {
               <Plus size={20} className="mr-2" />
               Add Note
             </Button>
+            <AIChatButton />
           </div>
         </div>
       </div>

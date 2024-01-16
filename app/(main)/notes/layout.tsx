@@ -1,4 +1,4 @@
-import Navbar from "./__components/Navbar";
+import Navbar from "../../../components/Navbar";
 
 export default function NotesLayout({
   children,
