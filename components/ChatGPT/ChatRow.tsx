@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { MessageCircleMore, Trash } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -7,16 +8,13 @@ import React, { useEffect, useState } from "react";
 
 type Props = {
   id: string;
+  title: string;
 };
 
-function ChatRow({ id }: Props) {
+function ChatRow({ id, title }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const [active, setActive] = useState<boolean>(false);
-
-  //   const [messages] = useCollection(
-  //     collection(db, "users", session?.user?.email!, "chats", id, "messages")
-  //   );
 
   useEffect(() => {
     if (!pathname) return;
@@ -24,24 +22,27 @@ function ChatRow({ id }: Props) {
     setActive(pathname.includes(id));
   }, [pathname]);
 
-  //   const removeChat = async () => {
-  //     await deleteDoc(doc(db, "users", session?.user?.email!, "chats", id));
-  //     router.replace("/");
-  //   };
+  const removeChat = async () => {
+    await axios.delete(`/api/chatgpt/chat`, {
+      data: {
+        id,
+      },
+    });
+    router.push("/chatgpt");
+  };
 
   return (
     <Link
-      href={`/chat/${id}`}
+      href={`/chatgpt/${id}`}
       className={`chatRow justify-center ${active && "bg-gray-700/50"}`}
     >
       <MessageCircleMore className="h5 w-5" />
       <p className="hidden flex-1 truncate md:inline-flex">
-        {/* {messages?.docs[messages?.docs.length - 1]?.data().text || "New Chat"} */}
-        New chat
+        {title || "New Chat"}
       </p>
       <Trash
         className="h5 w-5 text-gray-700 hover:text-red-700"
-        // onClick={removeChat}
+        onClick={removeChat}
       />
     </Link>
   );

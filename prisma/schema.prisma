@@ -21,3 +21,30 @@ model Note {
 
   @@map("notes")
 }
+
+model Chat {
+  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId                String
+  title                 String
+
+  chatMessages          ChatMessage[] @relation("ChatToChatMessage")
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("chats")
+}
+
+model ChatMessage {
+  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
+  chatId                String @db.ObjectId
+  userId                String
+  content               String
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  chat                 Chat @relation("ChatToChatMessage", fields: [chatId], references: [id])
+
+  @@map("chat_messages")
+}

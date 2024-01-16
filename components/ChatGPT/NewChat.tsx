@@ -1,26 +1,24 @@
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useToast } from "../ui/use-toast";
+import axios from "axios";
+import { revalidatePath } from "next/cache";
 
 const NewChat = () => {
   const router = useRouter();
+  const { toast } = useToast();
 
-  // const createNewChat = async () => {
-  //   const doc = await addDoc(
-  //     collection(db, "users", session?.user?.email!, "chats"),
-  //     {
-  //       userId: session?.user?.email!,
-  //       createdAt: serverTimestamp(),
-  //     },
-  //   );
-
-  //   router.push(`/chat/${doc.id}`);
-  // };
+  const createNewChat = async () => {
+    await axios.post("/api/chatgpt/chat").then((res) => {
+      toast({
+        title: "Chat created",
+      });
+      router.replace(`/chatgpt/${res.data.chat.id}`);
+    });
+  };
 
   return (
-    <div
-      // onClick={createNewChat}
-      className="chatRow border border-gray-700"
-    >
+    <div onClick={createNewChat} className="chatRow border border-gray-700">
       <PlusIcon className="h-4 w-4" />
       <p>New Chat</p>
     </div>
