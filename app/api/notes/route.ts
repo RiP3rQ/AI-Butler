@@ -1,5 +1,7 @@
 // we use server insted of server actions because of the streaming feature from the AI API
-import prisma from "@/lib/db";
+import prisma from "@/lib/database/db";
+import { notesIndex } from "@/lib/database/pinecone";
+import { getEmbedding } from "@/lib/openai";
 
 import {
   createNoteSchema,
@@ -39,14 +41,33 @@ export async function POST(req: Request) {
       );
     }
 
-    // create the note
     const { title, content } = validation.data;
-    const note = await prisma.note.create({
-      data: {
-        title,
-        content,
-        userId,
-      },
+
+    // get the embedding for the note
+    const embedding = await getEmbeddingForNote(title, content);
+
+    const note = await prisma.$transaction(async (tx) => {
+      // create the note
+      const note = await tx.note.create({
+        data: {
+          title,
+          content,
+          userId,
+        },
+      });
+
+      // create the embedding via Pinecone
+      await notesIndex.upsert([
+        {
+          id: note.id,
+          values: embedding,
+          metadata: {
+            userId,
+          },
+        },
+      ]);
+
+      return note;
     });
 
     return Response.json({ note }, { status: 201 });
@@ -113,15 +134,34 @@ export async function PUT(req: Request) {
       );
     }
 
-    // update the note
-    const updatedNote = await prisma.note.update({
-      where: {
-        id,
-      },
-      data: {
-        title,
-        content,
-      },
+    // get the embedding for the note update via OpenAI
+    const embedding = await getEmbeddingForNote(title, content);
+
+    // prisma transaction
+    const updatedNote = await prisma.$transaction(async (tx) => {
+      // update the note
+      const updatedNote = await tx.note.update({
+        where: {
+          id,
+        },
+        data: {
+          title,
+          content,
+        },
+      });
+
+      // update the embedding via Pinecone
+      await notesIndex.upsert([
+        {
+          id,
+          values: embedding,
+          metadata: {
+            userId,
+          },
+        },
+      ]);
+
+      return updatedNote;
     });
 
     return Response.json({ updatedNote }, { status: 201 });
@@ -188,11 +228,17 @@ export async function DELETE(req: Request) {
       );
     }
 
-    // delete the note
-    await prisma.note.delete({
-      where: {
-        id,
-      },
+    // prisma transaction
+    await prisma.$transaction(async (tx) => {
+      // delete the note
+      await tx.note.delete({
+        where: {
+          id,
+        },
+      });
+
+      // delete the embedding via Pinecone
+      await notesIndex.deleteOne(id);
     });
 
     return Response.json({ message: "Note deleted" }, { status: 200 });
@@ -207,4 +253,8 @@ export async function DELETE(req: Request) {
       },
     );
   }
+}
+
+async function getEmbeddingForNote(title: string, content: string) {
+  return getEmbedding(title + "\n\n" + content);
 }
