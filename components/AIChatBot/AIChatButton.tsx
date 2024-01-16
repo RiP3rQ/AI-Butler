@@ -12,7 +12,7 @@ const AIChatButton = (props: Props) => {
     <>
       <Button onClick={() => setChatbotOpen(true)}>
         <Bot size={20} className="mr-2" />
-        AI Chat
+        Note AI
       </Button>
       <ChatbotBox open={chatbotOpen} onClose={() => setChatbotOpen(false)} />
     </>
