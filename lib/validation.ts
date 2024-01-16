@@ -11,3 +11,11 @@ export const createNoteSchema = z.object({
 });
 
 export type ICreateNoteSchema = z.infer<typeof createNoteSchema>;
+
+export const updateNoteSchema = createNoteSchema.extend({
+  id: z.string().min(1, { message: "ID must be at least 1 character long" }),
+});
+
+export const deleteNoteSchema = z.object({
+  id: z.string().min(1, { message: "ID must be at least 1 character long" }),
+});

@@ -1,7 +1,11 @@
 // we use server insted of server actions because of the streaming feature from the AI API
 import prisma from "@/lib/db";
 
-import { createNoteSchema } from "@/lib/validation";
+import {
+  createNoteSchema,
+  deleteNoteSchema,
+  updateNoteSchema,
+} from "@/lib/validation";
 import { auth } from "@clerk/nextjs";
 
 export async function POST(req: Request) {
@@ -46,6 +50,152 @@ export async function POST(req: Request) {
     });
 
     return Response.json({ note }, { status: 201 });
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        error: "Internal Server Error",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+
+    // validate the request body against the schema
+    const validation = updateNoteSchema.safeParse(body);
+    if (!validation.success) {
+      console.error(validation.error);
+      return Response.json(
+        {
+          error: validation.error.issues.map((issue) => issue.message),
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    const { id, title, content } = validation.data;
+    // check if the note exists
+    const note = await prisma.note.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!note) {
+      return Response.json(
+        {
+          error: "Note not found",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    // check if the user is logged in and owns the note
+    const { userId } = auth();
+    if (!userId || note.userId !== userId) {
+      return Response.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    // update the note
+    const updatedNote = await prisma.note.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        content,
+      },
+    });
+
+    return Response.json({ updatedNote }, { status: 201 });
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        error: "Internal Server Error",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json();
+
+    // validate the request body against the schema
+    const validation = deleteNoteSchema.safeParse(body);
+    if (!validation.success) {
+      console.error(validation.error);
+      return Response.json(
+        {
+          error: validation.error.issues.map((issue) => issue.message),
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    const { id } = validation.data;
+    // check if the note exists
+    const note = await prisma.note.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!note) {
+      return Response.json(
+        {
+          error: "Note not found",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    // check if the user is logged in and owns the note
+    const { userId } = auth();
+    if (!userId || note.userId !== userId) {
+      return Response.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    // delete the note
+    await prisma.note.delete({
+      where: {
+        id,
+      },
+    });
+
+    return Response.json({ message: "Note deleted" }, { status: 200 });
   } catch (error) {
     console.log(error);
     return Response.json(

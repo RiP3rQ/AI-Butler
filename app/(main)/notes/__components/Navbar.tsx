@@ -1,17 +1,21 @@
 "use client";
 
-import AddNoteDialog from "@/components/AddNoteDialog";
+import AddEditNoteDialog from "@/components/AddEditNoteDialog";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 import { Button } from "@/components/ui/button";
 import { UserButton } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { dark } from "@clerk/themes";
+import { useTheme } from "next-themes";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
-  const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
+  const { theme } = useTheme();
+  const [showAddEditNoteDialog, setShowAddEditNoteDialog] = useState(false);
 
   return (
     <>
@@ -25,6 +29,7 @@ const Navbar = (props: Props) => {
             <UserButton
               afterSignOutUrl="/"
               appearance={{
+                baseTheme: theme === "dark" ? dark : undefined,
                 elements: {
                   avatarBox: {
                     width: "2.5rem",
@@ -33,7 +38,10 @@ const Navbar = (props: Props) => {
                 },
               }}
             />
-            <Button onClick={() => setShowAddNoteDialog(!showAddNoteDialog)}>
+            <ThemeToggleButton />
+            <Button
+              onClick={() => setShowAddEditNoteDialog(!showAddEditNoteDialog)}
+            >
               <Plus size={20} className="mr-2" />
               Add Note
             </Button>
@@ -41,7 +49,10 @@ const Navbar = (props: Props) => {
         </div>
       </div>
 
-      <AddNoteDialog open={showAddNoteDialog} setOpen={setShowAddNoteDialog} />
+      <AddEditNoteDialog
+        open={showAddEditNoteDialog}
+        setOpen={setShowAddEditNoteDialog}
+      />
     </>
   );
 };

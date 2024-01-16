@@ -1,5 +1,5 @@
 import { ICreateNoteSchema, createNoteSchema } from "@/lib/validation";
-import React from "react";
+import React, { useState } from "react";
 import { Form, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -20,35 +20,55 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import LoadingButton from "./LoadingButton";
 import { useRouter } from "next/navigation";
+import { Note } from "@prisma/client";
 
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  noteToEdit?: Note;
 };
 
-const AddNoteDialog: React.FC<Props> = ({ open, setOpen }) => {
+const AddEditNoteDialog: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
+  const [deleteInProgress, setDeleteInProgress] = useState(false);
   const router = useRouter();
 
   const form = useForm<ICreateNoteSchema>({
     resolver: zodResolver(createNoteSchema),
     defaultValues: {
-      title: "",
-      content: "",
+      title: noteToEdit?.title || "",
+      content: noteToEdit?.content || "",
     },
   });
 
   async function onSubmit(input: ICreateNoteSchema) {
     try {
-      const response = await fetch("/api/notes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
+      if (noteToEdit) {
+        const response = await fetch("/api/notes", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...input,
+            id: noteToEdit.id,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Error creating note" + response.statusText);
+        if (!response.ok) {
+          throw new Error("Error creating note" + response.statusText);
+        }
+      } else {
+        const response = await fetch("/api/notes", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(input),
+        });
+
+        if (!response.ok) {
+          throw new Error("Error creating note" + response.statusText);
+        }
       }
 
       form.reset();
@@ -60,11 +80,39 @@ const AddNoteDialog: React.FC<Props> = ({ open, setOpen }) => {
     }
   }
 
+  async function onDelete() {
+    if (!noteToEdit) return;
+    setDeleteInProgress(true);
+    try {
+      const response = await fetch("/api/notes", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: noteToEdit?.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error deleting note" + response.statusText);
+      }
+
+      router.refresh();
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
+      alert("Error! Check console for more details.");
+    } finally {
+      setDeleteInProgress(false);
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Note</DialogTitle>
+          <DialogTitle>{noteToEdit ? "Edit note" : "Add note"}</DialogTitle>
         </DialogHeader>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
@@ -94,12 +142,24 @@ const AddNoteDialog: React.FC<Props> = ({ open, setOpen }) => {
                 </FormItem>
               )}
             />
-            <DialogFooter>
+            <DialogFooter className="gap-1 sm:gap-0">
+              {noteToEdit && (
+                <LoadingButton
+                  variant={"destructive"}
+                  loading={deleteInProgress}
+                  onClick={onDelete}
+                  disabled={form.formState.isSubmitting}
+                  type="button"
+                >
+                  Delete note
+                </LoadingButton>
+              )}
               <LoadingButton
                 type="submit"
                 loading={form.formState.isSubmitting}
+                disabled={deleteInProgress}
               >
-                Add Note
+                Submit
               </LoadingButton>
             </DialogFooter>
           </form>
@@ -109,4 +169,4 @@ const AddNoteDialog: React.FC<Props> = ({ open, setOpen }) => {
   );
 };
 
-export default AddNoteDialog;
+export default AddEditNoteDialog;
