@@ -136,3 +136,48 @@ export async function DELETE(
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+
+export async function PUT(
+  req: Request,
+  { params }: { params: { chatId: string } },
+) {
+  try {
+    const { userId } = auth();
+    const chatId = params.chatId;
+    const { newName } = await req.json();
+
+    if (!userId) {
+      return Response.json({ error: "Not logged in." }, { status: 401 });
+    }
+
+    if (!chatId) {
+      return Response.json({ error: "Chat Id not provided." }, { status: 404 });
+    }
+
+    if (!newName) {
+      return Response.json(
+        { error: "New name not provided." },
+        { status: 404 },
+      );
+    }
+
+    // update chat name with prisma
+    const chat = await prisma?.chat.update({
+      where: {
+        id: chatId,
+      },
+      data: {
+        title: newName,
+      },
+    });
+
+    if (!chat) {
+      return Response.json({ error: "Chat not found." }, { status: 404 });
+    }
+
+    return Response.json({ chat }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Internal server error" }, { status: 500 });
+  }
+}

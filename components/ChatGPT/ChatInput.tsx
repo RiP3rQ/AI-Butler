@@ -12,10 +12,13 @@ type Props = {
 
 const ChatInput = ({ chatId, refetchMessages }: Props) => {
   const [prompt, setPrompt] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!prompt) return;
+
+    setLoading(true);
 
     const notification = toast.loading("ChatGPT is thinking!", {
       position: "top-right",
@@ -27,6 +30,7 @@ const ChatInput = ({ chatId, refetchMessages }: Props) => {
         chatId,
       })
       .then(() => {
+        setPrompt("");
         toast.success("ChatGPT has responded!", {
           id: notification,
           position: "top-right",
@@ -39,8 +43,8 @@ const ChatInput = ({ chatId, refetchMessages }: Props) => {
         });
       })
       .finally(() => {
-        setPrompt("");
         refetchMessages();
+        setLoading(false);
       });
   };
 
@@ -48,6 +52,7 @@ const ChatInput = ({ chatId, refetchMessages }: Props) => {
     <div className="rounded-lg bg-gray-700/50 text-sm text-gray-400 ">
       <form onSubmit={sendMessage} className="flex space-x-5 p-5">
         <input
+          disabled={loading}
           className="flex-1 bg-transparent focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
@@ -55,7 +60,7 @@ const ChatInput = ({ chatId, refetchMessages }: Props) => {
           placeholder="Type your message here..."
         />
         <button
-          disabled={!prompt}
+          disabled={!prompt || loading}
           type="submit"
           className="rounded bg-[#11A37F] px-4 py-2 
           font-bold text-white hover:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-300"
