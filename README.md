@@ -44,7 +44,10 @@ Install AI-Butler with npm
 `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` = /notes
 
 `OPEN_AI_KEY` =
+
 `PINECONE_API_KEY` =
+
+
 ## Demo
 
 ![App Screenshot](https://raw.githubusercontent.com/RiP3rQ/AI-Butler/main/screenshots/1.png)
