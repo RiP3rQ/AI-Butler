@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import React from "react";
 import prisma from "@/lib/database/db";
 import Note from "@/components/Note";
+import AIChatButton from "@/components/AIChatBot/AIChatButton";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Notes",
@@ -24,7 +25,7 @@ export default async function NotesPage() {
   });
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="relative grid min-h-[90vh] gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {allNotes.map((note) => (
         <Note key={note.id} note={note} />
       ))}
@@ -36,6 +37,9 @@ export default async function NotesPage() {
           </p>
         </div>
       )}
+      <div className="absolute bottom-3 right-3">
+        <AIChatButton />
+      </div>
     </div>
   );
 }

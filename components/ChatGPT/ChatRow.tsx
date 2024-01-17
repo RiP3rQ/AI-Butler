@@ -23,11 +23,7 @@ function ChatRow({ id, title }: Props) {
   }, [pathname]);
 
   const removeChat = async () => {
-    await axios.delete(`/api/chatgpt/chat`, {
-      data: {
-        id,
-      },
-    });
+    await axios.delete(`/api/chatgpt/chat/${id}`);
     router.push("/chatgpt");
   };
 

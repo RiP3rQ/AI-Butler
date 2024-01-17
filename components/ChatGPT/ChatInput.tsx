@@ -7,9 +7,10 @@ import { toast } from "sonner";
 
 type Props = {
   chatId: string;
+  refetchMessages: () => void;
 };
 
-const ChatInput = ({ chatId }: Props) => {
+const ChatInput = ({ chatId, refetchMessages }: Props) => {
   const [prompt, setPrompt] = useState<string>("");
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -39,6 +40,7 @@ const ChatInput = ({ chatId }: Props) => {
       })
       .finally(() => {
         setPrompt("");
+        refetchMessages();
       });
   };
 

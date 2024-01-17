@@ -26,7 +26,7 @@ const Note: React.FC<Props> = ({ note }) => {
   return (
     <>
       <Card
-        className="cursor-pointer transition-shadow hover:shadow-lg"
+        className="h-fit cursor-pointer transition-shadow hover:shadow-lg"
         onClick={() => setShowEditDialog(!showEditDialog)}
       >
         <CardHeader>

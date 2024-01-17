@@ -34,9 +34,6 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log("Relevent notes:");
-    console.log(releventNotes);
-
     // ChatGPT message format
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
