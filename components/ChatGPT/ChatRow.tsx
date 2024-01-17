@@ -37,9 +37,7 @@ function ChatRow({ id, title }: Props) {
       className={`chatRow justify-center ${active && "bg-gray-700/50"}`}
     >
       <MessageCircleMore className="h5 w-5" />
-      <p className="hidden flex-1 truncate md:inline-flex">
-        {title || "New Chat"}
-      </p>
+      <p className="hidden flex-1 truncate md:inline-flex">{title}</p>
       <Trash
         className="h5 w-5 text-gray-700 hover:text-red-700"
         onClick={removeChat}

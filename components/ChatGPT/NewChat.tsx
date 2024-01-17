@@ -1,18 +1,15 @@
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useToast } from "../ui/use-toast";
+import { toast } from "sonner";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 
 const NewChat = () => {
   const router = useRouter();
-  const { toast } = useToast();
 
   const createNewChat = async () => {
     await axios.post("/api/chatgpt/chat").then((res) => {
-      toast({
-        title: "Chat created",
-      });
+      toast.success("Chat created!");
       router.replace(`/chatgpt/${res.data.chat.id}`);
     });
   };

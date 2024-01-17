@@ -1,8 +1,9 @@
 "use client";
 
+import axios from "axios";
 import { SendHorizonal } from "lucide-react";
 import { FormEvent, useState } from "react";
-import useSWR from "swr";
+import { toast } from "sonner";
 
 type Props = {
   chatId: string;
@@ -15,53 +16,30 @@ const ChatInput = ({ chatId }: Props) => {
     e.preventDefault();
     if (!prompt) return;
 
-    const input = prompt.trim();
-    setPrompt("");
+    const notification = toast.loading("ChatGPT is thinking!", {
+      position: "top-right",
+    });
 
-    // const message: Message = {
-    //   text: input,
-    //   createdAt: serverTimestamp(),
-    //   user: {
-    //     _id: session?.user?.email!,
-    //     name: session?.user?.name!,
-    //     avatar:
-    //       session?.user?.image! ||
-    //       `https://ui-avatars.com/api/?name=${session?.user?.name}`,
-    //   },
-    // };
-
-    // await addDoc(
-    //   collection(
-    //     db,
-    //     "users",
-    //     session?.user?.email!,
-    //     "chats",
-    //     chatId,
-    //     "messages"
-    //   ),
-    //   message
-    // );
-
-    // Toast notification to say thinking!
-    // const notification = toast.loading("ChatGPT is thinking!");
-    // Toast notifications
-    // await fetch("/api/askQuestion", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     prompt: input,
-    //     chatId,
-    //     model,
-    //     session,
-    //   }),
-    // }).then(() => {
-    //   // Toast notification to say successfully!
-    //   toast.success("ChatGPT has responded!", {
-    //     id: notification,
-    //   });
-    // });
+    await axios
+      .post(`/api/chatgpt/chat/${chatId}`, {
+        prompt,
+        chatId,
+      })
+      .then(() => {
+        toast.success("ChatGPT has responded!", {
+          id: notification,
+          position: "top-right",
+        });
+      })
+      .catch(() => {
+        toast.error("ChatGPT failed to respond!", {
+          id: notification,
+          position: "top-right",
+        });
+      })
+      .finally(() => {
+        setPrompt("");
+      });
   };
 
   return (
@@ -69,14 +47,13 @@ const ChatInput = ({ chatId }: Props) => {
       <form onSubmit={sendMessage} className="flex space-x-5 p-5">
         <input
           className="flex-1 bg-transparent focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300"
-          //   disabled={!session}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           type="text"
           placeholder="Type your message here..."
         />
         <button
-          //   disabled={!prompt || !session}
+          disabled={!prompt}
           type="submit"
           className="rounded bg-[#11A37F] px-4 py-2 
           font-bold text-white hover:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-300"
