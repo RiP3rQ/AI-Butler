@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs";
 import { Metadata } from "next";
 import React from "react";
 import prisma from "@/lib/database/db";
-import Note from "@/components/Note";
+import Note from "@/components/notes/Note";
 import AIChatButton from "@/components/AIChatBot/AIChatButton";
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default async function NotesPage() {
         <Note key={note.id} note={note} />
       ))}
       {allNotes.length === 0 && (
-        <div className="text-center">
+        <div className="col-span-3 mt-10 text-center">
           <p className="text-lg font-semibold">No notes yet!</p>
           <p className="text-gray-500">
             Click the button above to add your first note.

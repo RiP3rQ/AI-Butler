@@ -8,17 +8,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog";
+} from "../ui/dialog";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import LoadingButton from "./LoadingButton";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import LoadingButton from "../LoadingButton";
 import { useRouter } from "next/navigation";
 import { Note } from "@prisma/client";
 
@@ -41,6 +41,7 @@ const AddEditNoteDialog: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
   });
 
   async function onSubmit(input: ICreateNoteSchema) {
+    // TODO: Toasts and add SWR
     try {
       if (noteToEdit) {
         const response = await fetch("/api/notes", {

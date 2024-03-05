@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 import AddEditNoteDialog from "./AddEditNoteDialog";
 
 type Props = {
