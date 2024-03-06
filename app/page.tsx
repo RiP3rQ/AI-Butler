@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 export default function Home() {
   const { userId } = auth();
 
-  if (userId) redirect("/notes");
+  if (userId) redirect("/dashboard");
 
   return (
     <main className="grainy min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">

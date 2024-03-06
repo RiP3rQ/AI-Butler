@@ -1,8 +1,8 @@
-import NavbarNotes from "../../components/notes/NavbarNotes";
+import NavbarNotes from "../../../components/notes/NavbarNotes";
 
 export default function NotesLayout({
-  children,
-}: {
+                                      children
+                                    }: {
   children: React.ReactNode;
 }) {
   return (

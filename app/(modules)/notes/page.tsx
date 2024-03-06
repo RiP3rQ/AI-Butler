@@ -3,12 +3,12 @@ import { Metadata } from "next";
 import React from "react";
 import prisma from "@/lib/database/db";
 import Note from "@/components/notes/Note";
-import AIChatButton from "@/components/AIChatBot/AIChatButton";
+import AIChatButton from "@/components/aichatbot/AIChatButton";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Notes",
   description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials"
 };
 
 export default async function NotesPage() {
@@ -20,8 +20,8 @@ export default async function NotesPage() {
 
   const allNotes = await prisma.note.findMany({
     where: {
-      userId,
-    },
+      userId
+    }
   });
 
   return (

@@ -1,16 +1,16 @@
-import GoBackButton from "@/components/ChatGPT/GoBackButton";
-import Sidebar from "@/components/ChatGPT/Sidebar";
+import GoBackButton from "@/components/chatgpt/GoBackButton";
+import Sidebar from "@/components/chatgpt/Sidebar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "AI-Butler - ChatGPT",
   description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials"
 };
 
 export default function ChatgptLayout({
-  children,
-}: {
+                                        children
+                                      }: {
   children: React.ReactNode;
 }) {
   return (
