@@ -28,14 +28,12 @@ export default function ModuleCard({ title, icon: Icon, description, href }: Pro
           <p>{description}</p>
         </CardContent>
         <CardFooter className={"flex items-center justify-center"}>
-
           <Button
             color="primary"
             variant={"outline"}
           >
             Open {<ArrowRight />}
           </Button>
-
         </CardFooter>
       </Card>
     </Link>
