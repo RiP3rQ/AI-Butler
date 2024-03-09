@@ -68,7 +68,7 @@ const ModuleSelector = () => {
       }}
     >
       <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Change category..." />
+        <SelectValue placeholder="Change module..." />
       </SelectTrigger>
       <SelectContent>
         {AvailableModules.map((module, index) => (
