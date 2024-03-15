@@ -17,7 +17,7 @@ const ChatPage: React.FC<Props> = ({}) => {
   console.log("Refetching status:", refetchMessagesBoolean);
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden pb-2">
       {/* Chat */}
       <Chat
         chatId={ChatId}

@@ -1,6 +1,7 @@
 import GoBackButton from "@/components/chatgpt/GoBackButton";
 import Sidebar from "@/components/chatgpt/Sidebar";
 import { Metadata } from "next";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "AI-Butler - ChatGPT",
@@ -14,15 +15,17 @@ export default function ChatgptLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex">
+    <div className="relative flex h-[calc(100vh-4rem)]">
       <aside
-        className="h-screen max-w-xs overflow-y-auto bg-[#202123] 
+        className=" max-w-xs overflow-y-auto
       md:min-w-[20rem]"
       >
         <Sidebar />
       </aside>
 
-      <main className="flex-1 bg-[#343541]">{children}</main>
+      <Separator orientation={"vertical"} className={"h-full"} />
+
+      <main className="flex-1 mx-2 ">{children}</main>
 
       <GoBackButton />
     </div>

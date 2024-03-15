@@ -29,7 +29,7 @@ const Sidebar = () => {
   }, [pathname]);
 
   return (
-    <div className="flex h-screen flex-col p-2">
+    <div className="flex h-full flex-col p-2">
       <div className="flex-1">
         <NewChat />
 
@@ -57,9 +57,9 @@ const Sidebar = () => {
             elements: {
               avatarBox: {
                 width: "3rem",
-                height: "3rem",
-              },
-            },
+                height: "3rem"
+              }
+            }
           }}
         />
       </div>
