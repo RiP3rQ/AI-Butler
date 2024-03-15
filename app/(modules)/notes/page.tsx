@@ -4,6 +4,9 @@ import React from "react";
 import prisma from "@/lib/database/db";
 import Note from "@/components/notes/Note";
 import AIChatButton from "@/components/aichatbot/AIChatButton";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import NotesActionButtons from "@/components/notes/NotesActionButtons";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Notes",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
 
 export default async function NotesPage() {
   const { userId } = auth();
+
 
   if (!userId) {
     throw new Error("UserId is not defined");
@@ -37,9 +41,7 @@ export default async function NotesPage() {
           </p>
         </div>
       )}
-      <div className="absolute bottom-3 right-3">
-        <AIChatButton />
-      </div>
+      <NotesActionButtons />
     </div>
   );
 }
