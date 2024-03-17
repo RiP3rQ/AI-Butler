@@ -9,7 +9,7 @@ export const $posts = pgTable("posts", {
   editorState: text("editor_state")
 });
 
-export type NoteType = typeof $posts.$inferInsert;
+export type PostType = typeof $posts.$inferInsert;
 
 // drizzle-orm
 // drizzle-kit
