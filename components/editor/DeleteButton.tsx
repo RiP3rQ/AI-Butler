@@ -7,15 +7,15 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  noteId: number;
+  postId: number;
 };
 
-const DeleteButton = ({ noteId }: Props) => {
+const DeleteButton = ({ postId }: Props) => {
   const router = useRouter();
-  const deleteNote = useMutation({
+  const deletePost = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/deleteNote", {
-        noteId
+      const response = await axios.post("/api/deletePost", {
+        postId
       });
       return response.data;
     }
@@ -24,13 +24,13 @@ const DeleteButton = ({ noteId }: Props) => {
     <Button
       variant={"destructive"}
       size="sm"
-      disabled={deleteNote.isPending}
+      disabled={deletePost.isPending}
       onClick={() => {
         const confirm = window.confirm(
-          "Are you sure you want to delete this note?"
+          "Are you sure you want to delete this post?"
         );
         if (!confirm) return;
-        deleteNote.mutate(undefined, {
+        deletePost.mutate(undefined, {
           onSuccess: () => {
             router.push("/dashboard");
           },

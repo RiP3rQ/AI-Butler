@@ -11,19 +11,19 @@ import axios from "axios";
 import { PostType } from "@/lib/drizzle/schema";
 import { useCompletion } from "ai/react";
 
-type Props = { note: PostType };
+type Props = { post: PostType };
 
-const TipTapEditor = ({ note }: Props) => {
+const TipTapEditor = ({ post }: Props) => {
   const [editorState, setEditorState] = React.useState(
-    note.editorState || `<h1>${note.name}</h1>`
+    post.editorState || `<h1>${post.name}</h1>`
   );
   const { complete, completion } = useCompletion({
     api: "/api/completion"
   });
-  const saveNote = useMutation({
+  const savePost = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/saveNote", {
-        noteId: note.id,
+      const response = await axios.post("/api/savePost", {
+        postId: post.id,
         editorState
       });
       return response.data;
@@ -63,7 +63,7 @@ const TipTapEditor = ({ note }: Props) => {
   React.useEffect(() => {
     // save to db
     if (debouncedEditorState === "") return;
-    saveNote.mutate(undefined, {
+    savePost.mutate(undefined, {
       onSuccess: (data) => {
         console.log("success update!", data);
       },
@@ -77,7 +77,7 @@ const TipTapEditor = ({ note }: Props) => {
       <div className="flex">
         {editor && <TipTapMenuBar editor={editor} />}
         <Button disabled variant={"outline"}>
-          {saveNote.isPending ? "Saving..." : "Saved"}
+          {savePost.isPending ? "Saving..." : "Saved"}
         </Button>
       </div>
 
