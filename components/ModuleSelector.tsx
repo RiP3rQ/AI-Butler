@@ -30,11 +30,6 @@ export const AvailableModules = [
     description: "Chat with AI"
   },
   {
-    value: "Personalities",
-    Icon: PersonStandingIcon,
-    description: "Create and manage your personalities"
-  },
-  {
     value: "Journal",
     Icon: NotebookIcon,
     description: "Create and manage your journal"
@@ -43,16 +38,6 @@ export const AvailableModules = [
     value: "Pdfs",
     Icon: TextIcon,
     description: "Create and manage your pdfs"
-  },
-  {
-    value: "Audios",
-    Icon: MusicIcon,
-    description: "Create and manage your audios"
-  },
-  {
-    value: "Images",
-    Icon: ImageIcon,
-    description: "Create and manage your images"
   }
 ];
 
