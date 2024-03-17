@@ -48,13 +48,13 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
           <span className="mx-1 inline-block">/</span>
           <span className="font-semibold text-stone-500">{post.name}</span>
           <div className="ml-auto">
-            <DeleteButton noteId={post.id} />
+            <DeleteButton postId={post.id} />
           </div>
         </div>
 
         <div className="h-4"></div>
         <div className="w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
-          <TipTapEditor note={post} />
+          <TipTapEditor post={post} />
         </div>
       </div>
     </div>
