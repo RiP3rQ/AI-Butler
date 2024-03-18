@@ -13,16 +13,18 @@ import { useCompletion } from "ai/react";
 
 type Props = { post: PostType };
 
+// TODO: BETTER COLORS AND UI
+
 const TipTapEditor = ({ post }: Props) => {
   const [editorState, setEditorState] = React.useState(
     post.editorState || `<h1>${post.name}</h1>`
   );
   const { complete, completion } = useCompletion({
-    api: "/api/completion"
+    api: "/api/journal/completion"
   });
   const savePost = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/savePost", {
+      const response = await axios.post("/api/journal/savePost", {
         postId: post.id,
         editorState
       });
@@ -59,7 +61,7 @@ const TipTapEditor = ({ post }: Props) => {
     editor.commands.insertContent(diff);
   }, [completion, editor]);
 
-  const debouncedEditorState = useDebounce(editorState, 500);
+  const debouncedEditorState = useDebounce(editorState, 1000);
   React.useEffect(() => {
     // save to db
     if (debouncedEditorState === "") return;

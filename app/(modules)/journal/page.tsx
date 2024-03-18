@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   }
 };
 
+// TODO: Sorting and filtering of posts + pagination
+
 export default async function JournalPage() {
   const { userId } = auth();
   const posts = await db
@@ -29,13 +31,13 @@ export default async function JournalPage() {
 
   return (
     <div className="grainy min-h-[90vh]">
-      <div className="max-w-7xl mx-auto p-10">
+      <div className="mx-auto max-w-7xl p-10">
         <div className="h-14"></div>
-        <div className="flex justify-between items-center md:flex-row flex-col">
+        <div className="flex flex-col items-center justify-between md:flex-row">
           <div className="flex items-center">
             <Link href="/">
               <Button className="bg-gray-600" size="sm">
-                <ArrowLeft className="mr-1 w-4 h-4" />
+                <ArrowLeft className="mr-1 h-4 w-4" />
                 Back
               </Button>
             </Link>
@@ -51,20 +53,20 @@ export default async function JournalPage() {
         <div className="h-8"></div>
         {/* list all the posts */}
         {/* if no posts, display this */}
-        {posts.length === 0 && (
+        {posts?.length === 0 && (
           <div className="text-center">
             <h2 className="text-xl text-gray-500">You have no posts yet.</h2>
           </div>
         )}
 
         {/* display all the posts */}
-        <div className="grid sm:grid-cols-3 md:grid-cols-5 grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
           <CreatePostDialog />
-          {posts.map((post) => {
+          {posts?.map((post: any) => {
             return (
               <Link href={`/journal/${post.id}`} key={post.id}>
                 <div
-                  className="border border-stone-300 rounded-lg overflow-hidden flex flex-col hover:shadow-xl transition hover:-translate-y-1">
+                  className="flex flex-col overflow-hidden rounded-lg border border-stone-300 transition hover:-translate-y-1 hover:shadow-xl">
                   <Image
                     width={400}
                     height={200}

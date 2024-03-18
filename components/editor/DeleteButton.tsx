@@ -10,11 +10,13 @@ type Props = {
   postId: number;
 };
 
+// TODO: CONFIRMATION MODAL FOR DELETING POSTS
+
 const DeleteButton = ({ postId }: Props) => {
   const router = useRouter();
   const deletePost = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/deletePost", {
+      const response = await axios.post("/api/journal/deletePost", {
         postId
       });
       return response.data;
@@ -32,7 +34,7 @@ const DeleteButton = ({ postId }: Props) => {
         if (!confirm) return;
         deletePost.mutate(undefined, {
           onSuccess: () => {
-            router.push("/dashboard");
+            router.push("/journal");
           },
           onError: (err) => {
             console.error(err);

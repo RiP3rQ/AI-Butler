@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { generateDalleImage, generateImagePrompt } from "@/lib/openai";
 import { $posts } from "@/lib/drizzle/schema";
 import { db } from "@/lib/drizzle";
+import { revalidatePath } from "next/cache";
 
 export const runtime = "edge";
 
@@ -38,6 +39,8 @@ export async function POST(req: Request) {
     .returning({
       insertedId: $posts.id
     });
+
+  revalidatePath("/api/journal/getJournalPosts");
 
   return NextResponse.json({
     post_id: post_ids[0].insertedId

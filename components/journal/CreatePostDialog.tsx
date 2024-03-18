@@ -17,20 +17,22 @@ import { useRouter } from "next/navigation";
 
 type Props = {};
 
+// TODO: Steps in modal to choose one of 3 generated images or upload a custom image
+
 const CreatePostDialog = (props: Props) => {
   const router = useRouter();
   const [input, setInput] = React.useState("");
-  // const uploadToFirebase = useMutation({
-  //   mutationFn: async (noteId: string) => {
-  //     const response = await axios.post("/api/uploadToFirebase", {
-  //       noteId
-  //     });
-  //     return response.data;
-  //   }
-  // });
+  const uploadToStorage = useMutation({
+    mutationFn: async (postId: string) => {
+      const response = await axios.post("/api/journal/uploadToStorage", {
+        postId
+      });
+      return response.data;
+    }
+  });
   const createPost = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/journal", {
+      const response = await axios.post("/api/journal/createPost", {
         name: input
       });
       return response.data;
@@ -48,7 +50,7 @@ const CreatePostDialog = (props: Props) => {
       onSuccess: ({ post_id }) => {
         console.log("created new post:", { post_id });
         // hit another endpoint to uplod the temp dalle url to permanent firebase url
-        // uploadToFirebase.mutate(note_id);
+        uploadToStorage.mutate(post_id);
         router.push(`/journal/${post_id}`);
       },
       onError: (error) => {
