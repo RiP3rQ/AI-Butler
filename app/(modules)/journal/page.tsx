@@ -89,7 +89,7 @@ export default async function JournalPage() {
                     </h3>
                     <div className="h-1"></div>
                     <p className="text-sm text-gray-500">
-                      {new Date(post.createdAt).toLocaleDateString()}
+                      {new Date(post.updatedAt).toLocaleDateString()}{" "} at{" "} {new Date(post.updatedAt).toLocaleTimeString()}
                     </p>
                   </div>
                 </div>
