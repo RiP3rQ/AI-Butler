@@ -29,19 +29,21 @@ export default async function NotesPage() {
   });
 
   return (
-    <div className="relative grid min-h-[90vh] gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {allNotes.map((note) => (
-        <Note key={note.id} note={note} />
-      ))}
-      {allNotes.length === 0 && (
-        <div className="col-span-3 mt-10 text-center">
-          <p className="text-lg font-semibold">No notes yet!</p>
-          <p className="text-gray-500">
-            Click the button above to add your first note.
-          </p>
-        </div>
-      )}
-      <NotesActionButtons />
+    <div className={"relative min-h-[calc(100vh-4rem)]"}>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 pt-4">
+        {allNotes.map((note) => (
+          <Note key={note.id} note={note} />
+        ))}
+        {allNotes.length === 0 && (
+          <div className="col-span-3 mt-10 text-center">
+            <p className="text-lg font-semibold">No notes yet!</p>
+            <p className="text-gray-500">
+              Click the button above to add your first note.
+            </p>
+          </div>
+        )}
+        <NotesActionButtons />
+      </div>
     </div>
   );
 }

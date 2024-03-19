@@ -41,9 +41,8 @@ export default async function JournalPage() {
   }
 
   return (
-    <div className="min-h-[90vh]">
+    <div className="min-h-[calc(100vh-4rem)]">
       <div className="mx-auto max-w-7xl p-10">
-        <div className="h-14"></div>
         <div className="flex flex-col items-center justify-between md:flex-row">
           <div className="flex items-center">
             <Link href="/">

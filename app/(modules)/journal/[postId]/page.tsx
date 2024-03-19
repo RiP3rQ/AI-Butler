@@ -33,7 +33,7 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
   const post = posts[0];
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-[calc(100vh-4rem)] p-8">
       <div className="mx-auto max-w-4xl">
         <div className="flex items-center rounded-lg border border-stone-200 p-4 shadow-xl">
           <Link href={"/journal"}>
