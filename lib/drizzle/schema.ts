@@ -12,7 +12,7 @@ export const $posts = pgTable("posts", {
 
 export type PostType = typeof $posts.$inferInsert;
 
-export const $postAnalysis = pgTable("post_analysis", {
+export const $postsAnalysis = pgTable("post_analysis", {
   id: serial("id").primaryKey(),
   postId: text("post_id").notNull(),
   mood: text("mood").notNull(),
@@ -23,7 +23,7 @@ export const $postAnalysis = pgTable("post_analysis", {
   updatedAt: timestamp("updated_at").notNull().defaultNow()
 });
 
-export type PostAnalysisType = typeof $postAnalysis.$inferInsert;
+export type PostsAnalysisType = typeof $postsAnalysis.$inferInsert;
 
 // drizzle-orm
 // drizzle-kit

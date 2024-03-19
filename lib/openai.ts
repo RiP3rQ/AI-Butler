@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { OpenAI as LangchainOpenAI } from "@langchain/openai";
 
 const apiKey = process.env.OPEN_AI_KEY;
 
@@ -63,3 +64,9 @@ export async function generateDalleImage(image_description: string) {
     console.error(error);
   }
 }
+
+export const analyzePost = async (prompt: string) => {
+  const model = new LangchainOpenAI({ temperature: 0, modelName: "gpt-3.5-turbo", openAIApiKey: apiKey });
+  const result = await model.invoke(prompt);
+  console.log(result);
+};

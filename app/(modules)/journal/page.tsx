@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default async function JournalPage() {
   const { userId } = auth();
-  const { posts } = await fetch(`${process.env.URL}/api/journal/journalPosts`, {
+  const { posts, postsAnalysis } = await fetch(`${process.env.URL}/api/journal/journalPosts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -38,6 +38,23 @@ export default async function JournalPage() {
 
   if (posts.length === 0) {
     return <div>No posts found</div>;
+  }
+
+  // attach the analysis to the posts based on the postsAnalysis.postId === posts.id
+  // for (const post of posts) {
+  //   for (const analysis of postsAnalysis) {
+  //     if (analysis?.postId === post.id) {
+  //       post.analysis = analysis;
+  //     }
+  //   }
+  // }
+  for (const post of posts) {
+    post.analysis = {
+      mood: "Neutral",
+      summary: "This is a summary",
+      color: "gray",
+      negative: false
+    };
   }
 
   return (
