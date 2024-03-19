@@ -3,9 +3,18 @@ import { $posts } from "@/lib/drizzle/schema";
 import { uploadFileToFirebase } from "@/lib/firebase";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs";
 
 export async function POST(req: Request) {
   try {
+    const { userId } = auth();
+
+    console.log("userId", userId);
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
     const { postId } = await req.json();
     // extract out the dalle imageurl
     // save it to firebase
@@ -34,6 +43,7 @@ export async function POST(req: Request) {
         imageUrl: firebase_url
       })
       .where(eq($posts.id, parseInt(postId)));
+
     return new NextResponse("ok", { status: 200 });
   } catch (error) {
     console.error(error);

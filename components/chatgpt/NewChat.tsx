@@ -2,7 +2,6 @@ import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import axios from "axios";
-import { revalidatePath } from "next/cache";
 
 const NewChat = () => {
   const router = useRouter();

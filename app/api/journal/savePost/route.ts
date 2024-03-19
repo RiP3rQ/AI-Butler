@@ -2,9 +2,17 @@ import { db } from "@/lib/drizzle";
 import { $posts } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   try {
+    const { userId } = auth();
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
     const body = await req.json();
     let { postId, editorState } = body;
     if (!editorState || !postId) {
@@ -26,6 +34,9 @@ export async function POST(req: Request) {
         })
         .where(eq($posts.id, postId));
     }
+
+    revalidatePath("/api/journal/journalPosts");
+
     return NextResponse.json(
       {
         success: true

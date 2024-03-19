@@ -5,11 +5,9 @@ import { UserButton, auth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { db } from "@/lib/drizzle";
-import { eq } from "drizzle-orm";
-import { $posts } from "@/lib/drizzle/schema";
 import { Separator } from "@/components/ui/separator";
 import CreatePostDialog from "@/components/journal/CreatePostDialog";
+import axios from "axios";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Journal",
@@ -21,16 +19,29 @@ export const metadata: Metadata = {
 };
 
 // TODO: Sorting and filtering of posts + pagination
+// TODO: PROPER REVALIDATION OF POSTS
 
 export default async function JournalPage() {
   const { userId } = auth();
-  const posts = await db
-    .select()
-    .from($posts)
-    .where(eq($posts.userId, userId!));
+  const { posts } = await fetch(`${process.env.URL}/api/journal/journalPosts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ userId }),
+    cache: "no-cache"
+  }).then((res) => res.json());
+
+  if (!userId || !posts) {
+    return <div>Loading...</div>;
+  }
+
+  if (posts.length === 0) {
+    return <div>No posts found</div>;
+  }
 
   return (
-    <div className="grainy min-h-[90vh]">
+    <div className="min-h-[90vh]">
       <div className="mx-auto max-w-7xl p-10">
         <div className="h-14"></div>
         <div className="flex flex-col items-center justify-between md:flex-row">
