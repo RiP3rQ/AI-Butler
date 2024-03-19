@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const $posts = pgTable("posts", {
   id: serial("id").primaryKey(),
@@ -11,6 +11,19 @@ export const $posts = pgTable("posts", {
 });
 
 export type PostType = typeof $posts.$inferInsert;
+
+export const $postAnalysis = pgTable("post_analysis", {
+  id: serial("id").primaryKey(),
+  postId: text("post_id").notNull(),
+  mood: text("mood").notNull(),
+  summary: text("summary").notNull(),
+  color: text("color").notNull(),
+  negative: boolean("negative").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow()
+});
+
+export type PostAnalysisType = typeof $postAnalysis.$inferInsert;
 
 // drizzle-orm
 // drizzle-kit

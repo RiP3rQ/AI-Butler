@@ -8,6 +8,13 @@
       "when": 1710875825707,
       "tag": "0000_fluffy_sentry",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710876412606,
+      "tag": "0001_rare_gamora",
+      "breakpoints": true
     }
   ]
 }
