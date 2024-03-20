@@ -1,5 +1,8 @@
 import OpenAI from "openai";
 import { OpenAI as LangchainOpenAI } from "@langchain/openai";
+import { OutputFixingParser, StructuredOutputParser } from "langchain/output_parsers";
+import z from "zod";
+import { PromptTemplate } from "langchain/prompts";
 
 const apiKey = process.env.OPEN_AI_KEY;
 
@@ -65,8 +68,48 @@ export async function generateDalleImage(image_description: string) {
   }
 }
 
-export const analyzePost = async (prompt: string) => {
+const parser = StructuredOutputParser.fromZodSchema(
+  z.object({
+    mood: z.string().describe("The mood of the person who wrote the journal entry."),
+    summary: z.string().describe("A quick summary of the entire journal entry."),
+    subject: z.string().describe("The subject of the journal entry."),
+    negative: z.boolean().describe("Is the journal entry negative? (i.e. does it contain negative emotions?)."),
+    color: z.string().describe("A hexadecimal color representing the mood of the journal entry. Example #0101FE for blue representing happiness."),
+    sentimentScore: z
+      .number()
+      .describe(
+        "sentiment of the text and rated on a scale from -10 to 10, where -10 is extremely negative, 0 is neutral, and 10 is extremely positive."
+      )
+  })
+);
+
+const getPrompt = async (content: string) => {
+  const format_instructions = parser.getFormatInstructions();
+
+  const prompt = new PromptTemplate({
+    template:
+      "Analyze the following journal entry. Follow the instructions and format your response to match the format instructions, no matter what! \n{format_instructions}\n{entry}",
+    inputVariables: ["entry"],
+    partialVariables: { format_instructions }
+  });
+
+  return await prompt.format({
+    entry: content
+  });
+};
+
+export const analyzePost = async (content: string) => {
+  const input = await getPrompt(content);
   const model = new LangchainOpenAI({ temperature: 0, modelName: "gpt-3.5-turbo", openAIApiKey: apiKey });
-  const result = await model.invoke(prompt);
-  console.log(result);
+  const output = await model.invoke(input);
+
+  try {
+    return parser.parse(output);
+  } catch (e) {
+    const fixParser = OutputFixingParser.fromLLM(
+      new LangchainOpenAI({ temperature: 0, modelName: "gpt-3.5-turbo" }),
+      parser
+    );
+    return await fixParser.parse(output);
+  }
 };

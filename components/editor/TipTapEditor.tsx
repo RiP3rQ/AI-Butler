@@ -17,7 +17,7 @@ type Props = { post: PostType };
 
 const TipTapEditor = ({ post }: Props) => {
   const [editorState, setEditorState] = React.useState(
-    post.editorState || `<h1>${post.name}</h1>`
+    post.editorState || ""
   );
   const { complete, completion } = useCompletion({
     api: "/api/journal/completion"

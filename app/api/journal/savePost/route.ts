@@ -1,9 +1,10 @@
 import { db } from "@/lib/drizzle";
-import { $posts } from "@/lib/drizzle/schema";
+import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
+import { analyzePost } from "@/lib/openai";
 
 export async function POST(req: Request) {
   try {
@@ -27,6 +28,7 @@ export async function POST(req: Request) {
 
     const post = posts[0];
     if (post.editorState !== editorState) {
+      // update the post
       await db
         .update($posts)
         .set({
@@ -34,6 +36,25 @@ export async function POST(req: Request) {
           updatedAt: new Date()
         })
         .where(eq($posts.id, postId));
+      // analyze the post
+      const analysis = await analyzePost(editorState);
+      if (!analysis) {
+        return new NextResponse("failed to analyze", { status: 500 });
+      }
+      await db.update($postsAnalysis).set({
+        userId,
+        postId,
+        mood: analysis.mood,
+        summary: analysis.summary,
+        color: analysis.color,
+        negative: analysis.negative,
+        subject: analysis.subject,
+        sentimentScore: String(analysis.sentimentScore),
+        updatedAt: new Date()
+      }).where(eq($postsAnalysis.postId, postId));
+      console.log("Updated and analyzed the post!");
+    } else {
+      console.log("No changes detected! Not updating the post.");
     }
 
     revalidatePath("/api/journal/journalPosts");

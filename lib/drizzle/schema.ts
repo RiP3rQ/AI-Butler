@@ -15,9 +15,12 @@ export type PostType = typeof $posts.$inferInsert;
 export const $postsAnalysis = pgTable("post_analysis", {
   id: serial("id").primaryKey(),
   postId: text("post_id").notNull(),
+  userId: text("user_id").notNull(),
   mood: text("mood").notNull(),
+  subject: text("subject").notNull(),
   summary: text("summary").notNull(),
   color: text("color").notNull(),
+  sentimentScore: text("sentiment_score").notNull(),
   negative: boolean("negative").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow()

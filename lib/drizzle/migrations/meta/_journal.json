@@ -15,6 +15,20 @@
       "when": 1710876412606,
       "tag": "0001_rare_gamora",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1710959260454,
+      "tag": "0002_naive_mentallo",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1710960091899,
+      "tag": "0003_lame_caretaker",
+      "breakpoints": true
     }
   ]
 }

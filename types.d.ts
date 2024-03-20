@@ -6,3 +6,14 @@ export type PostType = {
   userId: string;
   editorState: string;
 }
+
+export type AnalysisType = {
+  id: string;
+  postId: string;
+  mood: string;
+  summary: string;
+  subject: string;
+  negative: boolean;
+  color: string;
+  sentimentScore: number;
+}
