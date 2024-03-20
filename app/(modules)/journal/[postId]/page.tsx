@@ -66,40 +66,36 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
 
       {/*  Analysis*/}
       {postAnalysis && (
-        <div className="absolute top-16 right-0 h-fit w-96 border border-black/5">
+        <div className="absolute top-16 right-0 h-fit w-96 border border-black/5 bg-gray-200">
           <div
             style={{ background: postAnalysis.color }}
-            className="h-[100px] bg-blue-600 text-white p-8"
+            className="h-[30px] text-white py-6 flex items-center justify-center"
           >
-            <h2 className="text-2xl bg-white/25 text-black">Analysis</h2>
+            <h2 className="text-2xl text-black font-bold">Analysis</h2>
           </div>
           <div>
-            <ul role="list" className="divide-y divide-gray-200">
-              <li className="py-4 px-8 flex items-center justify-between">
-                <div className="text-xl font-semibold w-1/3">Subject</div>
-                <div className="text-xl">{postAnalysis.subject}</div>
+            <ul role="list" className="divide-y divide-gray-600">
+              <li className="py-2 px-2 flex items-center justify-between gap-2">
+                <div className="text-xl font-semibold w-fit">Subject</div>
+                <div className="text-base">{postAnalysis.subject}</div>
               </li>
 
-              <li className="py-4 px-8 flex items-center justify-between">
-                <div className="text-xl font-semibold">Mood</div>
-                <div className="text-xl">{postAnalysis.mood}</div>
+              <li className="py-2 px-2 flex items-center justify-between gap-2">
+                <div className="text-xl font-semibold w-fit">Summary</div>
+                <div className="text-base">{postAnalysis.summary}</div>
               </li>
 
-              <li className="py-4 px-8 flex items-center justify-between">
-                <div className="text-xl font-semibold">Negative</div>
-                <div className="text-xl">
+              <li className="py-2 px-2 flex items-center justify-between gap-2">
+                <div className="text-xl font-semibold w-fit">Mood</div>
+                <div className="text-base">{postAnalysis.mood}</div>
+              </li>
+
+              <li className="py-2 px-2 flex items-center justify-between gap-2">
+                <div className="text-xl font-semibold w-fit">Negative</div>
+                <div className="text-base">
                   {postAnalysis.negative ? "True" : "False"}
                 </div>
               </li>
-              {/*<li className="py-4 px-8 flex items-center justify-between">*/}
-              {/*  <button*/}
-              {/*    onClick={handleDelete}*/}
-              {/*    type="button"*/}
-              {/*    className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"*/}
-              {/*  >*/}
-              {/*    Delete*/}
-              {/*  </button>*/}
-              {/*</li>*/}
             </ul>
           </div>
         </div>

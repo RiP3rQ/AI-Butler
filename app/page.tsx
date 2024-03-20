@@ -10,9 +10,12 @@ export default function Home() {
 
   if (userId) redirect("/dashboard");
 
+  // TODO: REFACTOR color for different themes
+
   return (
     <main className="grainy min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">
-      <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4">
+      <div
+        className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4">
         <div className="flex flex-col items-center justify-center">
           <Image src="/logo.png" alt="logo" width={100} height={100} />
           <span className="text-4xl font-extrabold tracking-tight lg:text-5xl">
