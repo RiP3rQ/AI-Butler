@@ -1,5 +1,5 @@
 import { db } from "@/lib/drizzle";
-import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
+import { $posts } from "@/lib/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 

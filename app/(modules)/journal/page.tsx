@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import CreatePostDialog from "@/components/journal/CreatePostDialog";
 import axios from "axios";
+import { SearchInput } from "@/components/journal/SearchInput";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Journal",
@@ -53,6 +54,9 @@ export default async function JournalPage() {
             </Link>
             <div className="w-4"></div>
             <h1 className="text-3xl font-bold text-gray-900">My posts</h1>
+          </div>
+          <div>
+            <SearchInput posts={posts} />
           </div>
         </div>
 

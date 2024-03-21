@@ -1,8 +1,15 @@
 import OpenAI from "openai";
-import { OpenAI as LangchainOpenAI } from "@langchain/openai";
-import { OutputFixingParser, StructuredOutputParser } from "langchain/output_parsers";
+import { OpenAI as LangchainOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import {
+  OutputFixingParser,
+  StructuredOutputParser
+} from "langchain/output_parsers";
 import z from "zod";
 import { PromptTemplate } from "langchain/prompts";
+import { loadQARefineChain } from "langchain/chains";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { Document } from "langchain/document";
+import { PostType } from "@/lib/drizzle/schema";
 
 const apiKey = process.env.OPEN_AI_KEY;
 
@@ -70,11 +77,23 @@ export async function generateDalleImage(image_description: string) {
 
 const parser = StructuredOutputParser.fromZodSchema(
   z.object({
-    mood: z.string().describe("The mood of the person who wrote the journal entry."),
-    summary: z.string().describe("A quick summary of the entire journal entry."),
+    mood: z
+      .string()
+      .describe("The mood of the person who wrote the journal entry."),
+    summary: z
+      .string()
+      .describe("A quick summary of the entire journal entry."),
     subject: z.string().describe("The subject of the journal entry."),
-    negative: z.boolean().describe("Is the journal entry negative? (i.e. does it contain negative emotions?)."),
-    color: z.string().describe("A hexadecimal color representing the mood of the journal entry. Example #0101FE for blue representing happiness."),
+    negative: z
+      .boolean()
+      .describe(
+        "Is the journal entry negative? (i.e. does it contain negative emotions?)."
+      ),
+    color: z
+      .string()
+      .describe(
+        "A hexadecimal color representing the mood of the journal entry. Example #0101FE for blue representing happiness."
+      ),
     sentimentScore: z
       .number()
       .describe(
@@ -100,7 +119,11 @@ const getPrompt = async (content: string) => {
 
 export const analyzePost = async (content: string) => {
   const input = await getPrompt(content);
-  const model = new LangchainOpenAI({ temperature: 0, modelName: "gpt-3.5-turbo", openAIApiKey: apiKey });
+  const model = new LangchainOpenAI({
+    temperature: 0,
+    modelName: "gpt-3.5-turbo",
+    openAIApiKey: apiKey
+  });
   const output = await model.invoke(input);
 
   try {
@@ -112,4 +135,28 @@ export const analyzePost = async (content: string) => {
     );
     return await fixParser.parse(output);
   }
+};
+
+export const qa = async (question: string, posts: PostType[]) => {
+  const docs = posts.map(
+    (post) =>
+      new Document({
+        pageContent: post.editorState!,
+        metadata: { source: post.id, date: post.createdAt }
+      })
+  );
+  const model = new LangchainOpenAI({
+    temperature: 0,
+    modelName: "gpt-3.5-turbo"
+  });
+  const chain = loadQARefineChain(model);
+  const embeddings = new OpenAIEmbeddings();
+  const store = await MemoryVectorStore.fromDocuments(docs, embeddings);
+  const relevantDocs = await store.similaritySearch(question);
+  const res = await chain.invoke({
+    input_documents: relevantDocs,
+    question
+  });
+
+  return res.output_text;
 };
