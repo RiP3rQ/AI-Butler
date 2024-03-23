@@ -19,22 +19,8 @@
     {
       "idx": 2,
       "version": "5",
-      "when": 1710959260454,
-      "tag": "0002_naive_mentallo",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1710960091899,
-      "tag": "0003_lame_caretaker",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1711219829271,
-      "tag": "0004_tidy_cyclops",
+      "when": 1711221837157,
+      "tag": "0002_lying_ben_parker",
       "breakpoints": true
     }
   ]

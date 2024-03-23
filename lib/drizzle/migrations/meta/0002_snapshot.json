@@ -1,5 +1,5 @@
 {
-  "id": "e984516f-cd9f-479f-bbaa-4a01aae9438e",
+  "id": "184d5419-37d2-4fe3-966e-36345ddab7be",
   "prevId": "d6bb43b6-4d28-491e-b798-b58e04dbcb2f",
   "version": "5",
   "dialect": "pg",
@@ -70,6 +70,12 @@
         },
         "post_id": {
           "name": "post_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true

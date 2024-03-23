@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       // analyze the post
 
       // TODO: before analyzing, replace all <h1>, <p>, <code> tags with empty string
-
+      console.log("Analyzing the post...");
       const analysis = await analyzePost(editorState);
       if (!analysis) {
         return new NextResponse("failed to analyze", { status: 500 });

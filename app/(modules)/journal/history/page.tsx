@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs";
 import { db } from "@/lib/drizzle";
 import { $postsAnalysis } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
+import LineHistoryChart from "@/components/charts/LineChart";
 
 const getData = async (userId: string) => {
 
@@ -25,11 +26,13 @@ const HistoryPage = async () => {
   console.log(average);
 
   return (
-    <div className="h-full px-6 py-8">
+    <div className="h-[calc(100vh-8rem)] px-6 pt-8">
       <div>
         <h1 className="mb-4 text-2xl">{`Avg. Sentiment: ${average}`}</h1>
       </div>
-      <div className="h-full w-full">analiza</div>
+      <div className="h-full w-full">
+        <LineHistoryChart data={analyses} />
+      </div>
     </div>
   );
 };

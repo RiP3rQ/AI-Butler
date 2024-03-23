@@ -22,6 +22,7 @@ export const postsRelations = relations($posts, ({ one }) => ({
 
 export const $postsAnalysis = pgTable("post_analysis", {
   id: serial("id").primaryKey(),
+  postId: text("post_id").notNull(),
   userId: text("user_id").notNull(),
   mood: text("mood").notNull(),
   subject: text("subject").notNull(),

@@ -37,10 +37,6 @@ export default async function JournalPage() {
     return <div>Loading...</div>;
   }
 
-  if (posts.length === 0) {
-    return <div>No posts found</div>;
-  }
-
   // TODO: deleteing posts from journal main page
   // TODO: check analysis from the main page and display it
 
@@ -59,7 +55,9 @@ export default async function JournalPage() {
             <h1 className="text-3xl font-bold text-gray-900">My posts</h1>
           </div>
           <div>
-            <SearchInput />
+            {posts?.length !== 0 && (
+              <SearchInput />
+            )}
           </div>
         </div>
 
