@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default async function JournalPage() {
   const { userId } = auth();
-  const { posts } = await fetch(`${process.env.URL}/api/journal/journalPosts`, {
+  const { posts } = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -56,7 +56,7 @@ export default async function JournalPage() {
             <h1 className="text-3xl font-bold text-gray-900">My posts</h1>
           </div>
           <div>
-            <SearchInput posts={posts} />
+            <SearchInput />
           </div>
         </div>
 

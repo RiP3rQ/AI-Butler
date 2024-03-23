@@ -1,15 +1,15 @@
-
 # 🤖🤵🏻 AI-Butler 🧠
 
-Next.js 14 app allowing user to interact with OpenAI API. Create unique notes with content that will be converted to vector matrixes and then analized by OpenAI API for personalized responses. AI-Butler also allows users to interact with OpenAI ChatGPT model not related to the provided notes.
-
+Next.js 14 app allowing user to interact with OpenAI API. Create unique notes with content that will be converted to
+vector matrixes and then analized by OpenAI API for personalized responses. AI-Butler also allows users to interact with
+OpenAI ChatGPT model not related to the provided notes.
 
 ## Tech Stack
 
 - **Next.js 14**
 - **React**
 - **Tailwindcss**
-- **Typescript** 
+- **Typescript**
 - **OpenAI API**
 - **Vercel AI** - (real-time streaming bot's responses) [useChat]
 - **MongoDb**
@@ -26,14 +26,14 @@ Install AI-Butler with npm
   npm install 
   npm run dev
 ```
-    
+
 ## Environment Variables
 
-`DATABASE_URL` = 
+`DATABASE_URL` =
 
-`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` = 
+`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` =
 
-`CLERK_SECRET_KEY` = 
+`CLERK_SECRET_KEY` =
 
 `NEXT_PUBLIC_CLERK_SIGN_IN_URL` = /sign-in
 
@@ -43,10 +43,9 @@ Install AI-Butler with npm
 
 `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` = /notes
 
-`OPEN_AI_KEY` =
+`OPENAI_API_KEY` =
 
 `PINECONE_API_KEY` =
-
 
 ## Demo
 

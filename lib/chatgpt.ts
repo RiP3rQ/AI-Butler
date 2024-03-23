@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 
 const chatgpt = new OpenAI({
-  apiKey: process.env.OPEN_AI_KEY,
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 export async function sendMsgToOpenAI(prompt: string) {
@@ -12,7 +12,7 @@ export async function sendMsgToOpenAI(prompt: string) {
     max_tokens: 256,
     top_p: 1,
     frequency_penalty: 0,
-    presence_penalty: 0,
+    presence_penalty: 0
   });
   return res.choices[0].text;
 }

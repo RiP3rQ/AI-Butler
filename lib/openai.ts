@@ -11,7 +11,7 @@ import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { Document } from "langchain/document";
 import { PostType } from "@/lib/drizzle/schema";
 
-const apiKey = process.env.OPEN_AI_KEY;
+const apiKey = process.env.OPENAI_API_KEY;
 
 if (!apiKey) {
   throw new Error("OPENAI_API_KEY is not defined");
@@ -130,7 +130,7 @@ export const analyzePost = async (content: string) => {
     return parser.parse(output);
   } catch (e) {
     const fixParser = OutputFixingParser.fromLLM(
-      new LangchainOpenAI({ temperature: 0, modelName: "gpt-3.5-turbo" }),
+      new LangchainOpenAI({ temperature: 0, modelName: "gpt-3.5-turbo", openAIApiKey: apiKey }),
       parser
     );
     return await fixParser.parse(output);
@@ -147,7 +147,8 @@ export const qa = async (question: string, posts: PostType[]) => {
   );
   const model = new LangchainOpenAI({
     temperature: 0,
-    modelName: "gpt-3.5-turbo"
+    modelName: "gpt-3.5-turbo",
+    openAIApiKey: apiKey
   });
   const chain = loadQARefineChain(model);
   const embeddings = new OpenAIEmbeddings();
