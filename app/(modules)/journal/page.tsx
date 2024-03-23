@@ -21,7 +21,6 @@ export const metadata: Metadata = {
 };
 
 // TODO: Sorting and filtering of posts + pagination
-// TODO: PROPER REVALIDATION OF POSTS
 
 export default async function JournalPage() {
   const { userId } = auth();

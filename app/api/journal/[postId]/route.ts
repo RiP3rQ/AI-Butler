@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
 import { $postsAnalysis } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { auth } from "@clerk/nextjs";
 
-export async function POST(
+export async function GET(
   req: Request,
   { params }: { params: { postId: number } }
 ) {
   try {
-    const { userId } = await req.json();
+    const { userId } = auth();
     if (!userId) {
       return NextResponse.json({ data: "Unauthorized" }, { status: 401 });
     }
@@ -19,7 +20,7 @@ export async function POST(
 
     const postAnalysis = await db.select().from($postsAnalysis).where(eq($postsAnalysis.postId, String(params.postId)));
 
-    return NextResponse.json({ postAnalysis });
+    return NextResponse.json({ data: postAnalysis });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ data: "Internal Server Error" }, { status: 500 });

@@ -9,6 +9,7 @@ import { clerk } from "@/lib/clerk-server";
 import { db } from "@/lib/drizzle";
 import { $posts } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
+import PostAnalysis from "@/components/journal/PostAnalysis";
 
 type Props = {
   params: {
@@ -24,15 +25,6 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
   }
 
   const user = await clerk.users.getUser(userId);
-
-  const { postAnalysis } = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/journal/${postId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ userId }),
-    cache: "no-cache"
-  }).then((res) => res.json());
 
   const posts = await db
     .select()
@@ -73,41 +65,7 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
       </div>
 
       {/*  Analysis*/}
-      {postAnalysis && (
-        <div className="absolute top-16 right-0 h-fit w-96 border border-black/5 bg-gray-200">
-          <div
-            style={{ background: postAnalysis[0].color }}
-            className="h-[30px] text-white py-6 flex items-center justify-center"
-          >
-            <h2 className="text-2xl text-black font-bold">Analysis</h2>
-          </div>
-          <div>
-            <ul role="list" className="divide-y divide-gray-600">
-              <li className="py-2 px-2 flex items-center justify-between gap-2">
-                <div className="text-xl font-semibold w-fit">Subject</div>
-                <div className="text-base">{postAnalysis[0].subject}</div>
-              </li>
-
-              <li className="py-2 px-2 flex items-center justify-between gap-2">
-                <div className="text-xl font-semibold w-fit">Summary</div>
-                <div className="text-base">{postAnalysis[0].summary}</div>
-              </li>
-
-              <li className="py-2 px-2 flex items-center justify-between gap-2">
-                <div className="text-xl font-semibold w-fit">Mood</div>
-                <div className="text-base">{postAnalysis[0].mood}</div>
-              </li>
-
-              <li className="py-2 px-2 flex items-center justify-between gap-2">
-                <div className="text-xl font-semibold w-fit">Negative</div>
-                <div className="text-base">
-                  {postAnalysis[0].negative ? "True" : "False"}
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      )}
+      <PostAnalysis postId={postId} userId={userId} />
     </div>
   );
 };

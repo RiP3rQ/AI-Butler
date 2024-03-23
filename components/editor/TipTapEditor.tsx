@@ -10,6 +10,7 @@ import Text from "@tiptap/extension-text";
 import axios from "axios";
 import { PostType } from "@/lib/drizzle/schema";
 import { useCompletion } from "ai/react";
+import { mutate } from "swr";
 
 type Props = { post: PostType };
 
@@ -28,6 +29,8 @@ const TipTapEditor = ({ post }: Props) => {
         postId: post.id,
         editorState
       });
+
+      await mutate(`${process.env.NEXT_PUBLIC_URL}/api/journal/${post.id}`);
       return response.data;
     }
   });

@@ -28,7 +28,6 @@ export async function POST(req: Request) {
     });
   }
 
-  // TODO: REFACTOR so analysis is initially empty and on first save of file is created and then updated
   const editorState = `${name}`;
 
   const post_ids = await db

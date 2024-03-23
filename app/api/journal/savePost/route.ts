@@ -3,7 +3,6 @@ import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
-import { revalidatePath } from "next/cache";
 import { analyzePost } from "@/lib/openai";
 
 export async function POST(req: Request) {
@@ -59,9 +58,6 @@ export async function POST(req: Request) {
     } else {
       console.log("No changes detected! Not updating the post.");
     }
-
-    revalidatePath("/api/journal/journalPosts");
-    revalidatePath(`/api/journal/${postId}`);
 
     return NextResponse.json(
       {
