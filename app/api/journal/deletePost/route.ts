@@ -17,6 +17,6 @@ export async function POST(req: Request) {
   const { postId } = await req.json();
   await db.delete($posts).where(eq($posts.id, parseInt(postId)));
 
-  revalidatePath("/api/journal/journalPosts");
+  revalidatePath(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`);
   return new NextResponse("ok", { status: 200 });
 }

@@ -14,7 +14,7 @@ import { mutate } from "swr";
 
 type Props = { post: PostType };
 
-// TODO: BETTER COLORS AND UI
+// TODO: (LATER) BETTER COLORS AND UI + context menu on right click
 
 const TipTapEditor = ({ post }: Props) => {
   const [editorState, setEditorState] = React.useState(

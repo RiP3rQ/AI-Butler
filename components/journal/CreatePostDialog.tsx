@@ -14,10 +14,12 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { mutate } from "swr";
+import { toast } from "sonner";
 
 type Props = {};
 
-// TODO: Steps in modal to choose one of 3 generated images or upload a custom image
+// TODO: (LATER) Steps in modal to choose one of 3 generated images or upload a custom image
 
 const CreatePostDialog = (props: Props) => {
   const router = useRouter();
@@ -27,6 +29,7 @@ const CreatePostDialog = (props: Props) => {
       const response = await axios.post("/api/journal/uploadToStorage", {
         postId
       });
+      await mutate(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`);
       return response.data;
     }
   });
@@ -35,6 +38,7 @@ const CreatePostDialog = (props: Props) => {
       const response = await axios.post("/api/journal/createPost", {
         name: input
       });
+      await mutate(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`);
       return response.data;
     }
   });
@@ -42,13 +46,13 @@ const CreatePostDialog = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input === "") {
-      window.alert("Please enter a name for your post");
+      toast.error("Please enter a name for the post");
       return;
     }
     console.log("creating new post");
     createPost.mutate(undefined, {
       onSuccess: ({ post_id }) => {
-        console.log("created new post:", { post_id });
+        toast.success("Post created successfully");
         // hit another endpoint to uplod the temp dalle url to permanent firebase url
         uploadToStorage.mutate(post_id);
         router.push(`/journal/${post_id}`);

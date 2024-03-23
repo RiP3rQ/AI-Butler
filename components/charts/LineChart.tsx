@@ -30,7 +30,7 @@ const CustomTooltip = ({ payload, label, active }) => {
   return null;
 };
 
-// TODO: CHART REFACTOR TO react-chartjs-2
+// TODO:(LATER) CHART REFACTOR TO react-chartjs-2
 
 // Main line chart on whole widht of the screen
 // Then 3 smaller charts below it one pie one doughnut

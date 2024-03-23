@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { analyzePost, generateDalleImage, generateImagePrompt } from "@/lib/openai";
 import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
 import { db } from "@/lib/drizzle";
+import { revalidatePath } from "next/cache";
 
 export const runtime = "edge";
 
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
     sentimentScore: String(analysis.sentimentScore)
   });
 
+  revalidatePath(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`);
 
   return NextResponse.json({
     post_id: post_ids[0].insertedId

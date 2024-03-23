@@ -1,15 +1,15 @@
 import { Metadata } from "next";
 import React from "react";
-import Image from "next/image";
-import { UserButton, auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft, HistoryIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import CreatePostDialog from "@/components/journal/CreatePostDialog";
-import axios from "axios";
 import { SearchInput } from "@/components/journal/SearchInput";
 import { HistoryButton } from "@/components/journal/HistoryButton";
+import { redirect } from "next/navigation";
+import PostsGrid from "@/components/journal/PostsGrid";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Journal",
@@ -20,21 +20,12 @@ export const metadata: Metadata = {
   }
 };
 
-// TODO: Sorting and filtering of posts + pagination
+// TODO:(LATER) Sorting and filtering of posts + pagination
 
 export default async function JournalPage() {
   const { userId } = auth();
-  const { posts } = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ userId }),
-    cache: "no-cache"
-  }).then((res) => res.json());
-
-  if (!userId || !posts) {
-    return <div>Loading...</div>;
+  if (!userId) {
+    return redirect("/sign-in");
   }
 
   // TODO: deleteing posts from journal main page
@@ -55,53 +46,21 @@ export default async function JournalPage() {
             <h1 className="text-3xl font-bold text-gray-900">My posts</h1>
           </div>
           <div>
-            {posts?.length !== 0 && (
-              <div className={"flex items-center justify-center gap-2"}>
-                <HistoryButton />
-                <SearchInput />
-              </div>
-            )}
+            <div className={"flex items-center justify-center gap-2"}>
+              <HistoryButton />
+              <SearchInput />
+            </div>
           </div>
         </div>
 
         <div className="h-8"></div>
         <Separator />
         <div className="h-8"></div>
-        {/* list all the posts */}
-        {/* if no posts, display this */}
-        {posts?.length === 0 && (
-          <div className="text-center">
-            <h2 className="text-xl text-gray-500">You have no posts yet.</h2>
-          </div>
-        )}
 
         {/* display all the posts */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
           <CreatePostDialog />
-          {posts?.map((post: any) => {
-            return (
-              <Link href={`/journal/${post.id}`} key={post.id}>
-                <div
-                  className="flex flex-col overflow-hidden rounded-lg border border-stone-300 transition hover:-translate-y-1 hover:shadow-xl">
-                  <Image
-                    width={400}
-                    height={200}
-                    alt={post.name}
-                    src={post.imageUrl || ""}
-                  />
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      {post.name}
-                    </h3>
-                    <div className="h-1"></div>
-                    <p className="text-sm text-gray-500">
-                      {new Date(post.updatedAt).toLocaleDateString()}{" "} at{" "} {new Date(post.updatedAt).toLocaleTimeString()}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+          <PostsGrid />
         </div>
       </div>
     </div>
