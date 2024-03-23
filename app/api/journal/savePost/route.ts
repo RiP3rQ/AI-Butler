@@ -27,7 +27,6 @@ export async function POST(req: Request) {
 
     const post = posts[0];
     if (post.editorState !== editorState) {
-      // update the post
       await db
         .update($posts)
         .set({
@@ -35,10 +34,9 @@ export async function POST(req: Request) {
           updatedAt: new Date()
         })
         .where(eq($posts.id, postId));
-      // analyze the post
 
-      // TODO: before analyzing, replace all <h1>, <p>, <code> tags with empty string
-      console.log("Analyzing the post...");
+      editorState = editorState.replace(/<\/?(h1|h2|h3|h4|h5|h6|p|li|strong|ul|ol|em|s|code|pre)>/g, "");
+
       const analysis = await analyzePost(editorState);
       if (!analysis) {
         return new NextResponse("failed to analyze", { status: 500 });

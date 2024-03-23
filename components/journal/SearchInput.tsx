@@ -11,9 +11,9 @@ export const SearchInput = () => {
   const [response, setResponse] = useState<string>("");
 
   // TODO: SEND LOADING AND RESPONSE TO PARENT COMPONENT and handle it there for better ui
-  // TODO: give ability to hide response on click or after 10 seconds
-  // TODO: before sending the request, check if the search is empty
-  // TODO: replace all editor signs like <h1>, <p>, <code> with empty string before sending the request
+  // give ability to hide response on click or after 10 seconds
+  // before sending the request, check if the search is empty
+  // replace all editor signs like <h1>, <p>, <code> with empty string before sending the request
 
   const handleSearch = async (e: any) => {
     e.preventDefault();

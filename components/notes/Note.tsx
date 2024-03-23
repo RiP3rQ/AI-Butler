@@ -7,7 +7,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "../ui/card";
 import AddEditNoteDialog from "./AddEditNoteDialog";
 
@@ -19,9 +19,20 @@ const Note: React.FC<Props> = ({ note }) => {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const wasUpdated = note.updatedAt > note.createdAt;
 
-  const createdUpdatedAtTimestamp = (
+  console.log(note);
+
+  const date = (
     wasUpdated ? note.updatedAt : note.createdAt
-  ).toDateString();
+  ).toLocaleString();
+  const createdUpdatedAtTimestamp = new Date(date).toLocaleString("en-us", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric"
+  });
+  
 
   return (
     <>

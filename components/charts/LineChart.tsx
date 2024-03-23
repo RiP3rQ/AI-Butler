@@ -32,9 +32,9 @@ const CustomTooltip = ({ payload, label, active }) => {
 
 // TODO: CHART REFACTOR TO react-chartjs-2
 
-// TODO: Main line chart on whole widht of the screen
-// TODO: Then 3 smaller charts below it one pie one doughnut
-// TODO: pie (negative, positive), doughnut (all scores), bar (mood)
+// Main line chart on whole widht of the screen
+// Then 3 smaller charts below it one pie one doughnut
+// pie (negative, positive), doughnut (all scores), bar (mood)
 
 // @ts-ignore
 const LineHistoryChart = ({ data }) => {

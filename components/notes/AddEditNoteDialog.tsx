@@ -7,20 +7,22 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "../ui/dialog";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import LoadingButton from "../LoadingButton";
 import { useRouter } from "next/navigation";
 import { Note } from "@prisma/client";
+import { toast } from "sonner";
+import { mutate } from "swr";
 
 type Props = {
   open: boolean;
@@ -36,40 +38,43 @@ const AddEditNoteDialog: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
     resolver: zodResolver(createNoteSchema),
     defaultValues: {
       title: noteToEdit?.title || "",
-      content: noteToEdit?.content || "",
-    },
+      content: noteToEdit?.content || ""
+    }
   });
 
   async function onSubmit(input: ICreateNoteSchema) {
-    // TODO: Toasts and add SWR
     try {
       if (noteToEdit) {
         const response = await fetch("/api/notes", {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
             ...input,
-            id: noteToEdit.id,
-          }),
+            id: noteToEdit.id
+          })
         });
 
         if (!response.ok) {
           throw new Error("Error creating note" + response.statusText);
         }
+        await mutate(`${process.env.NEXT_PUBLIC_URL}/api/notes/allNotes`);
+        toast.success("Note updated successfully!");
       } else {
         const response = await fetch("/api/notes", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
-          body: JSON.stringify(input),
+          body: JSON.stringify(input)
         });
 
         if (!response.ok) {
           throw new Error("Error creating note" + response.statusText);
         }
+        await mutate(`${process.env.NEXT_PUBLIC_URL}/api/notes/allNotes`);
+        toast.success("Note created successfully!");
       }
 
       form.reset();
@@ -77,7 +82,7 @@ const AddEditNoteDialog: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
       setOpen(false);
     } catch (error) {
       console.error(error);
-      alert("Error! Check console for more details.");
+      toast.error("Error! Check console for more details.");
     }
   }
 
@@ -88,22 +93,25 @@ const AddEditNoteDialog: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
       const response = await fetch("/api/notes", {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          id: noteToEdit?.id,
-        }),
+          id: noteToEdit?.id
+        })
       });
 
       if (!response.ok) {
         throw new Error("Error deleting note" + response.statusText);
       }
 
+      await mutate(`${process.env.NEXT_PUBLIC_URL}/api/notes/allNotes`);
+      toast.success("Note deleted successfully!");
+
       router.refresh();
       setOpen(false);
     } catch (error) {
       console.error(error);
-      alert("Error! Check console for more details.");
+      toast.error("Error! Check console for more details.");
     } finally {
       setDeleteInProgress(false);
     }

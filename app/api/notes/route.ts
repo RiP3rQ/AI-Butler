@@ -6,7 +6,7 @@ import { getEmbedding } from "@/lib/openai";
 import {
   createNoteSchema,
   deleteNoteSchema,
-  updateNoteSchema,
+  updateNoteSchema
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs";
 
@@ -20,11 +20,11 @@ export async function POST(req: Request) {
       console.error(validation.error);
       return Response.json(
         {
-          error: validation.error.issues.map((issue) => issue.message),
+          error: validation.error.issues.map((issue) => issue.message)
         },
         {
-          status: 400,
-        },
+          status: 400
+        }
       );
     }
 
@@ -33,11 +33,11 @@ export async function POST(req: Request) {
     if (!userId) {
       return Response.json(
         {
-          error: "Unauthorized",
+          error: "Unauthorized"
         },
         {
-          status: 401,
-        },
+          status: 401
+        }
       );
     }
 
@@ -52,8 +52,8 @@ export async function POST(req: Request) {
         data: {
           title,
           content,
-          userId,
-        },
+          userId
+        }
       });
 
       // create the embedding via Pinecone
@@ -62,9 +62,9 @@ export async function POST(req: Request) {
           id: note.id,
           values: embedding,
           metadata: {
-            userId,
-          },
-        },
+            userId
+          }
+        }
       ]);
 
       return note;
@@ -75,11 +75,11 @@ export async function POST(req: Request) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error",
+        error: "Internal Server Error"
       },
       {
-        status: 500,
-      },
+        status: 500
+      }
     );
   }
 }
@@ -94,11 +94,11 @@ export async function PUT(req: Request) {
       console.error(validation.error);
       return Response.json(
         {
-          error: validation.error.issues.map((issue) => issue.message),
+          error: validation.error.issues.map((issue) => issue.message)
         },
         {
-          status: 400,
-        },
+          status: 400
+        }
       );
     }
 
@@ -106,18 +106,18 @@ export async function PUT(req: Request) {
     // check if the note exists
     const note = await prisma.note.findUnique({
       where: {
-        id,
-      },
+        id
+      }
     });
 
     if (!note) {
       return Response.json(
         {
-          error: "Note not found",
+          error: "Note not found"
         },
         {
-          status: 404,
-        },
+          status: 404
+        }
       );
     }
 
@@ -126,11 +126,11 @@ export async function PUT(req: Request) {
     if (!userId || note.userId !== userId) {
       return Response.json(
         {
-          error: "Unauthorized",
+          error: "Unauthorized"
         },
         {
-          status: 401,
-        },
+          status: 401
+        }
       );
     }
 
@@ -142,12 +142,12 @@ export async function PUT(req: Request) {
       // update the note
       const updatedNote = await tx.note.update({
         where: {
-          id,
+          id
         },
         data: {
           title,
-          content,
-        },
+          content
+        }
       });
 
       // update the embedding via Pinecone
@@ -156,9 +156,9 @@ export async function PUT(req: Request) {
           id,
           values: embedding,
           metadata: {
-            userId,
-          },
-        },
+            userId
+          }
+        }
       ]);
 
       return updatedNote;
@@ -169,11 +169,11 @@ export async function PUT(req: Request) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error",
+        error: "Internal Server Error"
       },
       {
-        status: 500,
-      },
+        status: 500
+      }
     );
   }
 }
@@ -188,11 +188,11 @@ export async function DELETE(req: Request) {
       console.error(validation.error);
       return Response.json(
         {
-          error: validation.error.issues.map((issue) => issue.message),
+          error: validation.error.issues.map((issue) => issue.message)
         },
         {
-          status: 400,
-        },
+          status: 400
+        }
       );
     }
 
@@ -200,18 +200,18 @@ export async function DELETE(req: Request) {
     // check if the note exists
     const note = await prisma.note.findUnique({
       where: {
-        id,
-      },
+        id
+      }
     });
 
     if (!note) {
       return Response.json(
         {
-          error: "Note not found",
+          error: "Note not found"
         },
         {
-          status: 404,
-        },
+          status: 404
+        }
       );
     }
 
@@ -220,11 +220,11 @@ export async function DELETE(req: Request) {
     if (!userId || note.userId !== userId) {
       return Response.json(
         {
-          error: "Unauthorized",
+          error: "Unauthorized"
         },
         {
-          status: 401,
-        },
+          status: 401
+        }
       );
     }
 
@@ -233,8 +233,8 @@ export async function DELETE(req: Request) {
       // delete the note
       await tx.note.delete({
         where: {
-          id,
-        },
+          id
+        }
       });
 
       // delete the embedding via Pinecone
@@ -246,11 +246,11 @@ export async function DELETE(req: Request) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error",
+        error: "Internal Server Error"
       },
       {
-        status: 500,
-      },
+        status: 500
+      }
     );
   }
 }
