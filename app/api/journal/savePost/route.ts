@@ -61,6 +61,7 @@ export async function POST(req: Request) {
     }
 
     revalidatePath("/api/journal/journalPosts");
+    revalidatePath(`/api/journal/${postId}`);
 
     return NextResponse.json(
       {

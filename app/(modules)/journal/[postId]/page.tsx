@@ -1,14 +1,14 @@
-import DeleteButton from "@/components/editor/DeleteButton";
-import TipTapEditor from "@/components/editor/TipTapEditor";
-import { Button } from "@/components/ui/button";
-import { clerk } from "@/lib/clerk-server";
-import { db } from "@/lib/drizzle";
-import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
 import { auth } from "@clerk/nextjs";
-import { and, eq } from "drizzle-orm";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import TipTapEditor from "@/components/editor/TipTapEditor";
+import DeleteButton from "@/components/editor/DeleteButton";
+import { clerk } from "@/lib/clerk-server";
+import { db } from "@/lib/drizzle";
+import { $posts } from "@/lib/drizzle/schema";
+import { and, eq } from "drizzle-orm";
 
 type Props = {
   params: {
@@ -19,26 +19,32 @@ type Props = {
 const JournalPostPage = async ({ params: { postId } }: Props) => {
   const { userId } = auth();
   if (!userId) {
+    console.log("no user");
     return redirect("/dashboard");
   }
+
   const user = await clerk.users.getUser(userId);
+
+  const { postAnalysis } = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/journal/${postId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ userId }),
+    cache: "no-cache"
+  }).then((res) => res.json());
+
   const posts = await db
     .select()
     .from($posts)
     .where(and(eq($posts.id, parseInt(postId)), eq($posts.userId, userId)));
 
-  // TODO: Server side fetching using api route for revalidation of data on update
-  const analysis = await db.select().from($postsAnalysis).where(and(eq($postsAnalysis.postId, postId), eq($postsAnalysis.userId, userId)));
-  const postAnalysis = analysis[0];
-
-  // TODO: Analysis UI Refactor
-
-  // TODO: REVALIDATE ANALYSIS on save post
-
   if (posts.length != 1) {
     return redirect("/dashboard");
   }
   const post = posts[0];
+
+  // TODO: Analysis UI Refactor
 
   return (
     <div className="min-h-[calc(100vh-4rem)] p-8">
@@ -70,7 +76,7 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
       {postAnalysis && (
         <div className="absolute top-16 right-0 h-fit w-96 border border-black/5 bg-gray-200">
           <div
-            style={{ background: postAnalysis.color }}
+            style={{ background: postAnalysis[0].color }}
             className="h-[30px] text-white py-6 flex items-center justify-center"
           >
             <h2 className="text-2xl text-black font-bold">Analysis</h2>
@@ -79,32 +85,32 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
             <ul role="list" className="divide-y divide-gray-600">
               <li className="py-2 px-2 flex items-center justify-between gap-2">
                 <div className="text-xl font-semibold w-fit">Subject</div>
-                <div className="text-base">{postAnalysis.subject}</div>
+                <div className="text-base">{postAnalysis[0].subject}</div>
               </li>
 
               <li className="py-2 px-2 flex items-center justify-between gap-2">
                 <div className="text-xl font-semibold w-fit">Summary</div>
-                <div className="text-base">{postAnalysis.summary}</div>
+                <div className="text-base">{postAnalysis[0].summary}</div>
               </li>
 
               <li className="py-2 px-2 flex items-center justify-between gap-2">
                 <div className="text-xl font-semibold w-fit">Mood</div>
-                <div className="text-base">{postAnalysis.mood}</div>
+                <div className="text-base">{postAnalysis[0].mood}</div>
               </li>
 
               <li className="py-2 px-2 flex items-center justify-between gap-2">
                 <div className="text-xl font-semibold w-fit">Negative</div>
                 <div className="text-base">
-                  {postAnalysis.negative ? "True" : "False"}
+                  {postAnalysis[0].negative ? "True" : "False"}
                 </div>
               </li>
             </ul>
           </div>
         </div>
       )}
-
     </div>
   );
 };
+
 
 export default JournalPostPage;
