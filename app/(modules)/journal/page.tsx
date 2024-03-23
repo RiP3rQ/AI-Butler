@@ -41,6 +41,9 @@ export default async function JournalPage() {
     return <div>No posts found</div>;
   }
 
+  // TODO: deleteing posts from journal main page
+  // TODO: check analysis from the main page and display it
+
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       <div className="mx-auto max-w-7xl p-10">

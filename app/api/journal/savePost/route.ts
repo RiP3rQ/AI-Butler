@@ -37,6 +37,9 @@ export async function POST(req: Request) {
         })
         .where(eq($posts.id, postId));
       // analyze the post
+
+      // TODO: before analyzing, replace all <h1>, <p>, <code> tags with empty string
+
       const analysis = await analyzePost(editorState);
       if (!analysis) {
         return new NextResponse("failed to analyze", { status: 500 });

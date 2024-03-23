@@ -1,4 +1,5 @@
 import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const $posts = pgTable("posts", {
   id: serial("id").primaryKey(),
@@ -12,9 +13,15 @@ export const $posts = pgTable("posts", {
 
 export type PostType = typeof $posts.$inferInsert;
 
+export const postsRelations = relations($posts, ({ one }) => ({
+  postAnalysis: one($postsAnalysis, {
+    fields: [$posts.id],
+    references: [$postsAnalysis.id]
+  })
+}));
+
 export const $postsAnalysis = pgTable("post_analysis", {
   id: serial("id").primaryKey(),
-  postId: text("post_id").notNull(),
   userId: text("user_id").notNull(),
   mood: text("mood").notNull(),
   subject: text("subject").notNull(),
