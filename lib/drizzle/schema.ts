@@ -13,13 +13,6 @@ export const $posts = pgTable("posts", {
 
 export type PostType = typeof $posts.$inferInsert;
 
-export const postsRelations = relations($posts, ({ one }) => ({
-  postAnalysis: one($postsAnalysis, {
-    fields: [$posts.id],
-    references: [$postsAnalysis.id]
-  })
-}));
-
 export const $postsAnalysis = pgTable("post_analysis", {
   id: serial("id").primaryKey(),
   postId: text("post_id").notNull(),
@@ -35,6 +28,20 @@ export const $postsAnalysis = pgTable("post_analysis", {
 });
 
 export type PostsAnalysisType = typeof $postsAnalysis.$inferInsert;
+
+export const postsRelations = relations($posts, ({ one }) => ({
+  postsAnalysis: one($postsAnalysis, {
+    fields: [$posts.id],
+    references: [$postsAnalysis.postId]
+  })
+}));
+
+export const postsAnalysisRelations = relations($postsAnalysis, ({ one }) => ({
+  post: one($posts, {
+    fields: [$postsAnalysis.postId],
+    references: [$posts.id]
+  })
+}));
 
 // drizzle-orm
 // drizzle-kit

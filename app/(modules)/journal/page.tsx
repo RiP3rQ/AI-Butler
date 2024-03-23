@@ -4,11 +4,12 @@ import Image from "next/image";
 import { UserButton, auth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, HistoryIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import CreatePostDialog from "@/components/journal/CreatePostDialog";
 import axios from "axios";
 import { SearchInput } from "@/components/journal/SearchInput";
+import { HistoryButton } from "@/components/journal/HistoryButton";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Journal",
@@ -56,7 +57,10 @@ export default async function JournalPage() {
           </div>
           <div>
             {posts?.length !== 0 && (
-              <SearchInput />
+              <div className={"flex items-center justify-center gap-2"}>
+                <HistoryButton />
+                <SearchInput />
+              </div>
             )}
           </div>
         </div>

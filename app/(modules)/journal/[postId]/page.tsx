@@ -33,6 +33,8 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
 
   // TODO: Analysis UI Refactor
 
+  // TODO: REVALIDATE ANALYSIS on save post
+
   if (posts.length != 1) {
     return redirect("/dashboard");
   }
