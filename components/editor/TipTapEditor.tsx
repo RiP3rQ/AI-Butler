@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 type Props = { post: PostType };
 
-// TODO: (LATER) BETTER COLORS AND UI + context menu on right click
+// TODO: (LATER) context menu on right click
 
 const TipTapEditor = ({ post }: Props) => {
   const [editorState, setEditorState] = useState(
@@ -92,7 +92,7 @@ const TipTapEditor = ({ post }: Props) => {
   }, [debouncedEditorState]);
 
   return (
-    <>
+    <div className={"w-full"}>
       {savePost.isPending ? "Saving..." : null}
       <div className="flex items-center justify-between">
         {editor && <TipTapMenuBar editor={editor} />}
@@ -110,7 +110,7 @@ const TipTapEditor = ({ post }: Props) => {
         </Button>
       </div>
 
-      <div className="prose prose-sm mt-4 w-full">
+      <div className="prose prose-sm text-black dark:text-muted-foreground mt-4 w-full">
         <EditorContent editor={editor} />
       </div>
       <div className="h-4"></div>
@@ -121,7 +121,7 @@ const TipTapEditor = ({ post }: Props) => {
         </kbd>{" "}
         for AI autocomplete
       </span>
-    </>
+    </div>
   );
 };
 

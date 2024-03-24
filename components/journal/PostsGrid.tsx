@@ -121,7 +121,7 @@ const PostsGrid = () => {
                 src={post.imageUrl || ""}
               />
               <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-900">
+                <h3 className="text-xl font-semibold text-black dark:text-muted-foreground">
                   {post.name}
                 </h3>
                 <div className="h-1"></div>

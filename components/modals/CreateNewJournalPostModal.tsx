@@ -6,7 +6,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
+  DialogClose
 } from "@/components/ui/dialog";
 import { Loader2, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -90,9 +91,11 @@ const CreateNewJournalPostModal = (props: Props) => {
           />
           <div className="h-4"></div>
           <div className="flex items-center gap-2">
-            <Button type="reset" variant={"secondary"}>
-              Cancel
-            </Button>
+            <DialogClose>
+              <Button type="reset" variant={"secondary"} onClick={() => setInput("")}>
+                Cancel
+              </Button>
+            </DialogClose>
             <Button
               type="submit"
               className="bg-green-600"
