@@ -18,7 +18,11 @@ export async function GET(
       return NextResponse.json({ data: "Post not found" }, { status: 404 });
     }
 
+    console.log(params.postId);
+
     const postAnalysis = await db.select().from($postsAnalysis).where(eq($postsAnalysis.postId, String(params.postId)));
+
+    console.log(postAnalysis);
 
     return NextResponse.json({ data: postAnalysis });
   } catch (error) {

@@ -27,7 +27,10 @@ import { Separator } from "@/components/ui/separator";
 
 const PostsGrid = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [deletePostId, setDeletePostId] = useState<number | null>(null);
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+  const [showAnalysisModal, setShowAnalysisModal] = useState(false);
+  const [postAnalysisData, setPostAnalysisData] = useState<any | null>(null);
+  const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
   const { data } = useSWR(
     `${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`,
     fetcher
@@ -53,11 +56,31 @@ const PostsGrid = () => {
     }
   });
 
+  const fetchPostAnalysis = useMutation({
+    mutationFn: async (postId: number) => {
+      setIsAnalysisLoading(true);
+      const { data } = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/journal/${postId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((res) => res.json());
+      const postAnalysis = data?.[0];
+      if (postAnalysis) {
+        setIsAnalysisLoading(false);
+        setPostAnalysisData(postAnalysis);
+      } else {
+        toast.error("Failed to fetch analysis");
+      }
+    }
+  });
+
   // TODO: check analysis from the main page and display it in the modal
   // TODO: (later) refactor to single components
 
   return (
     <>
+      {/* CONFIRM */}
       <Dialog
         open={showConfirmModal}
         onOpenChange={() => setShowConfirmModal(false)}
@@ -71,10 +94,10 @@ const PostsGrid = () => {
             <Button
               variant="destructive"
               onClick={() => {
-                deletePost.mutate(deletePostId!, {
+                deletePost.mutate(selectedPostId!, {
                   onSuccess: () => {
                     toast.success("Post deleted successfully");
-                    setDeletePostId(null);
+                    setSelectedPostId(null);
                     setShowConfirmModal(false);
                   },
                   onError: (err) => {
@@ -88,6 +111,70 @@ const PostsGrid = () => {
             <Button onClick={() => setShowConfirmModal(false)}>Cancel</Button>
           </DialogFooter>
         </DialogContent>
+      </Dialog>
+      {/* ANALYSIS MODAL*/}
+      <Dialog
+        open={showAnalysisModal}
+        onOpenChange={() => {
+          setPostAnalysisData(null);
+          setShowAnalysisModal(false);
+        }}
+      >
+        {isAnalysisLoading ? (
+          <DialogContent>
+            <DialogBody>
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-lg">Loading analysis...</p>
+              </div>
+            </DialogBody>
+          </DialogContent>
+        ) : (
+          <DialogContent>
+            <DialogBody>
+              <div
+                style={{ background: postAnalysisData?.color }}
+                className="flex h-[30px] items-center justify-center py-6 text-white"
+              >
+                <h2 className="text-2xl font-bold text-black">Analysis</h2>
+              </div>
+              <div>
+                <ul role="list" className="divide-y divide-gray-600">
+                  <li className="flex items-center justify-between gap-2 px-2 py-2">
+                    <div className="w-fit text-xl font-semibold">Subject</div>
+                    <div className="text-base">{postAnalysisData?.subject}</div>
+                  </li>
+
+                  <li className="flex items-center justify-between gap-2 px-2 py-2">
+                    <div className="w-fit text-xl font-semibold">Summary</div>
+                    <div className="text-base">{postAnalysisData?.summary}</div>
+                  </li>
+
+                  <li className="flex items-center justify-between gap-2 px-2 py-2">
+                    <div className="w-fit text-xl font-semibold">Mood</div>
+                    <div className="text-base">{postAnalysisData?.mood}</div>
+                  </li>
+
+                  <li className="flex items-center justify-between gap-2 px-2 py-2">
+                    <div className="w-fit text-xl font-semibold">Negative</div>
+                    <div className="text-base">
+                      {postAnalysisData?.negative ? "True" : "False"}
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </DialogBody>
+            <DialogFooter>
+              <Button
+                onClick={() => {
+                  setPostAnalysisData(null);
+                  setShowAnalysisModal(false);
+                }}
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        )}
       </Dialog>
       {posts?.map((post: any) => (
         <div className={"relative"} key={post.id}>
@@ -132,7 +219,7 @@ const PostsGrid = () => {
                   }
                   disabled={deletePost.isPending}
                   onClick={() => {
-                    setDeletePostId(post.id);
+                    setSelectedPostId(post.id);
                     setShowConfirmModal(true);
                   }}
                 >
@@ -145,6 +232,11 @@ const PostsGrid = () => {
                   className={
                     "flex w-full cursor-pointer items-center justify-between text-gray-500 hover:text-green-500"
                   }
+                  onClick={() => {
+                    setSelectedPostId(post.id);
+                    setShowAnalysisModal(true);
+                    fetchPostAnalysis.mutate(post.id!);
+                  }}
                 >
                   <BookOpenCheck className={"h-6 w-6 "} />
                   <span className="text-base">Show analysis</span>
