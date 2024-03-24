@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import TipTapMenuBar from "./TipTapMenuBar";
@@ -11,13 +11,14 @@ import axios from "axios";
 import { PostType } from "@/lib/drizzle/schema";
 import { useCompletion } from "ai/react";
 import { mutate } from "swr";
+import { toast } from "sonner";
 
 type Props = { post: PostType };
 
 // TODO: (LATER) BETTER COLORS AND UI + context menu on right click
 
 const TipTapEditor = ({ post }: Props) => {
-  const [editorState, setEditorState] = React.useState(
+  const [editorState, setEditorState] = useState(
     post.editorState || ""
   );
   const { complete, completion } = useCompletion({
@@ -34,6 +35,18 @@ const TipTapEditor = ({ post }: Props) => {
       return response.data;
     }
   });
+
+  const analyzePost = useMutation({
+    mutationFn: async () => {
+      const response = await axios.put("/api/journal/analyzePost", {
+        postId: post.id,
+        editorState
+      });
+      await mutate(`${process.env.NEXT_PUBLIC_URL}/api/journal/${post.id}`);
+      return response.data;
+    }
+  });
+
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
@@ -55,9 +68,9 @@ const TipTapEditor = ({ post }: Props) => {
       setEditorState(editor.getHTML());
     }
   });
-  const lastCompletion = React.useRef("");
+  const lastCompletion = useRef("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!completion || !editor) return;
     const diff = completion.slice(lastCompletion.current.length);
     lastCompletion.current = completion;
@@ -65,24 +78,35 @@ const TipTapEditor = ({ post }: Props) => {
   }, [completion, editor]);
 
   const debouncedEditorState = useDebounce(editorState, 1000);
-  React.useEffect(() => {
+  useEffect(() => {
     // save to db
     if (debouncedEditorState === "") return;
     savePost.mutate(undefined, {
       onSuccess: (data) => {
-        console.log("success update!", data);
+        toast.success("Post saved successfully");
       },
       onError: (err) => {
         console.error(err);
       }
     });
   }, [debouncedEditorState]);
+
   return (
     <>
-      <div className="flex">
+      {savePost.isPending ? "Saving..." : null}
+      <div className="flex items-center justify-between">
         {editor && <TipTapMenuBar editor={editor} />}
-        <Button disabled variant={"outline"}>
-          {savePost.isPending ? "Saving..." : "Saved"}
+        <Button variant={"outline"} onClick={() => {
+          analyzePost.mutate(undefined, {
+            onSuccess: (data) => {
+              toast.success("Post analyzed successfully");
+            },
+            onError: (err) => {
+              console.error(err);
+            }
+          });
+        }}>
+          Analysis
         </Button>
       </div>
 

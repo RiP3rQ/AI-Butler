@@ -34,25 +34,6 @@ export async function POST(req: Request) {
           updatedAt: new Date()
         })
         .where(eq($posts.id, postId));
-
-      editorState = editorState.replace(/<\/?(h1|h2|h3|h4|h5|h6|p|li|strong|ul|ol|em|s|code|pre)>/g, "");
-
-      const analysis = await analyzePost(editorState);
-      if (!analysis) {
-        return new NextResponse("failed to analyze", { status: 500 });
-      }
-      await db.update($postsAnalysis).set({
-        userId,
-        postId,
-        mood: analysis.mood,
-        summary: analysis.summary,
-        color: analysis.color,
-        negative: analysis.negative,
-        subject: analysis.subject,
-        sentimentScore: String(analysis.sentimentScore),
-        updatedAt: new Date()
-      }).where(eq($postsAnalysis.postId, postId));
-      console.log("Updated and analyzed the post!");
     } else {
       console.log("No changes detected! Not updating the post.");
     }

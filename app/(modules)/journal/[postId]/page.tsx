@@ -44,9 +44,7 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
   }
   const post = posts[0];
 
-  // TODO: (LATER) Analysis UI Refactor
-  // TODO: Editor UI refactor
-  // TODO: (LATER) analysis button to atually do the analysis after we are ready
+  // TODO: (LATER) Change Analysis to modal
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
