@@ -1,59 +1,80 @@
 "use client";
-import { ResponsiveContainer, LineChart, Line, XAxis, Tooltip } from "recharts";
 
-// @ts-ignore
-const CustomTooltip = ({ payload, label, active }) => {
-  const dateLabel = new Date(label).toLocaleString("en-us", {
-    weekday: "long",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric"
-  });
-
-  if (active) {
-    const analysis = payload[0].payload;
-    return (
-      <div
-        className="p-8 custom-tooltip bg-white/5 shadow-md border border-black/10 rounded-lg backdrop-blur-md relative">
-        <div
-          className="absolute left-2 top-2 w-2 h-2 rounded-full"
-          style={{ background: analysis.color }}
-        ></div>
-        <p className="label text-sm text-black/30">{dateLabel}</p>
-        <p className="intro text-xl uppercase">{analysis.mood}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-// TODO:(LATER) CHART REFACTOR TO react-chartjs-2
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import moment from "moment";
 
 // Main line chart on whole widht of the screen
 // Then 3 smaller charts below it one pie one doughnut
 // pie (negative, positive), doughnut (all scores), bar (mood)
 
-// @ts-ignore
-const LineHistoryChart = ({ data }) => {
-  console.log(data);
-  return (
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart width={300} height={100} data={data}>
-        <Line
-          type="monotone"
-          dataKey="sentimentScore"
-          stroke="#8884d8"
-          strokeWidth={2}
-          activeDot={{ r: 8 }}
-        />
-        <XAxis dataKey="updatedAt" />
-        <Tooltip content={<CustomTooltip payload={undefined} label={undefined} active={undefined} />} />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: true,
+      position: "top" as const,
+      align: "center" as const
+    },
+    title: {
+      display: true,
+      text: "Sentiment Analysis",
+      align: "center" as const
+    },
+    tooltip: {
+      bodyAlign: "center" as const
+    }
+  }
+};
+
+const LineHistoryChart = ({ data }: any) => {
+  const formatDate = (date: string) => {
+    return moment(date).format("MMMM Do YYYY, h:mm:ss a");
+  };
+
+  const labels = data.map((record: any) => formatDate(record.updatedAt));
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "Sentiment",
+        data: data.map((record: any) => record.sentimentScore),
+        fill: false,
+        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)"
+      }
+    ]
+  };
+
+  console.log(chartData);
+
+  if (!data) return null;
+
+  if (!chartData) return null;
+
+  return <div className={"w-full h-full"}>
+
+    <Line options={options} data={chartData} />
+  </div>;
 };
 
 export default LineHistoryChart;

@@ -6,15 +6,24 @@ import React, { useState } from "react";
 import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcher";
 import { BookOpenCheck, Delete, Settings, Trash2 } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import { DialogBody } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
-
 
 const PostsGrid = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -26,11 +35,14 @@ const PostsGrid = () => {
   const posts = data?.data;
 
   if (posts?.length === 0) {
-    return (<div className="text-center">
-      <h2 className="text-xl text-gray-500">You have no posts yet.</h2>
-    </div>);
+    return (
+      <div className="text-center">
+        <h2 className="text-xl text-gray-500">You have no posts yet.</h2>
+      </div>
+    );
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const deletePost = useMutation({
     mutationFn: async (postId: number) => {
       const response = await axios.post("/api/journal/deletePost", {
@@ -42,17 +54,19 @@ const PostsGrid = () => {
   });
 
   // TODO: check analysis from the main page and display it in the modal
+  // TODO: (later) refactor to single components
 
   return (
     <>
-      <Dialog open={showConfirmModal} onOpenChange={() => setShowConfirmModal(false)}>
+      <Dialog
+        open={showConfirmModal}
+        onOpenChange={() => setShowConfirmModal(false)}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete journal post</DialogTitle>
           </DialogHeader>
-          <DialogBody>
-            Are you sure you want to delete this post?
-          </DialogBody>
+          <DialogBody>Are you sure you want to delete this post?</DialogBody>
           <DialogFooter>
             <Button
               variant="destructive"
@@ -76,8 +90,8 @@ const PostsGrid = () => {
         </DialogContent>
       </Dialog>
       {posts?.map((post: any) => (
-        <div className={"relative"}>
-          <Link href={`/journal/${post.id}`} key={post.id}>
+        <div className={"relative"} key={post.id}>
+          <Link href={`/journal/${post.id}`}>
             <div
               className="flex flex-col overflow-hidden rounded-lg border border-stone-300 transition hover:-translate-y-1 hover:shadow-xl">
               <Image
@@ -101,29 +115,38 @@ const PostsGrid = () => {
           {/*  Actions button */}
           <Popover>
             <PopoverTrigger asChild>
-              <div className={"absolute top-0 right-0 bg-white rounded-full p-[2px] z-50 cursor-pointer"}>
-                <Settings className="w-6 h-6 text-gray-500 hover:text-green-500 " />
+              <div
+                className={
+                  "absolute right-0 top-0 z-50 cursor-pointer rounded-full bg-white p-[2px]"
+                }
+              >
+                <Settings className="h-6 w-6 text-gray-500 hover:text-green-500 " />
               </div>
             </PopoverTrigger>
             <PopoverContent className={"w-52 p-0"}>
               <div className="flex flex-col items-center justify-center gap-[2px] ">
                 <Button
                   variant={"none"}
-                  className={"flex items-center justify-between cursor-pointer text-gray-500 hover:text-red-500  w-full"}
+                  className={
+                    "flex w-full cursor-pointer items-center justify-between text-gray-500  hover:text-red-500"
+                  }
                   disabled={deletePost.isPending}
                   onClick={() => {
                     setDeletePostId(post.id);
                     setShowConfirmModal(true);
                   }}
                 >
-                  <Trash2 className={"w-6 h-6 "} />
+                  <Trash2 className={"h-6 w-6 "} />
                   <span className="text-base">Delete</span>
                 </Button>
                 <Separator />
                 <Button
                   variant={"none"}
-                  className={"flex items-center justify-between cursor-pointer text-gray-500 hover:text-green-500 w-full"}>
-                  <BookOpenCheck className={"w-6 h-6 "} />
+                  className={
+                    "flex w-full cursor-pointer items-center justify-between text-gray-500 hover:text-green-500"
+                  }
+                >
+                  <BookOpenCheck className={"h-6 w-6 "} />
                   <span className="text-base">Show analysis</span>
                 </Button>
               </div>
