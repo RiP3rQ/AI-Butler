@@ -1,5 +1,18 @@
-import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+
+export const $users = pgTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  stripePriceId: text("stripe_price_id"),
+  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end")
+});
+export type UserType = typeof $users.$inferInsert;
 
 export const $posts = pgTable("posts", {
   id: serial("id").primaryKey(),
@@ -10,7 +23,6 @@ export const $posts = pgTable("posts", {
   userId: text("user_id").notNull(),
   editorState: text("editor_state")
 });
-
 export type PostType = typeof $posts.$inferInsert;
 
 export const $postsAnalysis = pgTable("post_analysis", {
@@ -26,7 +38,6 @@ export const $postsAnalysis = pgTable("post_analysis", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow()
 });
-
 export type PostsAnalysisType = typeof $postsAnalysis.$inferInsert;
 
 export const postsRelations = relations($posts, ({ one }) => ({
@@ -42,6 +53,31 @@ export const postsAnalysisRelations = relations($postsAnalysis, ({ one }) => ({
     references: [$posts.id]
   })
 }));
+
+export const UploadStatus = pgEnum("upload_status", ["PENDING", "PROCESSING", "FAILED", "SUCCESS"]);
+export const $PdfFiles = pgTable("pdf_files", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  uploadStatus: UploadStatus("upload_status").default("PENDING"),
+  url: text("url").notNull(),
+  key: text("key").notNull(),
+  userId: text("user_id").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow()
+});
+export type PdfFilesType = typeof $PdfFiles.$inferInsert;
+
+export const $pdfFileMessages = pgTable("pdf_file_messages", {
+  id: serial("id").primaryKey(),
+  pdfFileId: text("pdf_file_id").notNull(),
+  userId: text("user_id").notNull(),
+  isUserMessage: boolean("is_user_message").notNull(),
+  text: text("text").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow()
+});
+export type PdfFileMessagesType = typeof $pdfFileMessages.$inferInsert;
+
 
 // drizzle-orm
 // drizzle-kit
