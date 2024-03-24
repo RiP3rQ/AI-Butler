@@ -46,7 +46,7 @@ export default async function SinglePdfPage({ params }: Props) {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage>
-                {params.pdfName}
+                {params.pdfName}.pdf
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>

@@ -2,7 +2,8 @@ import { AlertTriangle, BoltIcon, SunIcon } from "lucide-react";
 
 export default function ChatgptPage() {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center px-2 text-black dark:text-muted-foreground">
+    <div
+      className="flex h-[calc(100vh-9rem)] w-full flex-col items-center justify-center px-2 text-black dark:text-muted-foreground">
       <h1 className="mb-20 text-5xl font-bold">ChatGPT Clone</h1>
 
       <div className="flex space-x-4 text-center">

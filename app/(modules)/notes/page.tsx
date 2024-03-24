@@ -25,7 +25,7 @@ export default async function NotesPage() {
   }
 
   return (
-    <div className={"relative min-h-[calc(100vh-4rem)]"}>
+    <div className={"relative min-h-[calc(100vh-4rem)] max-w-7xl mx-auto"}>
       <Breadcrumb className={"text-xl font-bold pt-4"}>
         <BreadcrumbList>
           <BreadcrumbItem>

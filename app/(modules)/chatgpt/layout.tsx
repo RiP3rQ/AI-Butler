@@ -23,7 +23,7 @@ export default function ChatgptLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative h-[calc(100vh-4rem)]">
+    <div className="relative h-[calc(100vh-4rem)] px-0 lg:px-20">
       <div className={"w-full"}>
         <Breadcrumb className={"text-xl font-bold pt-4"}>
           <BreadcrumbList>

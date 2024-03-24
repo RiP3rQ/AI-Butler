@@ -38,7 +38,7 @@ export default async function PdfsPage() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Separator className={"mt-1 mb-3 w-full"} />
+        <Separator className={"mt-1 mb-1 w-full"} />
 
         <PdfsDashboard />
       </div>

@@ -40,9 +40,12 @@ const PdfsDashboard = () => {
     }
   });
 
+  // TODO: add a skeleton loader
+  // TODO: Theme fixes
+
   return (
     <div className={"w-full flex items-center justify-center"}>
-      <main className="mx-auto max-w-7xl md:p-10">
+      <main className="mx-auto max-w-7xl">
         <div
           className="mt-8 flex flex-col items-center justify-center border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0 w-full">
           <UploadButton isSubscribed={false} />
