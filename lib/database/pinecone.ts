@@ -7,7 +7,14 @@ if (!apiKey) {
 }
 
 const pinecone = new Pinecone({
-  apiKey,
+  apiKey
 });
 
 export const notesIndex = pinecone.Index("ai-butler");
+
+
+export const getPineconeClient = async () => {
+  return new Pinecone({
+    apiKey
+  });
+};

@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import PdfsDashboard from "@/components/pdfs/PdfsDashboard";
 
 export const metadata: Metadata = {
   title: "AI-Butler - PDFS",
@@ -39,10 +40,7 @@ export default async function PdfsPage() {
 
         <Separator className={"mt-1 mb-3 w-full"} />
 
-        <div className={"w-full flex items-center justify-center"}>
-          PDFs
-        </div>
-
+        <PdfsDashboard />
       </div>
     </div>
   );

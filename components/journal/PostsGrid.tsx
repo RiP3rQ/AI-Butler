@@ -50,6 +50,7 @@ const PostsGrid = () => {
     }
   });
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const fetchPostAnalysis = useMutation({
     mutationFn: async (postId: number) => {
       setIsAnalysisLoading(true);
