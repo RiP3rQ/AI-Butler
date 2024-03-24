@@ -13,25 +13,23 @@ export async function POST(req: Request) {
     const messagesTruncated = messages.slice(-6);
 
     const embedding = await getEmbedding(
-      messagesTruncated.map((message) => message.content).join("\n"),
+      messagesTruncated.map((message) => message.content).join("\n")
     );
 
-    // User: Hey, what's my wifi password?
-    // Bot: It's 12345678
     const { userId } = auth();
 
     const vectorQueryResponse = await notesIndex.query({
       vector: embedding,
       topK: 4, // change this for better results
-      filter: { userId },
+      filter: { userId }
     });
 
     const releventNotes = await prisma.note.findMany({
       where: {
         id: {
-          in: vectorQueryResponse.matches.map((match) => match.id),
-        },
-      },
+          in: vectorQueryResponse.matches.map((match) => match.id)
+        }
+      }
     });
 
     // ChatGPT message format
@@ -42,14 +40,14 @@ export async function POST(req: Request) {
         "The relevant notes are:\n" +
         releventNotes
           .map((note) => `Title: ${note.title}\n\nContent:\n${note.content}`)
-          .join("\n\n"),
+          .join("\n\n")
     };
 
     // ChatGPT request response
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       stream: true,
-      messages: [systemMessage, ...messagesTruncated],
+      messages: [systemMessage, ...messagesTruncated]
     });
 
     const stream = OpenAIStream(response);

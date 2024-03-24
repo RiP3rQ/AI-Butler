@@ -13,10 +13,6 @@ import {
 import { Line } from "react-chartjs-2";
 import moment from "moment";
 
-// Main line chart on whole widht of the screen
-// Then 3 smaller charts below it one pie one doughnut
-// pie (negative, positive), doughnut (all scores), bar (mood)
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,11 +29,6 @@ const options = {
     legend: {
       display: true,
       position: "top" as const,
-      align: "center" as const
-    },
-    title: {
-      display: true,
-      text: "Sentiment Analysis",
       align: "center" as const
     },
     tooltip: {
@@ -71,8 +62,7 @@ const LineHistoryChart = ({ data }: any) => {
 
   if (!chartData) return null;
 
-  return <div className={"w-full h-full"}>
-
+  return <div className={"h-full w-full flex items-center justify-center"}>
     <Line options={options} data={chartData} />
   </div>;
 };

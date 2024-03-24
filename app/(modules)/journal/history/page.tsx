@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import DonutHistoryChart from "@/components/charts/DonutChart";
+import BarHistoryChart from "@/components/charts/BarChart";
 
 const getData = async (userId: string) => {
   const analyses = await db
@@ -47,18 +50,56 @@ const HistoryPage = async () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>
-              Analysis History
-            </BreadcrumbPage>
+            <BreadcrumbPage>Analysis History</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <Separator className={"mt-1 mb-3"} />
+      <Separator className={"mb-3 mt-1"} />
       <div>
         <h1 className="mb-4 text-2xl">{`Avg. Sentiment: ${roundedAverage}`}</h1>
       </div>
-      <div className="h-full w-full">
-        <LineHistoryChart data={analyses} />
+      <div className={"space-y-2"}>
+        <Card>
+          <div
+            className={
+              "w-full text-center font-bold text-black dark:text-muted-foreground"
+            }
+          >
+            Sentiment Analysis History
+          </div>
+          <Separator className={"my-1"} />
+          <div className={"h-96 w-full"}>
+            <LineHistoryChart data={analyses} />
+          </div>
+        </Card>
+        <div className={"grid grid-cols-2 gap-2"}>
+          <Card>
+            <div
+              className={
+                "w-full text-center font-bold text-black dark:text-muted-foreground"
+              }
+            >
+              Positive vs Negative Sentiment
+            </div>
+            <Separator className={"my-1"} />
+            <div className={"h-56 w-full"}>
+              <DonutHistoryChart data={analyses} />
+            </div>
+          </Card>
+          <Card>
+            <div
+              className={
+                "w-full text-center font-bold text-black dark:text-muted-foreground"
+              }
+            >
+              Sentiment Distribution
+            </div>
+            <Separator className={"my-1"} />
+            <div className={"h-56 w-full"}>
+              <BarHistoryChart data={analyses} />
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );

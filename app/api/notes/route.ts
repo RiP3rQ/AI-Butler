@@ -1,4 +1,3 @@
-// we use server insted of server actions because of the streaming feature from the AI API
 import prisma from "@/lib/database/db";
 import { notesIndex } from "@/lib/database/pinecone";
 import { getEmbedding } from "@/lib/openai";
