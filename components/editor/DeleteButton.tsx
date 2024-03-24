@@ -5,9 +5,9 @@ import { Trash } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { DialogBody } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import { mutate } from "swr";
+import ConfirmModal from "@/components/modals/ConfirmModa";
+import { toast } from "sonner";
 
 type Props = {
   postId: number;
@@ -26,36 +26,31 @@ const DeleteButton = ({ postId }: Props) => {
       return response.data;
     }
   });
+
+  const onConfirm = () => {
+    deletePost.mutate(undefined, {
+      onSuccess: () => {
+        toast.success("Post deleted successfully!");
+        router.push("/journal");
+      },
+      onError: (err) => {
+        console.error(err);
+      }
+    });
+  };
+
   return (
     <>
-      <Dialog open={showConfirmModal} onOpenChange={() => setShowConfirmModal(false)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete journal post</DialogTitle>
-          </DialogHeader>
-          <DialogBody>
-            Are you sure you want to delete this post?
-          </DialogBody>
-          <DialogFooter>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                deletePost.mutate(undefined, {
-                  onSuccess: () => {
-                    router.push("/journal");
-                  },
-                  onError: (err) => {
-                    console.error(err);
-                  }
-                });
-              }}
-            >
-              Delete
-            </Button>
-            <Button onClick={() => setShowConfirmModal(false)}>Cancel</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* CONFIRM */}
+      <ConfirmModal
+        open={showConfirmModal}
+        setOpen={setShowConfirmModal}
+        title={"Delete post"}
+        // map post name to selectedPostId
+        description={"Are you sure you want to delete this post?"}
+        onConfirm={onConfirm}
+        onConfirmText={"Delete this post"}
+      />
       <Button
         variant={"destructive"}
         size="sm"

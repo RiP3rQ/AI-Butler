@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import React, { useState } from "react";
 import Note from "@/components/notes/Note";
-import AddEditNoteDialog from "@/components/notes/AddEditNoteDialog";
+import AddEditNoteModal from "@/components/modals/AddEditNoteModal";
 
 type Props = {};
 
@@ -25,7 +25,7 @@ const NotesActionButtons: React.FC<Props> = (props) => {
           Add Note
         </Button>
       </div>
-      <AddEditNoteDialog
+      <AddEditNoteModal
         open={showAddEditNoteDialog}
         setOpen={setShowAddEditNoteDialog}
       />

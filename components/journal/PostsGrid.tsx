@@ -13,17 +13,11 @@ import {
 } from "@/components/ui/popover";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
-import { DialogBody } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import ConfirmModal from "@/components/modals/ConfirmModa";
+import AnalysisModal from "@/components/modals/AnalysisModal";
 
 const PostsGrid = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -59,12 +53,15 @@ const PostsGrid = () => {
   const fetchPostAnalysis = useMutation({
     mutationFn: async (postId: number) => {
       setIsAnalysisLoading(true);
-      const { data } = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/journal/${postId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
+      const { data } = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/journal/${postId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
         }
-      }).then((res) => res.json());
+      ).then((res) => res.json());
       const postAnalysis = data?.[0];
       if (postAnalysis) {
         setIsAnalysisLoading(false);
@@ -75,106 +72,42 @@ const PostsGrid = () => {
     }
   });
 
-  // TODO: (LATER) refactor to single components
+  const onConfirm = () => {
+    deletePost.mutate(selectedPostId!, {
+      onSuccess: () => {
+        toast.success("Post deleted successfully");
+        setSelectedPostId(null);
+        setShowConfirmModal(false);
+      },
+      onError: (err) => {
+        console.error(err);
+      }
+    });
+  };
 
   return (
     <>
       {/* CONFIRM */}
-      <Dialog
+      <ConfirmModal
         open={showConfirmModal}
-        onOpenChange={() => setShowConfirmModal(false)}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete journal post</DialogTitle>
-          </DialogHeader>
-          <DialogBody>Are you sure you want to delete this post?</DialogBody>
-          <DialogFooter>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                deletePost.mutate(selectedPostId!, {
-                  onSuccess: () => {
-                    toast.success("Post deleted successfully");
-                    setSelectedPostId(null);
-                    setShowConfirmModal(false);
-                  },
-                  onError: (err) => {
-                    console.error(err);
-                  }
-                });
-              }}
-            >
-              Delete
-            </Button>
-            <Button onClick={() => setShowConfirmModal(false)}>Cancel</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        setOpen={setShowConfirmModal}
+        title={"Delete journal post"}
+        // map post name to selectedPostId
+        description={`Are you sure you want to delete post with title: ${
+          posts?.find((post: any) => post.id === selectedPostId)?.name
+        }?`}
+        onConfirm={onConfirm}
+        onConfirmText={"Delete"}
+      />
       {/* ANALYSIS MODAL*/}
-      <Dialog
+      <AnalysisModal
         open={showAnalysisModal}
-        onOpenChange={() => {
-          setPostAnalysisData(null);
-          setShowAnalysisModal(false);
-        }}
-      >
-        {isAnalysisLoading ? (
-          <DialogContent>
-            <DialogBody>
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-lg">Loading analysis...</p>
-              </div>
-            </DialogBody>
-          </DialogContent>
-        ) : (
-          <DialogContent>
-            <DialogBody>
-              <div
-                style={{ background: postAnalysisData?.color }}
-                className="flex h-[30px] items-center justify-center py-6 text-white"
-              >
-                <h2 className="text-2xl font-bold text-black">Analysis</h2>
-              </div>
-              <div>
-                <ul role="list" className="divide-y divide-gray-600">
-                  <li className="flex items-center justify-between gap-2 px-2 py-2">
-                    <div className="w-fit text-xl font-semibold">Subject</div>
-                    <div className="text-base">{postAnalysisData?.subject}</div>
-                  </li>
-
-                  <li className="flex items-center justify-between gap-2 px-2 py-2">
-                    <div className="w-fit text-xl font-semibold">Summary</div>
-                    <div className="text-base">{postAnalysisData?.summary}</div>
-                  </li>
-
-                  <li className="flex items-center justify-between gap-2 px-2 py-2">
-                    <div className="w-fit text-xl font-semibold">Mood</div>
-                    <div className="text-base">{postAnalysisData?.mood}</div>
-                  </li>
-
-                  <li className="flex items-center justify-between gap-2 px-2 py-2">
-                    <div className="w-fit text-xl font-semibold">Negative</div>
-                    <div className="text-base">
-                      {postAnalysisData?.negative ? "True" : "False"}
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </DialogBody>
-            <DialogFooter>
-              <Button
-                onClick={() => {
-                  setPostAnalysisData(null);
-                  setShowAnalysisModal(false);
-                }}
-              >
-                Close
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        )}
-      </Dialog>
+        setOpen={setShowAnalysisModal}
+        postAnalysisData={postAnalysisData}
+        setPostAnalysisData={setPostAnalysisData}
+        isAnalysisLoading={isAnalysisLoading}
+      />
+      {/* POSTS */}
       {posts?.map((post: any) => (
         <div className={"relative"} key={post.id}>
           <Link href={`/journal/${post.id}`}>

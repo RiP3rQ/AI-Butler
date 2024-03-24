@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle
 } from "../ui/card";
-import AddEditNoteDialog from "./AddEditNoteDialog";
+import AddEditNoteModal from "../modals/AddEditNoteModal";
 
 type Props = {
   note: INoteModel;
@@ -32,7 +32,7 @@ const Note: React.FC<Props> = ({ note }) => {
     hour: "numeric",
     minute: "numeric"
   });
-  
+
 
   return (
     <>
@@ -51,7 +51,7 @@ const Note: React.FC<Props> = ({ note }) => {
           <p className="whitespace-pre-line">{note.content}</p>
         </CardContent>
       </Card>
-      <AddEditNoteDialog
+      <AddEditNoteModal
         open={showEditDialog}
         setOpen={setShowEditDialog}
         noteToEdit={note}

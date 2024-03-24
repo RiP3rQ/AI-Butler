@@ -21,7 +21,7 @@ type Props = {};
 
 // TODO: (LATER) Steps in modal to choose one of 3 generated images or upload a custom image
 
-const CreatePostDialog = (props: Props) => {
+const CreateNewJournalPostModal = (props: Props) => {
   const router = useRouter();
   const [input, setInput] = React.useState("");
   const uploadToStorage = useMutation({
@@ -110,4 +110,4 @@ const CreatePostDialog = (props: Props) => {
   );
 };
 
-export default CreatePostDialog;
+export default CreateNewJournalPostModal;

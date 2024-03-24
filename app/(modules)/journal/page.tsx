@@ -1,13 +1,7 @@
 import { Metadata } from "next";
 import React from "react";
 import { auth } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import CreatePostDialog from "@/components/journal/CreatePostDialog";
-import { SearchInput } from "@/components/journal/SearchInput";
-import { HistoryButton } from "@/components/journal/HistoryButton";
 import { redirect } from "next/navigation";
 import PostsGrid from "@/components/journal/PostsGrid";
 import {
@@ -19,6 +13,7 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 import JournalPageActions from "@/components/journal/JournalPageActions";
+import CreateNewJournalPostModal from "@/components/modals/CreateNewJournalPostModal";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Journal",
@@ -59,7 +54,7 @@ export default async function JournalPage() {
 
         {/* display all the posts */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
-          <CreatePostDialog />
+          <CreateNewJournalPostModal />
           <PostsGrid />
         </div>
       </div>

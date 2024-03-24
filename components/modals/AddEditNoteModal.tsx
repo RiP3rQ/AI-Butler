@@ -30,7 +30,7 @@ type Props = {
   noteToEdit?: Note;
 };
 
-const AddEditNoteDialog: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
+const AddEditNoteModal: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
   const [deleteInProgress, setDeleteInProgress] = useState(false);
   const router = useRouter();
 
@@ -178,4 +178,4 @@ const AddEditNoteDialog: React.FC<Props> = ({ open, setOpen, noteToEdit }) => {
   );
 };
 
-export default AddEditNoteDialog;
+export default AddEditNoteModal;
