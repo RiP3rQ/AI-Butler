@@ -37,6 +37,8 @@ const HistoryPage = async () => {
 
   const roundedAverage = Math.round(average * 100) / 100;
 
+  // TODO: (Later) Full page charts on click
+
   return (
     <div className="h-[calc(100vh-8rem)] px-6">
       <Breadcrumb className={"w-full pt-4 text-xl font-bold"}>
