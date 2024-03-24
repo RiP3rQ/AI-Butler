@@ -36,19 +36,19 @@ const Chat = ({ chatId, refetchMessages, refetchMessagesBoolean }: Props) => {
 
   if (loading)
     return (
-      <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <p className="mt-10 text-center text-white">Loading...</p>
+      <div className="flex-1 overflow-y-auto overflow-x-hidden text-black dark:text-muted-foreground">
+        <p className="mt-10 text-center ">Loading...</p>
       </div>
     );
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden text-black dark:text-muted-foreground">
       {messages?.length === 0 && (
         <>
-          <p className="mt-10 text-center text-white">
+          <p className="mt-10 text-center ">
             Type a prompt in below to get started!
           </p>
-          <ArrowDown className="mx-auto mt-5 h-10 w-10 animate-bounce text-white" />
+          <ArrowDown className="mx-auto mt-5 h-10 w-10 animate-bounce " />
         </>
       )}
       {messages && messages.length > 0 && (

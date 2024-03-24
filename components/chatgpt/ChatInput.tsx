@@ -21,25 +21,25 @@ const ChatInput = ({ chatId, refetchMessages }: Props) => {
     setLoading(true);
 
     const notification = toast.loading("ChatGPT is thinking!", {
-      position: "top-right",
+      position: "top-right"
     });
 
     await axios
       .post(`/api/chatgpt/chat/${chatId}`, {
         prompt,
-        chatId,
+        chatId
       })
       .then(() => {
         setPrompt("");
         toast.success("ChatGPT has responded!", {
           id: notification,
-          position: "top-right",
+          position: "top-right"
         });
       })
       .catch(() => {
         toast.error("ChatGPT failed to respond!", {
           id: notification,
-          position: "top-right",
+          position: "top-right"
         });
       })
       .finally(() => {
@@ -49,11 +49,11 @@ const ChatInput = ({ chatId, refetchMessages }: Props) => {
   };
 
   return (
-    <div className="rounded-lg bg-gray-700/50 text-sm text-gray-400 ">
+    <div className="rounded-lg bg-gray-700/50 text-sm dark:text-muted-foreground">
       <form onSubmit={sendMessage} className="flex space-x-5 p-5">
         <input
           disabled={loading}
-          className="flex-1 bg-transparent focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300"
+          className="flex-1 bg-transparent focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 placeholder:dark:text-muted-foreground placeholder:text-gray-500 dark:placeholder:dark:text-muted-foreground dark:placeholder:text-dark"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           type="text"

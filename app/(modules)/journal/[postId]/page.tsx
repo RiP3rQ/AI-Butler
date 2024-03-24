@@ -10,6 +10,14 @@ import { db } from "@/lib/drizzle";
 import { $posts } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import PostAnalysis from "@/components/journal/PostAnalysis";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
 
 type Props = {
   params: {
@@ -40,26 +48,36 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
   // TODO: analysis button to atually do the analysis after we are ready
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] p-8">
-      <div className="mx-auto max-w-4xl">
-        <div className="flex items-center rounded-lg border border-stone-200 p-4 shadow-xl">
-          <Link href={"/journal"}>
-            <Button className="bg-green-600" size="sm">
-              Back
-            </Button>
-          </Link>
-          <div className="w-3"></div>
-          <span className="font-semibold">
-            {user.firstName} {user.lastName}
-          </span>
-          <span className="mx-1 inline-block">/</span>
-          <span className="font-semibold text-stone-500">{post.name}</span>
-          <div className="ml-auto">
-            <DeleteButton postId={post.id} />
-          </div>
+    <div className="min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto max-w-4xl relative">
+        <Breadcrumb className={"w-full py-4 text-xl font-bold"}>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/journal">Journal</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>
+                <span className="font-semibold">
+                  {user.firstName} {user.lastName}
+                </span>
+                <span className="mx-1 inline-block">/</span>
+                <span className="font-semibold text-stone-500">
+                  {post.name}
+                </span>
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        {/* Delete button*/}
+        <div className="absolute top-2 right-2">
+          <DeleteButton postId={post.id} />
         </div>
 
-        <div className="h-4"></div>
         <div className="w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
           <TipTapEditor post={post} />
         </div>
@@ -70,6 +88,5 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
     </div>
   );
 };
-
 
 export default JournalPostPage;

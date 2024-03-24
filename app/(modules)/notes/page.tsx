@@ -2,6 +2,14 @@ import { auth } from "@clerk/nextjs";
 import { Metadata } from "next";
 import React from "react";
 import NotesGrid from "@/components/notes/NotesGrid";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Notes",
@@ -15,9 +23,20 @@ export default async function NotesPage() {
   if (!userId) {
     throw new Error("UserId is not defined");
   }
-  
+
   return (
     <div className={"relative min-h-[calc(100vh-4rem)]"}>
+      <Breadcrumb className={"text-xl font-bold pt-4"}>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Notes</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <NotesGrid />
     </div>
   );

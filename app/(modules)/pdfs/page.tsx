@@ -1,5 +1,14 @@
 import { Metadata } from "next";
 import React from "react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "AI-Butler - PDFS",
@@ -12,8 +21,29 @@ export const metadata: Metadata = {
 
 export default async function PdfsPage() {
   return (
-    <div className="relative grid min-h-[90vh] gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      PDFs
+    <div className="min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto max-w-7xl">
+        <Breadcrumb className={"w-full pt-4 text-xl font-bold"}>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>
+                PDFs
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        <Separator className={"mt-1 mb-3 w-full"} />
+
+        <div className={"w-full flex items-center justify-center"}>
+          PDFs
+        </div>
+
+      </div>
     </div>
   );
 }

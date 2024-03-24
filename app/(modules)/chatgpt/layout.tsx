@@ -1,7 +1,15 @@
-import GoBackButton from "@/components/chatgpt/GoBackButton";
 import Sidebar from "@/components/chatgpt/Sidebar";
 import { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "AI-Butler - ChatGPT",
@@ -15,19 +23,34 @@ export default function ChatgptLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex h-[calc(100vh-4rem)]">
-      <aside
-        className=" max-w-xs overflow-y-auto
+    <div className="relative h-[calc(100vh-4rem)]">
+      <div className={"w-full"}>
+        <Breadcrumb className={"text-xl font-bold pt-4"}>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>ChatGPT</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <Separator orientation={"horizontal"} className={"w-full mb-2"} />
+      </div>
+      <div className={"flex"}>
+        <aside
+          className="max-w-xs overflow-y-auto
       md:min-w-[20rem]"
-      >
-        <Sidebar />
-      </aside>
+        >
+          <Sidebar />
+        </aside>
 
-      <Separator orientation={"vertical"} className={"h-full"} />
+        <Separator orientation={"vertical"} className={"h-full text-black dark:text-muted-foreground"} />
 
-      <main className="flex-1 mx-2 ">{children}</main>
+        <main className="flex-1 mx-2 ">{children}</main>
+      </div>
 
-      <GoBackButton />
     </div>
   );
 }

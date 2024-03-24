@@ -44,21 +44,21 @@ function ChatRow({ id, title }: Props) {
   if (editing) {
     return (
       <form
-        className={`chatRow justify-center ${active && "bg-gray-700/50"}`}
+        className={`chatRow justify-center text-black dark:text-muted-foreground ${active && "bg-gray-700/50"}`}
         onSubmit={handleEditChat}
       >
         <Input
           type="text"
-          className="flex-1 truncate bg-transparent text-white outline-none"
+          className="flex-1 truncate bg-transparent outline-none"
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
         />
         <Check
-          className="h5 w-5 text-gray-700 hover:text-green-500"
+          className="h5 w-5 hover:text-green-500"
           onClick={handleEditChat}
         />
         <X
-          className="h5 w-5 text-gray-700 hover:text-red-700"
+          className="h5 w-5 hover:text-red-700"
           onClick={() => setEditing(false)}
         />
       </form>
@@ -68,16 +68,16 @@ function ChatRow({ id, title }: Props) {
   return (
     <Link
       href={`/chatgpt/${id}`}
-      className={`chatRow justify-center ${active && "bg-gray-700/50"}`}
+      className={`chatRow justify-center text-black dark:text-muted-foreground ${active && "bg-gray-700/50"}`}
     >
       <MessageCircleMore className="h5 w-5" />
       <p className="hidden flex-1 truncate md:inline-flex">{title}</p>
       <Edit
-        className="h5 w-5 text-gray-700 hover:text-blue-700"
+        className="h5 w-5 hover:text-blue-700"
         onClick={() => setEditing(!editing)}
       />
       <Trash
-        className="h5 w-5 text-gray-700 hover:text-red-700"
+        className="h5 w-5 hover:text-red-700"
         onClick={removeChat}
       />
     </Link>

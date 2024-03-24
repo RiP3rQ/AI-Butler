@@ -14,7 +14,7 @@ function Message({ message, userAvatar }: Props) {
   const AvatarImage = isUserMessage ? userAvatar : (chatgptLogo as any);
 
   return (
-    <div className={`py-5 text-white ${isUserMessage && "bg-[#434654]"}`}>
+    <div className={`py-5 text-black dark:text-muted-foreground ${isUserMessage && "bg-gray-700/50"}`}>
       <div className="mx-auto flex max-w-2xl space-x-5 px-10">
         <Image
           src={AvatarImage}
