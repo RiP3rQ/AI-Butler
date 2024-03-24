@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { mutate } from "swr";
 
 const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const router = useRouter();
@@ -29,6 +30,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
       const response = await axios.post("/api/pdfs/singlePdf", {
         key
       });
+      await mutate(`${process.env.NEXT_PUBLIC_URL}/api/pdfs`);
       return response.data;
     }
   });
@@ -51,6 +53,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
 
   return (
     <Dropzone
+      disabled={isUploading}
       multiple={false}
       onDrop={async (acceptedFile) => {
         setIsUploading(true);
@@ -161,7 +164,7 @@ const UploadButton = ({ isSubscribed }: { isSubscribed: boolean }) => {
       }}
     >
       <DialogTrigger onClick={() => setIsOpen(true)} asChild>
-        <Button>Upload PDF</Button>
+        <Button className={"w-full"}>Upload PDF</Button>
       </DialogTrigger>
 
       <DialogContent>

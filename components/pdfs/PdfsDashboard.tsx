@@ -22,9 +22,7 @@ import { fetcher } from "@/lib/fetcher";
 
 const PdfsDashboard = () => {
   const [currentlyDeletingFile, setCurrentlyDeletingFile] =
-    useState<string | null>(null);
-
-
+    useState<string>("");
   const { data, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_URL}/api/pdfs`, fetcher, {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
@@ -32,32 +30,21 @@ const PdfsDashboard = () => {
   });
   const files = data?.data;
 
-  console.log(files);
-
-  if (!files) {
-    return <h1>Loading...</h1>;
-  }
-
-  //eslint-disable-next-line react-hooks/rules-of-hooks
-  // const deletePdf = useMutation({
-  //   mutationFn: async () => {
-  //     const response = await axios.post("/api/pdfs/deletePdf", {
-  //       currentlyDeletingFile
-  //     });
-  //     await mutate(`${process.env.NEXT_PUBLIC_URL}/api/pdfs`);
-  //     return response.data;
-  //   }
-  // });
+  const deletePdf = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post("/api/pdfs/deletePdf", {
+        pdfId: currentlyDeletingFile
+      });
+      await mutate(`${process.env.NEXT_PUBLIC_URL}/api/pdfs`);
+      return response.data;
+    }
+  });
 
   return (
     <div className={"w-full flex items-center justify-center"}>
       <main className="mx-auto max-w-7xl md:p-10">
         <div
-          className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
-          <h1 className="mb-3 font-bold text-5xl text-gray-900">
-            My Files
-          </h1>
-
+          className="mt-8 flex flex-col items-center justify-center border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0 w-full">
           <UploadButton isSubscribed={false} />
         </div>
 
@@ -75,7 +62,7 @@ const PdfsDashboard = () => {
                   key={file.id}
                   className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg">
                   <Link
-                    href={`/dashboard/${file.id}`}
+                    href={`/pdfs/${file.key}`}
                     className="flex flex-col gap-2">
                     <div className="pt-6 px-6 flex w-full items-center justify-between space-x-6">
                       <div
@@ -102,16 +89,18 @@ const PdfsDashboard = () => {
                     </div>
 
                     <Button
-                      // onClick={() =>
-                      //   deletePdf.mutate(undefined, {
-                      //     onSuccess: () => {
-                      //       toast.success("Pdf deleted successfully!");
-                      //     },
-                      //     onError: (err) => {
-                      //       console.error(err);
-                      //     }
-                      //   })
-                      // }
+                      onClick={() => {
+                        setCurrentlyDeletingFile(file.id);
+                        deletePdf.mutate(undefined, {
+                          onSuccess: () => {
+                            toast.success("PDF deleted!");
+                            setCurrentlyDeletingFile("");
+                          },
+                          onError: (err) => {
+                            console.error(err);
+                          }
+                        });
+                      }}
                       size="sm"
                       className="w-full"
                       variant="destructive">
@@ -126,8 +115,7 @@ const PdfsDashboard = () => {
               ))}
           </ul>
         ) : isLoading ? (
-          // <Skeleton height={100} className="my-2" count={3} />
-          <h1>Loading...</h1>
+          <h1>Skeleton in future</h1>
         ) : (
           <div className="mt-16 flex flex-col items-center gap-2">
             <Ghost className="h-8 w-8 text-zinc-800" />
@@ -143,3 +131,24 @@ const PdfsDashboard = () => {
 };
 
 export default PdfsDashboard;
+
+const PdfsDashboardSkeleton = () => {
+  return (
+    <div className={"w-full flex items-center justify-center"}>
+      <main className="mx-auto max-w-7xl md:p-10">
+        <div
+          className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
+          <Skeleton className="h-4 w-[50px]" />
+
+          <Skeleton className="h-4 w-[50px]" />
+        </div>
+        <Skeleton className="h-1 w-full my-2" />
+        <div className="flex items-center justify-center">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </main>
+    </div>
+  );
+};

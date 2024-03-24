@@ -1,5 +1,5 @@
 import prisma from "@/lib/database/db";
-import { notesIndex } from "@/lib/database/pinecone";
+import { PineconeIndex } from "@/lib/database/pinecone";
 import { getEmbedding } from "@/lib/openai";
 
 import {
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       });
 
       // create the embedding via Pinecone
-      await notesIndex.upsert([
+      await PineconeIndex.upsert([
         {
           id: note.id,
           values: embedding,
@@ -150,7 +150,7 @@ export async function PUT(req: Request) {
       });
 
       // update the embedding via Pinecone
-      await notesIndex.upsert([
+      await PineconeIndex.upsert([
         {
           id,
           values: embedding,
@@ -237,7 +237,7 @@ export async function DELETE(req: Request) {
       });
 
       // delete the embedding via Pinecone
-      await notesIndex.deleteOne(id);
+      await PineconeIndex.deleteOne(id);
     });
 
     return Response.json({ message: "Note deleted" }, { status: 200 });

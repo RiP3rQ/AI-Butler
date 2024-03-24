@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs";
 import { db } from "@/lib/drizzle";
 import { $PdfFiles } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export async function GET(req: Request) {
   try {
@@ -58,8 +59,6 @@ export async function POST(req: Request) {
 
     // get all notes for the user
     const singlePdf = await db.select().from($PdfFiles).where(and(eq($PdfFiles.userId, userId), eq($PdfFiles.key, key)));
-
-    console.log("singlePdf:", singlePdf);
 
     return Response.json({ data: singlePdf }, { status: 200 });
   } catch (error) {

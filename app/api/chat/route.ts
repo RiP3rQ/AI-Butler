@@ -1,4 +1,4 @@
-import { notesIndex } from "@/lib/database/pinecone";
+import { PineconeIndex } from "@/lib/database/pinecone";
 import openai, { getEmbedding } from "@/lib/openai";
 import { auth } from "@clerk/nextjs";
 import { ChatCompletionMessage } from "openai/resources/index.mjs";
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     const { userId } = auth();
 
-    const vectorQueryResponse = await notesIndex.query({
+    const vectorQueryResponse = await PineconeIndex.query({
       vector: embedding,
       topK: 4, // change this for better results
       filter: { userId }
