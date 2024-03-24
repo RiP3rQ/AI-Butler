@@ -17,10 +17,15 @@ export async function POST(req: Request) {
     }
 
     const posts = await db.select().from($posts).where(eq($posts.userId, userId));
-    console.log("creating response", question);
-    console.log("posts", posts);
+
+    if (!posts.length) {
+      return NextResponse.json({ data: "No posts found" }, { status: 404 });
+    }
+
+    for (const post of posts) {
+      post.editorState = post?.editorState?.replace(/<\/?(h1|h2|h3|h4|h5|h6|p|li|strong|ul|ol|em|s|code|pre)>/g, "") || "";
+    }
     const answer = await qa(question, posts);
-    console.log("answer", answer);
 
     return NextResponse.json({ data: answer });
   } catch (error) {

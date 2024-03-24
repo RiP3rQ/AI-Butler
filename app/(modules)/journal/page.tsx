@@ -18,6 +18,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
+import JournalPageActions from "@/components/journal/JournalPageActions";
 
 export const metadata: Metadata = {
   title: "AI-Butler - Journal",
@@ -51,12 +52,7 @@ export default async function JournalPage() {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="flex flex-col items-center justify-between md:flex-row">
-          <div>
-            <div className={"flex items-center justify-center gap-2"}>
-              <HistoryButton />
-              <SearchInput />
-            </div>
-          </div>
+          <JournalPageActions />
         </div>
 
         <Separator className={"my-2"} />

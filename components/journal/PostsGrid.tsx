@@ -75,8 +75,7 @@ const PostsGrid = () => {
     }
   });
 
-  // TODO: check analysis from the main page and display it in the modal
-  // TODO: (later) refactor to single components
+  // TODO: (LATER) refactor to single components
 
   return (
     <>

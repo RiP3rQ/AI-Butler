@@ -5,21 +5,20 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export const SearchInput = () => {
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<string>("");
+interface Props {
+  setResponseContent: (response: string) => void;
+  setIsResponseLoading: (loading: boolean) => void;
+  isResponseLoading: boolean;
+}
 
-  // TODO: SEND LOADING AND RESPONSE TO PARENT COMPONENT and handle it there for better ui
-  // give ability to hide response on click or after 10 seconds
-  // before sending the request, check if the search is empty
-  // replace all editor signs like <h1>, <p>, <code> with empty string before sending the request
+export const SearchInput = ({ setResponseContent, setIsResponseLoading, isResponseLoading }: Props) => {
+  const [search, setSearch] = useState("");
 
   const handleSearch = async (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    setLoading(true); // Set loading state
     try {
+      setIsResponseLoading(true); // Set loading state
       const { data } = await fetch(
         `${process.env.NEXT_PUBLIC_URL}/api/journal/askQuestion`,
         {
@@ -31,11 +30,13 @@ export const SearchInput = () => {
           cache: "no-cache"
         }
       ).then((res) => res.json());
-      setResponse(data); // Set response
+
+      setResponseContent(data); // Set response content
       setSearch(""); // Clear search input
-      setLoading(false); // Reset loading state
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsResponseLoading(false); // Set loading state
     }
   };
 
@@ -46,15 +47,13 @@ export const SearchInput = () => {
           className="w-96"
           placeholder="Ask question to note's content"
           value={search}
-          disabled={loading}
+          disabled={isResponseLoading}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button className="bg-gray-600" size="sm" onClick={handleSearch}>
+        <Button className="bg-gray-600" size="sm" onClick={handleSearch} disabled={isResponseLoading}>
           <Search className="h-6 w-6 text-white" />
         </Button>
       </div>
-      {loading && <div className="ml-2">Loading...</div>}
-      {response && <div className="ml-2 text-red-500">{response}</div>}
     </div>
   );
 };
