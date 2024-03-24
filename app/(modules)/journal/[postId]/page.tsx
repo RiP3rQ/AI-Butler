@@ -37,6 +37,7 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
   const post = posts[0];
 
   // TODO: Analysis UI Refactor
+  // TODO: analysis button to atually do the analysis after we are ready
 
   return (
     <div className="min-h-[calc(100vh-4rem)] p-8">
