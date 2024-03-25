@@ -39,8 +39,7 @@ const PdfsDashboard = () => {
       return response.data;
     }
   });
-
-  // TODO: add a skeleton loader
+  
   // TODO: Theme fixes
 
   return (

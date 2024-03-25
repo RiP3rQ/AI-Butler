@@ -83,7 +83,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
   return (
     <div className="flex h-full w-full flex-col items-center rounded-md bg-white shadow">
       <div className="flex h-14 w-full items-center justify-between border-b border-zinc-200 px-2">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 text-black dark:text-muted-foreground">
           <Button
             disabled={currPage <= 1}
             onClick={() => {
@@ -93,14 +93,14 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             variant="ghost"
             aria-label="previous page"
           >
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-4 w-4 text-black dark:text-muted-foreground" />
           </Button>
 
           <div className="flex items-center gap-1.5">
             <Input
               {...register("page")}
               className={cn(
-                "h-8 w-12",
+                "h-8 w-12 text-black dark:text-muted-foreground bg-white",
                 errors.page && "focus-visible:ring-red-500"
               )}
               onKeyDown={(e) => {
@@ -126,11 +126,11 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             variant="ghost"
             aria-label="next page"
           >
-            <ChevronUp className="h-4 w-4" />
+            <ChevronUp className="h-4 w-4 text-black dark:text-muted-foreground" />
           </Button>
         </div>
 
-        <div className="space-x-2">
+        <div className="space-x-2 text-black dark:text-muted-foreground">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="gap-1.5" aria-label="zoom" variant="ghost">
