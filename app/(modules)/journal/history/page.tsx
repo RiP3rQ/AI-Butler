@@ -2,7 +2,6 @@ import { auth } from "@clerk/nextjs";
 import { db } from "@/lib/drizzle";
 import { $postsAnalysis } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
-import LineHistoryChart from "@/components/charts/LineChart";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,9 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import DonutHistoryChart from "@/components/charts/DonutChart";
-import BarHistoryChart from "@/components/charts/BarChart";
+import ChartsProvider from "@/components/charts/ChartsProvider";
 
 const getData = async (userId: string) => {
   const analyses = await db
@@ -36,8 +33,6 @@ const HistoryPage = async () => {
   const { analyses, average } = await getData(userId!);
 
   const roundedAverage = Math.round(average * 100) / 100;
-
-  // TODO: (Later) Full page charts on click
 
   return (
     <div className="h-[calc(100vh-8rem)] px-6">
@@ -60,49 +55,7 @@ const HistoryPage = async () => {
       <div>
         <h1 className="mb-4 text-2xl">{`Avg. Sentiment: ${roundedAverage}`}</h1>
       </div>
-      <div className={"space-y-2"}>
-        <Card>
-          <div
-            className={
-              "w-full text-center font-bold text-black dark:text-muted-foreground"
-            }
-          >
-            Sentiment Analysis History
-          </div>
-          <Separator className={"my-1"} />
-          <div className={"h-96 w-full"}>
-            <LineHistoryChart data={analyses} />
-          </div>
-        </Card>
-        <div className={"grid grid-cols-2 gap-2"}>
-          <Card>
-            <div
-              className={
-                "w-full text-center font-bold text-black dark:text-muted-foreground"
-              }
-            >
-              Positive vs Negative Sentiment
-            </div>
-            <Separator className={"my-1"} />
-            <div className={"h-56 w-full"}>
-              <DonutHistoryChart data={analyses} />
-            </div>
-          </Card>
-          <Card>
-            <div
-              className={
-                "w-full text-center font-bold text-black dark:text-muted-foreground"
-              }
-            >
-              Sentiment Distribution
-            </div>
-            <Separator className={"my-1"} />
-            <div className={"h-56 w-full"}>
-              <BarHistoryChart data={analyses} />
-            </div>
-          </Card>
-        </div>
-      </div>
+      <ChartsProvider analyses={analyses} />
     </div>
   );
 };

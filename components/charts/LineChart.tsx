@@ -56,8 +56,6 @@ const LineHistoryChart = ({ data }: any) => {
     ]
   };
 
-  console.log(chartData);
-
   if (!data) return null;
 
   if (!chartData) return null;

@@ -47,9 +47,6 @@ const BarHistoryChart = ({ data }: any) => {
   // Create an array of labels from -20 to 20 and parse values to string
   const labels = Array.from({ length: 41 }, (_, i) => (i - 20).toString());
 
-  console.log(labels);
-  console.log(data);
-
   const chartData = {
     labels: labels,
     datasets: [{
@@ -60,8 +57,6 @@ const BarHistoryChart = ({ data }: any) => {
       hoverOffset: 4
     }]
   };
-
-  console.log(chartData);
 
   if (!data) return null;
 

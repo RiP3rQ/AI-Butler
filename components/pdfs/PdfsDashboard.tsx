@@ -39,8 +39,6 @@ const PdfsDashboard = () => {
       return response.data;
     }
   });
-  
-  // TODO: Theme fixes
 
   return (
     <div className={"w-full flex items-center justify-center"}>
