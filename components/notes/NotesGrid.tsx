@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 
 const NotesGrid = () => {
-  // TODO: (LATER) MIGRATE TO DRIZZLE AND ADD PROPER RELATIONSHIPS
+  // FINAL VERSION: MIGRATE TO DRIZZLE AND ADD PROPER RELATIONSHIPS
   const { data } = useSWR(
     `${process.env.NEXT_PUBLIC_URL}/api/notes/allNotes`,
     fetcher,

@@ -15,8 +15,6 @@ import { toast } from "sonner";
 
 type Props = { post: PostType };
 
-// TODO: (LATER) context menu on right click
-
 const TipTapEditor = ({ post }: Props) => {
   const [editorState, setEditorState] = useState(
     post.editorState || ""
