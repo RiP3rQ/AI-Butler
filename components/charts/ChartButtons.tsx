@@ -2,14 +2,19 @@
 
 import { Expand, Eye, EyeOff, Minimize } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useContext } from "react";
 import { useChartsContext } from "@/components/providers/ChartsContextProvider";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import LineHistoryChart from "@/components/charts/LineChart";
+import React from "react";
+import DonutHistoryChart from "@/components/charts/DonutChart";
+import BarHistoryChart from "@/components/charts/BarChart";
 
 interface Props {
   chartId: string;
+  analyses: any;
 }
 
-const ChartButtons = ({ chartId }: Props) => {
+const ChartButtons = ({ chartId, analyses }: Props) => {
   // @ts-ignore
   const { chart1, chart2, chart3, setChart1, setChart2, setChart3 } = useChartsContext();
 
@@ -36,6 +41,19 @@ const ChartButtons = ({ chartId }: Props) => {
 
   return (
     <div>
+      <Dialog
+        open={isFullscreen}
+        onOpenChange={(v) => {
+          if (!v) {
+            handleFullscreen();
+          }
+        }}>
+        <DialogContent className="max-w-7xl w-full h-[90vh] overflow-hidden">
+          {chart1.isFullscreen && <LineHistoryChart data={analyses} />}
+          {chart2.isFullscreen && <DonutHistoryChart data={analyses} />}
+          {chart3.isFullscreen && <BarHistoryChart data={analyses} />}
+        </DialogContent>
+      </Dialog>
       <Button size="sm" variant="ghost" onClick={handleHide}>
         {isHidden ? <EyeOff className={"w-4 h-4"} /> : <Eye className={"w-4 h-4"} />}
       </Button>

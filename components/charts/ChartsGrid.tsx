@@ -16,6 +16,7 @@ interface Props {
 const ChartsGrid = ({ analyses }: Props) => {
   // @ts-ignore
   const { chart1, chart2, chart3 } = useChartsContext();
+
   return (
     <div className={"space-y-2"}>
       <Card>
@@ -25,7 +26,7 @@ const ChartsGrid = ({ analyses }: Props) => {
           }
         >
           Sentiment Analysis History
-          <ChartButtons chartId={"1"} />
+          <ChartButtons chartId={"1"} analyses={analyses} />
         </div>
         <Separator />
         <div className={`w-full h-96 ${chart1.isHidden ? "hidden" : ""}`}>
@@ -40,7 +41,7 @@ const ChartsGrid = ({ analyses }: Props) => {
             }
           >
             Positive vs Negative Sentiment
-            <ChartButtons chartId={"2"} />
+            <ChartButtons chartId={"2"} analyses={analyses} />
           </div>
           <Separator />
           <div className={`w-full h-56 overflow-hidden ${chart2.isHidden ? "hidden" : ""}`}>
@@ -54,7 +55,7 @@ const ChartsGrid = ({ analyses }: Props) => {
             }
           >
             Sentiment Distribution
-            <ChartButtons chartId={"3"} />
+            <ChartButtons chartId={"3"} analyses={analyses} />
           </div>
           <Separator />
           <div className={`w-full h-56 overflow-hidden ${chart3.isHidden ? "hidden" : ""}`}>
