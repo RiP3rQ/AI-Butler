@@ -44,8 +44,6 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
   }
   const post = posts[0];
 
-  // TODO: (LATER) Change Analysis to modal
-
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       <div className="mx-auto max-w-4xl relative">
