@@ -79,5 +79,21 @@ export const $pdfFileMessages = pgTable("pdf_file_messages", {
 export type PdfFileMessagesType = typeof $pdfFileMessages.$inferInsert;
 
 
+// -------------------------------------------- AUDIT LOGS --------------------------------------------
+export const $auditLogs = pgTable("audit_logs", {
+  id: serial("id").primaryKey(),
+  action: text("action").notNull(),
+  entityId: text("entity_id").notNull(),
+  entityType: text("entity_type").notNull(),
+  entityTitle: text("entity_title").notNull(),
+  userId: text("user_id").notNull(),
+  userImage: text("user_image"),
+  userName: text("user_name"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow()
+});
+
+export type AuditLogType = typeof $auditLogs.$inferInsert;
+
 // drizzle-orm
 // drizzle-kit

@@ -1,5 +1,4 @@
 import { db } from "@/lib/drizzle";
-import { auth } from "@clerk/nextjs";
 import { $PdfFiles } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";

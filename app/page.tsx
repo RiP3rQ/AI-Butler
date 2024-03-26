@@ -10,7 +10,7 @@ export default function Home() {
 
   if (userId) redirect("/dashboard");
 
-  // TODO: !IMPORTANT! Audit with every change made to the db
+  // FINAL VERSION: !IMPORTANT! Audit with every change made to the db
 
   // FINAL VERSION: ADD TRANSLATOR
   // FINAL VERSION: ADD PDFs reader

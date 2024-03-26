@@ -4,6 +4,7 @@ import { analyzePost, generateDalleImage, generateImagePrompt } from "@/lib/open
 import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
 import { db } from "@/lib/drizzle";
 import { revalidatePath } from "next/cache";
+import { createAuditLog } from "@/lib/createAuditLog";
 
 export const runtime = "edge";
 
@@ -48,7 +49,7 @@ export async function POST(req: Request) {
   if (!analysis) {
     return new NextResponse("failed to analyze", { status: 500 });
   }
-  await db.insert($postsAnalysis).values({
+  const analysisId = await db.insert($postsAnalysis).values({
     userId,
     postId: String(post_ids[0].insertedId),
     mood: analysis.mood,
@@ -57,6 +58,22 @@ export async function POST(req: Request) {
     negative: analysis.negative,
     subject: analysis.subject,
     sentimentScore: String(analysis.sentimentScore)
+  }).returning({
+    insertedId: $postsAnalysis.id
+  });
+
+  await createAuditLog({
+    entityId: String(post_ids[0].insertedId),
+    entityType: "posts",
+    entityTitle: name,
+    action: "CREATE"
+  });
+
+  await createAuditLog({
+    entityId: String(analysisId[0].insertedId),
+    entityType: "postsAnalysis",
+    entityTitle: name,
+    action: "CREATE"
   });
 
   revalidatePath(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`);

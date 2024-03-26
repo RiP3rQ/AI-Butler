@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs";
 import prisma from "@/lib/database/db";
 import { NextApiRequest } from "next";
+import { createAuditLog } from "@/lib/createAuditLog";
 
 export async function POST() {
   try {
@@ -15,9 +16,17 @@ export async function POST() {
     chat = await prisma?.chat.create({
       data: {
         userId,
-        title: "New Chat",
-      },
+        title: "New Chat"
+      }
     });
+
+    await createAuditLog({
+      entityId: chat.id,
+      entityType: "chat",
+      entityTitle: chat.title,
+      action: "CREATE"
+    });
+
     return Response.json({ chat }, { status: 200 });
   } catch (error) {
     console.error(error);
@@ -35,8 +44,8 @@ export async function GET() {
 
     const chats = await prisma?.chat.findMany({
       where: {
-        userId,
-      },
+        userId
+      }
     });
 
     if (!chats) {

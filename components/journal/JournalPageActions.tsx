@@ -14,8 +14,6 @@ const JournalPageActions = () => {
   const [response, setResponse] = useState<string>("");
   const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
 
-  console.log("response", response);
-
   return (<div className={" w-full"}>
     <div className={"flex items-center justify-center gap-2"}>
       <HistoryButton />
