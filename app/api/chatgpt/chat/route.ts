@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs";
 import prisma from "@/lib/database/db";
 import { NextApiRequest } from "next";
-import { createAuditLog } from "@/lib/createAuditLog";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 export async function POST() {
   try {

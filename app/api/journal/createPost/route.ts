@@ -4,7 +4,7 @@ import { analyzePost, generateDalleImage, generateImagePrompt } from "@/lib/open
 import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
 import { db } from "@/lib/drizzle";
 import { revalidatePath } from "next/cache";
-import { createAuditLog } from "@/lib/createAuditLog";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 export const runtime = "edge";
 

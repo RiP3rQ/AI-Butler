@@ -8,6 +8,9 @@ import React, { useState } from "react";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import ModuleSelector from "@/components/ModuleSelector";
+import { Button } from "@/components/ui/button";
+import { History } from "lucide-react";
+import AuditHistoryButton from "@/components/AuditHistoryButton";
 
 const Navbar = () => {
   const { theme } = useTheme();
@@ -26,6 +29,7 @@ const Navbar = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <AuditHistoryButton />
             <ThemeToggleButton />
             <UserButton
               afterSignOutUrl="/"

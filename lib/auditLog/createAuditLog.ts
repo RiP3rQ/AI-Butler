@@ -19,11 +19,11 @@ type IEntityType =
   "note"
   | "chat"
   | "chatMessage"
-  | "users"
-  | "posts"
+  | "user"
+  | "post"
   | "postsAnalysis"
-  | "pdfFiles"
-  | "pdfFileMessages";
+  | "pdfFile"
+  | "pdfFileMessage";
 
 const Actions = {
   CREATE: "CREATE",

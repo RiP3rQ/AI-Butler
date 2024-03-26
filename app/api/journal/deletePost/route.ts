@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs";
-import { createAuditLog } from "@/lib/createAuditLog";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 export async function POST(req: Request) {
   const { userId } = auth();
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
   await createAuditLog({
     entityId: postId,
-    entityType: "posts",
+    entityType: "post",
     entityTitle: deletePost[0].postsName,
     action: "DELETE"
   });
