@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { dark } from "@clerk/themes";
 import { Separator } from "../ui/separator";
 import axios from "axios";
+//@ts-ignore
 import { Chat } from "@prisma/client";
 import { usePathname } from "next/navigation";
 

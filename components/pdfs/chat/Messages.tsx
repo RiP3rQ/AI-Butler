@@ -1,35 +1,37 @@
-import { trpc } from "@/app/_trpc/client";
-import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
 import { Loader2, MessageSquare } from "lucide-react";
-import Skeleton from "react-loading-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import Message from "./Message";
 import { useContext, useEffect, useRef } from "react";
 import { ChatContext } from "./ChatContext";
-import { useIntersection } from "@mantine/hooks";
+import useSWR from "swr";
 
 interface MessagesProps {
   fileId: string;
 }
 
+const fetchFileMessages = async (fileId: any, { limit, cursor }: any) => {
+  const response = await fetch(`/api/fileMessages/${fileId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ limit, cursor })
+  });
+  return response.json();
+};
+
 const Messages = ({ fileId }: MessagesProps) => {
   const { isLoading: isAiThinking } =
     useContext(ChatContext);
 
-  const { data, isLoading, fetchNextPage } =
-    trpc.getFileMessages.useInfiniteQuery(
-      {
-        fileId,
-        limit: INFINITE_QUERY_LIMIT
-      },
-      {
-        getNextPageParam: (lastPage) =>
-          lastPage?.nextCursor,
-        keepPreviousData: true
-      }
-    );
+  const { data, error, isValidating, mutate } = useSWR([fileId, { limit: INFINITE_QUERY_LIMIT }], fetchFileMessages, {
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    refreshInterval: 1000
+  });
 
   const messages = data?.pages.flatMap(
-    (page) => page.messages
+    (page: any) => page.messages
   );
 
   const loadingMessage = {
@@ -57,9 +59,9 @@ const Messages = ({ fileId }: MessagesProps) => {
 
   useEffect(() => {
     if (entry?.isIntersecting) {
-      fetchNextPage();
+      mutate();
     }
-  }, [entry, fetchNextPage]);
+  }, [entry, mutate]);
 
   return (
     <div
@@ -92,7 +94,7 @@ const Messages = ({ fileId }: MessagesProps) => {
               />
             );
         })
-      ) : isLoading ? (
+      ) : !data ? (
         <div className="w-full flex flex-col gap-2">
           <Skeleton className="h-16" />
           <Skeleton className="h-16" />
