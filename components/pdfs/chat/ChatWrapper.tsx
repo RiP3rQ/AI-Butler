@@ -6,7 +6,8 @@ import { ChevronLeft, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ChatContextProvider } from "./ChatContext";
-import axios from "axios";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
 
 const PLANS = [
   {
@@ -24,22 +25,46 @@ interface ChatWrapperProps {
   isSubscribed: boolean;
 }
 
-const ChatWrapper = async ({
-                             fileKey,
-                             isSubscribed
-                           }: ChatWrapperProps) => {
-  let isLoading = true;
-  let data = null;
-  const response = await axios.post("/api/pdfs/singlePdf", {
-    key: fileKey
-  }).then((res) => res.data);
+const ChatWrapper = ({
+                       fileKey,
+                       isSubscribed
+                     }: ChatWrapperProps) => {
 
-  if (response.data) {
-    data = response.data;
-    isLoading = false;
-  }
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_URL}/api/pdfs/singlePdf/${fileKey}`, fetcher, {
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    revalidateOnMount: true
+  });
 
-  if (isLoading)
+  if (error)
+    return (
+      <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
+        <div className="flex-1 flex justify-center items-center flex-col mb-28">
+          <div className="flex flex-col items-center gap-2">
+            <XCircle className="h-8 w-8 text-red-500" />
+            <h3 className="font-semibold text-xl">
+              Error loading PDF
+            </h3>
+            <p className="text-zinc-500 text-sm">
+              There was an error loading the PDF.
+            </p>
+            <Link
+              href={"/pdfs"}
+              className={buttonVariants({
+                variant: "secondary",
+                className: "mt-4"
+              })}>
+              <ChevronLeft className="h-3 w-3 mr-1.5" />
+              Back
+            </Link>
+          </div>
+        </div>
+
+        <ChatInput isDisabled />
+      </div>
+    );
+
+  if (!data)
     return (
       <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
         <div className="flex-1 flex justify-center items-center flex-col mb-28">

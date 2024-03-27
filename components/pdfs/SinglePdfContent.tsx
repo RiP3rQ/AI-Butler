@@ -18,8 +18,6 @@ const SinglePdfContent = async ({ pdfName, userId }: Props) => {
 
   if (!file) redirect("/dashboard");
 
-  // TODO: ChatWrapper is not working
-
   return (
     <div className="flex-1 justify-between flex flex-col h-[calc(100vh-10rem)]">
       <div className="mx-auto h-full w-full max-w-8xl grow lg:flex xl:px-2">
@@ -32,7 +30,7 @@ const SinglePdfContent = async ({ pdfName, userId }: Props) => {
         </div>
 
         <div className="shrink-0 flex-[0.75] border-t border-gray-200 lg:w-96 lg:border-l lg:border-t-0">
-          {/*<ChatWrapper isSubscribed={false} fileKey={file[0].key} />*/}
+          <ChatWrapper isSubscribed={false} fileKey={file[0].key} />
         </div>
       </div>
     </div>
