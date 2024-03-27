@@ -11,6 +11,7 @@ import { getPineconeClient } from "@/lib/database/pinecone";
 import { auth } from "@clerk/nextjs";
 import { $PdfFiles } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 const f = createUploadthing();
 
@@ -59,9 +60,16 @@ const onUploadComplete = async ({
     url: `https://utfs.io/f/${file.key}`,
     uploadStatus: "PROCESSING",
     userId: metadata.userId
-  }).returning({ createdFileKey: $PdfFiles.key });
+  }).returning({ createdFileKey: $PdfFiles.key, name: $PdfFiles.name });
 
   console.log("createdFile:", createdFile[0].createdFileKey);
+
+  await createAuditLog({
+    entityId: createdFile[0].createdFileKey,
+    entityType: "pdfFile",
+    entityTitle: createdFile[0].name,
+    action: "CREATE"
+  });
 
   try {
     const response = await fetch(

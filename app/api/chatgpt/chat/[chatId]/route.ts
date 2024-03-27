@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs";
 import prisma from "@/lib/database/db";
 import openai from "@/lib/openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 export async function POST(req: Request) {
   try {
@@ -24,8 +25,15 @@ export async function POST(req: Request) {
       data: {
         chatId,
         userId,
-        content: prompt,
-      },
+        content: prompt
+      }
+    });
+
+    await createAuditLog({
+      entityId: chatId,
+      entityType: "chatMessage",
+      entityTitle: prompt,
+      action: "CREATE"
     });
 
     // ChatGPT response
@@ -37,7 +45,7 @@ export async function POST(req: Request) {
         temperature: 0.7,
         frequency_penalty: 0,
         presence_penalty: 0,
-        stream: false,
+        stream: false
       })
       .then(async (res) => {
         //write response to database
@@ -45,8 +53,8 @@ export async function POST(req: Request) {
           data: {
             chatId,
             userId: "chatgpt",
-            content: res.choices[0].text,
-          },
+            content: res.choices[0].text
+          }
         });
       });
 
@@ -59,7 +67,7 @@ export async function POST(req: Request) {
 
 export async function GET(
   req: Request,
-  { params }: { params: { chatId: string } },
+  { params }: { params: { chatId: string } }
 ) {
   try {
     const chatId = params.chatId;
@@ -76,11 +84,11 @@ export async function GET(
     // write message to database
     const messages = await prisma.chatMessage.findMany({
       where: {
-        chatId,
+        chatId
       },
       orderBy: {
-        createdAt: "asc",
-      },
+        createdAt: "asc"
+      }
     });
 
     return Response.json({ messages }, { status: 200 });
@@ -92,7 +100,7 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { chatId: string } },
+  { params }: { params: { chatId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -109,8 +117,8 @@ export async function DELETE(
     const chat = await prisma?.chat.findFirst({
       where: {
         id: chatId,
-        userId,
-      },
+        userId
+      }
     });
 
     if (!chat) {
@@ -120,14 +128,14 @@ export async function DELETE(
     // delete all messages in chat
     await prisma?.chatMessage.deleteMany({
       where: {
-        chatId,
-      },
+        chatId
+      }
     });
     // delete chat itself
     await prisma?.chat.delete({
       where: {
-        id: chatId,
-      },
+        id: chatId
+      }
     });
 
     return Response.json({ chat }, { status: 200 });
@@ -139,7 +147,7 @@ export async function DELETE(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { chatId: string } },
+  { params }: { params: { chatId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -157,18 +165,18 @@ export async function PUT(
     if (!newName) {
       return Response.json(
         { error: "New name not provided." },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     // update chat name with prisma
     const chat = await prisma?.chat.update({
       where: {
-        id: chatId,
+        id: chatId
       },
       data: {
-        title: newName,
-      },
+        title: newName
+      }
     });
 
     if (!chat) {

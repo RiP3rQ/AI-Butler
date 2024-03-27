@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 import { analyzePost } from "@/lib/openai";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 export async function POST(req: Request) {
   try {
@@ -34,6 +35,15 @@ export async function POST(req: Request) {
           updatedAt: new Date()
         })
         .where(eq($posts.id, postId));
+
+      // create the audit log
+      await createAuditLog({
+        entityId: postId,
+        entityType: "post",
+        entityTitle: post.name,
+        action: "UPDATE"
+      });
+
     } else {
       console.log("No changes detected! Not updating the post.");
     }

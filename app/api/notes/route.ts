@@ -8,6 +8,7 @@ import {
   updateNoteSchema
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 export async function POST(req: Request) {
   try {
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
     // get the embedding for the note
     const embedding = await getEmbeddingForNote(title, content);
 
-    const note = await prisma.$transaction(async (tx) => {
+    const note = await prisma.$transaction(async (tx: any) => {
       // create the note
       const note = await tx.note.create({
         data: {
@@ -53,6 +54,14 @@ export async function POST(req: Request) {
           content,
           userId
         }
+      });
+
+      // create the audit log
+      await createAuditLog({
+        entityId: note.id,
+        entityType: "note",
+        entityTitle: note.title,
+        action: "CREATE"
       });
 
       // create the embedding via Pinecone
@@ -137,7 +146,7 @@ export async function PUT(req: Request) {
     const embedding = await getEmbeddingForNote(title, content);
 
     // prisma transaction
-    const updatedNote = await prisma.$transaction(async (tx) => {
+    const updatedNote = await prisma.$transaction(async (tx: any) => {
       // update the note
       const updatedNote = await tx.note.update({
         where: {
@@ -147,6 +156,14 @@ export async function PUT(req: Request) {
           title,
           content
         }
+      });
+
+      // create the audit log
+      await createAuditLog({
+        entityId: updatedNote.id,
+        entityType: "note",
+        entityTitle: updatedNote.title,
+        action: "UPDATE"
       });
 
       // update the embedding via Pinecone
@@ -228,12 +245,20 @@ export async function DELETE(req: Request) {
     }
 
     // prisma transaction
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // delete the note
       await tx.note.delete({
         where: {
           id
         }
+      });
+
+      // create the audit log
+      await createAuditLog({
+        entityId: id,
+        entityType: "note",
+        entityTitle: note.title,
+        action: "DELETE"
       });
 
       // delete the embedding via Pinecone

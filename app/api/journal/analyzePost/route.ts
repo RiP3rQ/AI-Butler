@@ -4,6 +4,7 @@ import { db } from "@/lib/drizzle";
 import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs";
+import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
 export async function PUT(req: Request) {
   try {
@@ -34,7 +35,7 @@ export async function PUT(req: Request) {
     if (!analysis) {
       return new NextResponse("failed to analyze", { status: 500 });
     }
-    await db
+    const analysisReturn = await db
       .update($postsAnalysis)
       .set({
         userId,
@@ -47,8 +48,21 @@ export async function PUT(req: Request) {
         sentimentScore: String(analysis.sentimentScore),
         updatedAt: new Date()
       })
-      .where(eq($postsAnalysis.postId, postId));
+      .where(eq($postsAnalysis.postId, postId)).returning({
+        updatedId: $postsAnalysis.id,
+        updatedSummary: $postsAnalysis.summary
+      });
+
     console.log("Analyzed the post!");
+
+    // create the audit log
+    await createAuditLog({
+      entityId: String(analysisReturn[0].updatedId),
+      entityType: "postsAnalysis",
+      entityTitle: analysisReturn[0].updatedSummary,
+      action: "UPDATE"
+    });
+
     return NextResponse.json(
       {
         success: true

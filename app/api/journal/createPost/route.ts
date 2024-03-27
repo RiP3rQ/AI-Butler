@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
   await createAuditLog({
     entityId: String(post_ids[0].insertedId),
-    entityType: "posts",
+    entityType: "post",
     entityTitle: name,
     action: "CREATE"
   });
