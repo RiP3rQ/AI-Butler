@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs";
-import prisma from "@/lib/database/db";
+import prisma from "@/lib/prisma/db";
 import { NextApiRequest } from "next";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 

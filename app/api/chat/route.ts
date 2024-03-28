@@ -1,8 +1,8 @@
-import { PineconeIndex } from "@/lib/database/pinecone";
+import { PineconeIndex } from "@/lib/pinecone/pinecone";
 import openai, { getEmbedding } from "@/lib/openai";
 import { auth } from "@clerk/nextjs";
 import { ChatCompletionMessage } from "openai/resources/index.mjs";
-import prisma from "@/lib/database/db";
+import prisma from "@/lib/prisma/db";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 export async function POST(req: Request) {

@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import PdfsDashboard from "@/components/pdfs/PdfsDashboard";
 import SinglePdfContent from "@/components/pdfs/SinglePdfContent";
 import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "AI-Butler - PDF",
@@ -31,6 +32,11 @@ type Props = {
 
 export default async function SinglePdfPage({ params }: Props) {
   const { userId } = auth();
+
+  if (!userId) {
+    return redirect("/dashboard");
+  }
+
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       <div className="mx-auto max-w-7xl">

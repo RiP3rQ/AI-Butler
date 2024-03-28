@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs";
-import prisma from "@/lib/database/db";
+import prisma from "@/lib/prisma/db";
 import openai from "@/lib/openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";

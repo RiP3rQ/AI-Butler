@@ -80,7 +80,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
 
         uploadFile.mutate(key, {
           onSuccess: () => {
-            router.push(`/pdfs/${key}`);
+            router.refresh();
           },
           onError: (err) => {
             console.error(err);

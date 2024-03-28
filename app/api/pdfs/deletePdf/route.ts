@@ -2,10 +2,10 @@
 
 import { auth } from "@clerk/nextjs";
 import { db } from "@/lib/drizzle";
-import { $PdfFiles } from "@/lib/drizzle/schema";
+import { $pdfFileMessages, $PdfFiles } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { PineconeIndex } from "@/lib/database/pinecone";
+import { PineconeIndex } from "@/lib/pinecone/pinecone";
 import { UTApi } from "uploadthing/server";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
@@ -44,10 +44,11 @@ export async function POST(req: Request) {
       key: $PdfFiles.key,
       name: $PdfFiles.name
     });
+    // delete all pdf messages related to the pdf file
+    await db.delete($pdfFileMessages).where(eq($pdfFileMessages.pdfFileId, pdfId));
     // delete the pdf file from the storage
     await utapi.deleteFiles(DeletePdfKey[0].key);
-    // delete the embedding via Pinecone
-    await PineconeIndex.deleteOne(DeletePdfKey[0].key);
+    // FINAL VERSION TODO: delete the embedding via Pinecone
 
     await createAuditLog({
       entityId: pdfId,

@@ -12,10 +12,8 @@ const pinecone = new Pinecone({
 
 export const PineconeIndex = pinecone.Index("ai-butler");
 
-
 export const getPineconeClient = async () => {
   return new Pinecone({
     apiKey
   });
 };
-

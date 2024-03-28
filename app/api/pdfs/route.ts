@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs";
 import { db } from "@/lib/drizzle";
-import { $PdfFiles } from "@/lib/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { $pdfFileMessages, $PdfFiles, PdfFileMessagesType } from "@/lib/drizzle/schema";
+import { desc, eq } from "drizzle-orm";
 
 export async function GET(req: Request) {
   try {

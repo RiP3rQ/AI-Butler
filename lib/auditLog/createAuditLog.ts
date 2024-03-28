@@ -1,5 +1,3 @@
-"use server";
-
 import { auth, currentUser } from "@clerk/nextjs";
 import { db } from "@/lib/drizzle";
 import { $auditLogs, $postsAnalysis } from "@/lib/drizzle/schema";
@@ -37,18 +35,23 @@ interface AuditLogProps {
   entityType: IEntityType;
   entityTitle: string;
   action: IActions;
+  userIdFromProps?: string;
 }
 
 export async function createAuditLog({
                                        entityId,
                                        entityType,
                                        entityTitle,
-                                       action
+                                       action,
+                                       userIdFromProps
                                      }: AuditLogProps) {
   try {
-    const { userId } = auth();
+    const { userId: userIdFromAuth } = auth();
+    console.log("userIdFromAuth", userIdFromAuth);
+    const userId = userIdFromProps || userIdFromAuth;
+    console.log("userIdFromProps", userIdFromProps);
     const user = await currentUser();
-
+    console.log("user", user);
     if (!user || !userId) {
       throw new Error("User not found!");
     }
@@ -64,9 +67,9 @@ export async function createAuditLog({
       entityTitle,
       userId,
       userImage: user?.imageUrl,
-      userName
+      userName: userName || "Unknown"
     });
   } catch (error) {
     console.log("[AUDIT_LOG_ERROR]", error);
   }
-};
+}

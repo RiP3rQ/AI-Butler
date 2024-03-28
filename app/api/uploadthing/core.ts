@@ -7,7 +7,7 @@ import {
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { PineconeStore } from "@langchain/pinecone";
-import { getPineconeClient } from "@/lib/database/pinecone";
+import { getPineconeClient } from "@/lib/pinecone/pinecone";
 import { auth } from "@clerk/nextjs";
 import { $PdfFiles } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -68,7 +68,8 @@ const onUploadComplete = async ({
     entityId: createdFile[0].createdFileKey,
     entityType: "pdfFile",
     entityTitle: createdFile[0].name,
-    action: "CREATE"
+    action: "CREATE",
+    userIdFromProps: metadata.userId
   });
 
   try {

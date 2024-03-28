@@ -1,5 +1,5 @@
-import prisma from "@/lib/database/db";
-import { PineconeIndex } from "@/lib/database/pinecone";
+import prisma from "@/lib/prisma/db";
+import { PineconeIndex } from "@/lib/pinecone/pinecone";
 import { getEmbedding } from "@/lib/openai";
 
 import {
