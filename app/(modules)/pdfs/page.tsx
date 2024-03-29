@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import PdfsDashboard from "@/components/pdfs/PdfsDashboard";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - PDFS",
+  title: "AI-Butler - Pdfs",
   description:
     "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
   icons: {
