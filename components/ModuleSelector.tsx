@@ -16,6 +16,12 @@ import { usePathname, useRouter } from "next/navigation";
 
 export const AvailableModules = [
   {
+    value: "Journal",
+    Icon: NotebookIcon,
+    description:
+      "Create journal posts that can be processed by AI for analysis and insights about things like your mood, sentiment and more.",
+  },
+  {
     value: "Notes",
     Icon: StickyNoteIcon,
     description:
@@ -26,12 +32,6 @@ export const AvailableModules = [
     Icon: Bot,
     description:
       "Chat with newest OpenAI's model and get answers to your questions blazing fast.",
-  },
-  {
-    value: "Journal",
-    Icon: NotebookIcon,
-    description:
-      "Create journal posts that can be processed by AI for analysis and insights about things like your mood, sentiment and more.",
   },
   {
     value: "Pdfs",

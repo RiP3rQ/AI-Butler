@@ -3,6 +3,7 @@ import { Message } from "ai/react";
 import { Loader2 } from "lucide-react";
 import React from "react";
 import { PdfFileMessagesType } from "@/lib/drizzle/schema";
+import moment from "moment";
 
 interface Props {
   isLoading: boolean;
@@ -12,8 +13,8 @@ interface Props {
 const MessageList = ({ messages, isLoading }: Props) => {
   if (isLoading) {
     return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <Loader2 className="w-6 h-6 animate-spin" />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
   }
@@ -27,23 +28,32 @@ const MessageList = ({ messages, isLoading }: Props) => {
           <div
             key={message.id}
             className={cn("flex", {
-              //@ts-ignore
-              "justify-end pl-10": message?.role === "user" || message?.isUserMessage === true,
-              //@ts-ignore
-              "justify-start pr-10": message?.role === "assistant" || message?.isUserMessage === false
+              "justify-end pl-10":
+                //@ts-ignore
+                message?.role === "user" || message?.isUserMessage === true,
+
+              "justify-start pr-10":
+                //@ts-ignore
+                message?.role === "assistant" ||
+                //@ts-ignore
+                message?.isUserMessage === false,
             })}
           >
             <div
               className={cn(
-                "rounded-lg px-3 text-sm py-1 shadow-md ring-1 ring-gray-900/10",
+                "rounded-lg px-3 py-1 text-sm text-muted-foreground shadow-md ring-1 ring-gray-900/10",
                 {
-                  //@ts-ignore
-                  "bg-blue-600 text-white": message?.role === "user" || message?.isUserMessage === true
-                }
+                  "bg-blue-600 text-white":
+                    //@ts-ignore
+                    message?.role === "user" || message?.isUserMessage === true,
+                },
               )}
             >
               {/*@ts-ignore*/}
               <p>{message?.content || message?.text}</p>
+              <div className={"flex w-full items-center justify-end text-xs"}>
+                {moment(message?.createdAt).format("HH:mm")}
+              </div>
             </div>
           </div>
         );

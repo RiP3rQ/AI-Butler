@@ -62,6 +62,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.0",
+    "react-markdown": "^9.0.1",
     "react-pdf": "^7.7.1",
     "react-resize-detector": "^10.0.1",
     "recharts": "^2.12.3",

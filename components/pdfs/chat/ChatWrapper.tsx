@@ -4,7 +4,7 @@ import Messages from "./Messages";
 import { ChevronLeft, Loader2, Send, XCircle } from "lucide-react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Message, useChat } from "ai/react";
+import { useChat } from "ai/react";
 import { PdfFilesType } from "@/lib/drizzle/schema";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -14,12 +14,12 @@ import { Input } from "@/components/ui/input";
 const PLANS = [
   {
     name: "Free",
-    pagesPerPdf: 10
+    pagesPerPdf: 10,
   },
   {
     name: "Pro",
-    pagesPerPdf: 100
-  }
+    pagesPerPdf: 100,
+  },
 ];
 
 interface ChatWrapperProps {
@@ -32,19 +32,25 @@ const ChatWrapper = ({ file, isSubscribed }: ChatWrapperProps) => {
     queryKey: ["pdf_file_messages", file?.id],
     queryFn: async () => {
       const { data } = await axios.post(`/api/pdfs/singlePdf/messages`, {
-        pdfId: file?.id
+        pdfId: file?.id,
       });
       return data?.data;
-    }
+    },
   });
 
-  const { input, handleInputChange, handleSubmit, messages, isLoading: isResponseLoading } = useChat({
+  const {
+    input,
+    handleInputChange,
+    handleSubmit,
+    messages,
+    isLoading: isResponseLoading,
+  } = useChat({
     api: "/api/pdfs/message",
     body: {
       fileId: file?.id,
-      fileKey: file?.key
+      fileKey: file?.key,
     },
-    initialMessages: MessagesData || []
+    initialMessages: MessagesData || [],
   });
 
   useEffect(() => {
@@ -52,7 +58,7 @@ const ChatWrapper = ({ file, isSubscribed }: ChatWrapperProps) => {
     if (messageContainer) {
       messageContainer.scrollTo({
         top: messageContainer.scrollHeight,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   }, [messages]);
@@ -107,7 +113,7 @@ const ChatWrapper = ({ file, isSubscribed }: ChatWrapperProps) => {
               href={"/dashboard"}
               className={buttonVariants({
                 variant: "secondary",
-                className: "mt-4"
+                className: "mt-4",
               })}
             >
               <ChevronLeft className="mr-1.5 h-3 w-3" />
@@ -123,13 +129,13 @@ const ChatWrapper = ({ file, isSubscribed }: ChatWrapperProps) => {
       className="relative flex min-h-full flex-col justify-between gap-2 divide-y divide-zinc-200 overflow-y-auto bg-zinc-50"
       id="message-container"
     >
-      <div className="mb-28 flex flex-1 flex-col justify-between">
+      <div className=" flex flex-1 flex-col justify-between overflow-y-auto pt-3">
         <Messages messages={messages} isLoading={isLoading} />
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="sticky inset-x-0 bottom-0 bg-white px-2 py-4"
+        className="sticky inset-x-0 bottom-0 bg-white px-2 pt-4"
       >
         <div className="flex">
           <Input
