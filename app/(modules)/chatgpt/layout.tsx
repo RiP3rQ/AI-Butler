@@ -7,25 +7,27 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - ChatGPT",
-  description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials"
+  title: "ChatGPT | AI-Butler",
+  description: "AI-Butler using OpenAI's API created by RiP3rQ",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function ChatgptLayout({
-                                        children
-                                      }: {
+  children,
+}: {
   children: React.ReactNode;
 }) {
   return (
     <div className="relative h-[calc(100vh-4rem)] px-0 lg:px-20">
       <div className={"w-full"}>
-        <Breadcrumb className={"text-xl font-bold pt-4"}>
+        <Breadcrumb className={"pt-4 text-xl font-bold"}>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
@@ -36,7 +38,7 @@ export default function ChatgptLayout({
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Separator orientation={"horizontal"} className={"w-full mb-2"} />
+        <Separator orientation={"horizontal"} className={"mb-2 w-full"} />
       </div>
       <div className={"flex"}>
         <aside
@@ -46,11 +48,13 @@ export default function ChatgptLayout({
           <Sidebar />
         </aside>
 
-        <Separator orientation={"vertical"} className={"h-full text-black dark:text-muted-foreground"} />
+        <Separator
+          orientation={"vertical"}
+          className={"h-full text-black dark:text-muted-foreground"}
+        />
 
-        <main className="flex-1 mx-2 ">{children}</main>
+        <main className="mx-2 flex-1 ">{children}</main>
       </div>
-
     </div>
   );
 }

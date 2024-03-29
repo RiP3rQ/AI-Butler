@@ -6,18 +6,17 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import PdfsDashboard from "@/components/pdfs/PdfsDashboard";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - Pdfs",
-  description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+  title: "PDFs | AI-Butler",
+  description: "AI-Butler using OpenAI's API created by RiP3rQ",
   icons: {
-    icon: "/favicon.ico"
-  }
+    icon: "/favicon.ico",
+  },
 };
 
 export default async function PdfsPage() {
@@ -31,14 +30,12 @@ export default async function PdfsPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>
-                PDFs
-              </BreadcrumbPage>
+              <BreadcrumbPage>PDFs</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Separator className={"mt-1 mb-1 w-full"} />
+        <Separator className={"mb-1 mt-1 w-full"} />
 
         <PdfsDashboard />
       </div>

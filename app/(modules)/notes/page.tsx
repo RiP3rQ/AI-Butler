@@ -8,13 +8,15 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - Notes",
-  description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials"
+  title: "Notes | AI-Butler",
+  description: "AI-Butler using OpenAI's API created by RiP3rQ",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default async function NotesPage() {
@@ -25,8 +27,8 @@ export default async function NotesPage() {
   }
 
   return (
-    <div className={"relative min-h-[calc(100vh-4rem)] max-w-7xl mx-auto"}>
-      <Breadcrumb className={"text-xl font-bold pt-4"}>
+    <div className={"relative mx-auto min-h-[calc(100vh-4rem)] max-w-7xl"}>
+      <Breadcrumb className={"pt-4 text-xl font-bold"}>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>

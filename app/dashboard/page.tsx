@@ -4,9 +4,9 @@ import ModuleCard from "@/components/ModuleCard";
 import { AvailableModules } from "@/components/ModuleSelector";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - Dashboard",
+  title: "Dashboard | AI-Butler",
   description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+    "AI-Butler using OpenAI's API created by RiP3rQ",
   icons: {
     icon: "/favicon.ico"
   }
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-3 grid-cols-2 h-full w-full">
       {AvailableModules.map((module) => (
         <ModuleCard
           key={module.value}

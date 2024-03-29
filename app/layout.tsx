@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "AI-Butler",
   description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+    "AI-Butler using OpenAI's API created by RiP3rQ",
   icons: {
     icon: "/favicon.ico"
   }

@@ -2,9 +2,11 @@ import { SignUp } from "@clerk/nextjs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - Register",
-  description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+  title: "Register | AI-Butler",
+  description: "AI-Butler using OpenAI's API created by RiP3rQ",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function Page() {

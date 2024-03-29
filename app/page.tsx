@@ -10,14 +10,6 @@ export default function Home() {
 
   if (userId) redirect("/dashboard");
 
-  // FINAL VERSION: !IMPORTANT! Audit with every change made to the db
-
-  // FINAL VERSION: ADD TRANSLATOR
-  // FINAL VERSION: ADD PDFs reader
-  // FINAL VERSION: ADD Images creation
-
-  // FINAL VERSION: ADD Stripe integration
-
   return (
     <main className="grainy min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">
       <div

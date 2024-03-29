@@ -10,18 +10,17 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import JournalPageActions from "@/components/journal/JournalPageActions";
 import CreateNewJournalPostModal from "@/components/modals/CreateNewJournalPostModal";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - Journal",
-  description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+  title: "Journal | AI-Butler",
+  description: "AI-Butler using OpenAI's API created by RiP3rQ",
   icons: {
-    icon: "/favicon.ico"
-  }
+    icon: "/favicon.ico",
+  },
 };
 
 // FINAL VERSION: ADD Sorting and filtering of posts + pagination
@@ -36,7 +35,7 @@ export default async function JournalPage() {
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       <div className="mx-auto max-w-7xl">
-        <Breadcrumb className={"text-xl font-bold py-4 w-full"}>
+        <Breadcrumb className={"w-full py-4 text-xl font-bold"}>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>

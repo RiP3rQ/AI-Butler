@@ -6,21 +6,19 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
-import PdfsDashboard from "@/components/pdfs/PdfsDashboard";
 import SinglePdfContent from "@/components/pdfs/SinglePdfContent";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "AI-Butler - PDF",
-  description:
-    "AI-Butler using OpenAI's API created by RiP3rQ using Sonny Sangha's and Coding in Flow's tutorials",
+  title: "PDF | AI-Butler",
+  description: "AI-Butler using OpenAI's API created by RiP3rQ",
   icons: {
-    icon: "/favicon.ico"
-  }
+    icon: "/favicon.ico",
+  },
 };
 
 // get pdfName from the url Props
@@ -51,14 +49,12 @@ export default async function SinglePdfPage({ params }: Props) {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>
-                {params.pdfName}.pdf
-              </BreadcrumbPage>
+              <BreadcrumbPage>{params.pdfName}.pdf</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Separator className={"mt-1 mb-3 w-full"} />
+        <Separator className={"mb-3 mt-1 w-full"} />
 
         <SinglePdfContent pdfName={params.pdfName} userId={userId} />
       </div>

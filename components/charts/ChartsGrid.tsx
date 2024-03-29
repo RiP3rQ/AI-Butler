@@ -29,7 +29,7 @@ const ChartsGrid = ({ analyses }: Props) => {
           <ChartButtons chartId={"1"} analyses={analyses} />
         </div>
         <Separator />
-        <div className={`w-full h-96 ${chart1.isHidden ? "hidden" : ""}`}>
+        <div className={`h-96 w-full ${chart1.isHidden ? "hidden" : ""}`}>
           <LineHistoryChart data={analyses} />
         </div>
       </Card>
@@ -44,7 +44,9 @@ const ChartsGrid = ({ analyses }: Props) => {
             <ChartButtons chartId={"2"} analyses={analyses} />
           </div>
           <Separator />
-          <div className={`w-full h-56 overflow-hidden ${chart2.isHidden ? "hidden" : ""}`}>
+          <div
+            className={`h-56 w-full overflow-hidden ${chart2.isHidden ? "hidden" : ""}`}
+          >
             <DonutHistoryChart data={analyses} />
           </div>
         </Card>
@@ -58,7 +60,9 @@ const ChartsGrid = ({ analyses }: Props) => {
             <ChartButtons chartId={"3"} analyses={analyses} />
           </div>
           <Separator />
-          <div className={`w-full h-56 overflow-hidden ${chart3.isHidden ? "hidden" : ""}`}>
+          <div
+            className={`h-56 w-full overflow-hidden ${chart3.isHidden ? "hidden" : ""}`}
+          >
             <BarHistoryChart data={analyses} />
           </div>
         </Card>
