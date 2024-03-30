@@ -74,7 +74,7 @@ const PdfsDashboard = () => {
                 </Link>
 
                 <div className="mt-4 flex w-full items-center justify-between gap-6 px-6 py-2 text-xs text-zinc-500">
-                  <div className="flex w-[40px] items-center gap-2">
+                  <div className="flex w-[100px] items-center gap-2">
                     <Plus className="h-4 w-4" />
                     {moment(file.createdAt).format("MMM DD, YYYY")}
                   </div>
