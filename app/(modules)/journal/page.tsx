@@ -23,9 +23,6 @@ export const metadata: Metadata = {
   },
 };
 
-// FINAL VERSION: ADD Sorting and filtering of posts + pagination
-// FINAL VERSION: add audit logs to every server action CREATE / EDIT / DELETE
-
 export default async function JournalPage() {
   const { userId } = auth();
   if (!userId) {

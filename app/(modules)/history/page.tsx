@@ -28,8 +28,6 @@ export default async function NotesPage() {
     redirect("/dashboard");
   }
 
-  // FINAL VERSION: ADD Sorting and filtering of audit logs + pagination
-
   return (
     <div className={"relative mx-auto min-h-[calc(100vh-4rem)] max-w-7xl"}>
       <Breadcrumb className={"pt-4 text-xl font-bold"}>

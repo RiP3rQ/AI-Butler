@@ -2,22 +2,22 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcher";
-import { BookOpenCheck, Delete, Settings, Trash2 } from "lucide-react";
+import { BookOpenCheck, Settings, Trash2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
 import ConfirmModal from "@/components/modals/ConfirmModa";
 import AnalysisModal from "@/components/modals/AnalysisModal";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PostsGrid = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -25,29 +25,21 @@ const PostsGrid = () => {
   const [showAnalysisModal, setShowAnalysisModal] = useState(false);
   const [postAnalysisData, setPostAnalysisData] = useState<any | null>(null);
   const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
-  const { data } = useSWR(
+  const { data, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`,
-    fetcher
+    fetcher,
   );
   const posts = data?.data;
-
-  if (posts?.length === 0) {
-    return (
-      <div className="text-center">
-        <h2 className="text-xl text-gray-500">You have no posts yet.</h2>
-      </div>
-    );
-  }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const deletePost = useMutation({
     mutationFn: async (postId: number) => {
       const response = await axios.post("/api/journal/deletePost", {
-        postId
+        postId,
       });
       await mutate(`${process.env.NEXT_PUBLIC_URL}/api/journal/journalPosts`);
       return response.data;
-    }
+    },
   });
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -59,9 +51,9 @@ const PostsGrid = () => {
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
-          }
-        }
+            "Content-Type": "application/json",
+          },
+        },
       ).then((res) => res.json());
       const postAnalysis = data?.[0];
       if (postAnalysis) {
@@ -70,7 +62,7 @@ const PostsGrid = () => {
       } else {
         toast.error("Failed to fetch analysis");
       }
-    }
+    },
   });
 
   const onConfirm = () => {
@@ -82,9 +74,62 @@ const PostsGrid = () => {
       },
       onError: (err) => {
         console.error(err);
-      }
+      },
     });
   };
+
+  // Hydration error fix
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    const elements = [];
+    for (let i = 0; i < 6; i++) {
+      elements.push(
+        <div
+          key={i}
+          className="flex flex-col overflow-hidden rounded-lg border border-stone-300 transition hover:-translate-y-1 hover:shadow-xl"
+        >
+          <Skeleton className="h-56 w-96" />
+          <div className="p-4">
+            <Skeleton className="h-6 w-24" />
+            <div className="h-1"></div>
+            <Skeleton className="h-4 w-24" />
+          </div>
+        </div>,
+      );
+    }
+    return elements;
+  }
+
+  if (posts?.length === 0) {
+    return (
+      <div className="text-center">
+        <h2 className="text-xl text-gray-500">You have no posts yet.</h2>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    const elements = [];
+    for (let i = 0; i < 6; i++) {
+      elements.push(
+        <div
+          key={i}
+          className="flex flex-col overflow-hidden rounded-lg border border-stone-300 transition hover:-translate-y-1 hover:shadow-xl"
+        >
+          <Skeleton className="h-56 w-96" />
+          <div className="p-4">
+            <Skeleton className="h-6 w-24" />
+            <div className="h-1"></div>
+            <Skeleton className="h-4 w-24" />
+          </div>
+        </div>,
+      );
+    }
+    return elements;
+  }
 
   return (
     <>
@@ -112,8 +157,7 @@ const PostsGrid = () => {
       {posts?.map((post: any) => (
         <div className={"relative"} key={post.id}>
           <Link href={`/journal/${post.id}`}>
-            <div
-              className="flex flex-col overflow-hidden rounded-lg border border-stone-300 transition hover:-translate-y-1 hover:shadow-xl">
+            <div className="flex flex-col overflow-hidden rounded-lg border border-stone-300 transition hover:-translate-y-1 hover:shadow-xl">
               <Image
                 width={400}
                 height={200}
@@ -146,7 +190,7 @@ const PostsGrid = () => {
             <PopoverContent className={"w-52 p-0"}>
               <div className="flex flex-col items-center justify-center gap-[2px] ">
                 <Button
-                  variant={"none"}
+                  variant={"outline"}
                   className={
                     "flex w-full cursor-pointer items-center justify-between text-gray-500  hover:text-red-500"
                   }
@@ -159,9 +203,8 @@ const PostsGrid = () => {
                   <Trash2 className={"h-6 w-6 "} />
                   <span className="text-base">Delete</span>
                 </Button>
-                <Separator />
                 <Button
-                  variant={"none"}
+                  variant={"outline"}
                   className={
                     "flex w-full cursor-pointer items-center justify-between text-gray-500 hover:text-green-500"
                   }

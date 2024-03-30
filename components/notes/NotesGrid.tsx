@@ -7,15 +7,14 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 
 const NotesGrid = () => {
-  // FINAL VERSION: MIGRATE TO DRIZZLE AND ADD PROPER RELATIONSHIPS
   const { data } = useSWR(
     `${process.env.NEXT_PUBLIC_URL}/api/notes/allNotes`,
     fetcher,
     {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
-      revalidateOnMount: true
-    }
+      revalidateOnMount: true,
+    },
   );
   const allNotes = data?.data;
 
@@ -26,10 +25,8 @@ const NotesGrid = () => {
   }
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 pt-4">
-      {allNotes?.map((note: any) => (
-        <Note key={note.id} note={note} />
-      ))}
+    <div className="grid gap-3 pt-4 sm:grid-cols-2 lg:grid-cols-3">
+      {allNotes?.map((note: any) => <Note key={note.id} note={note} />)}
       {allNotes.length === 0 && (
         <div className="col-span-3 mt-10 text-center">
           <p className="text-lg font-semibold">No notes yet!</p>

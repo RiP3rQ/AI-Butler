@@ -5,7 +5,6 @@ import { db } from "@/lib/drizzle";
 import { $pdfFileMessages, $PdfFiles } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { PineconeIndex } from "@/lib/pinecone/pinecone";
 import { UTApi } from "uploadthing/server";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";
 
@@ -18,11 +17,11 @@ export async function POST(req: Request) {
     if (!userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
@@ -31,30 +30,33 @@ export async function POST(req: Request) {
     if (!pdfId) {
       return Response.json(
         {
-          error: "Missing pdfId"
+          error: "Missing pdfId",
         },
         {
-          status: 400
-        }
+          status: 400,
+        },
       );
     }
 
     // delete the pdf file with the given id
-    const DeletePdfKey = await db.delete($PdfFiles).where(and(eq($PdfFiles.id, pdfId), eq($PdfFiles.userId, userId))).returning({
-      key: $PdfFiles.key,
-      name: $PdfFiles.name
-    });
+    const DeletePdfKey = await db
+      .delete($PdfFiles)
+      .where(and(eq($PdfFiles.id, pdfId), eq($PdfFiles.userId, userId)))
+      .returning({
+        key: $PdfFiles.key,
+        name: $PdfFiles.name,
+      });
     // delete all pdf messages related to the pdf file
-    await db.delete($pdfFileMessages).where(eq($pdfFileMessages.pdfFileId, pdfId));
+    await db
+      .delete($pdfFileMessages)
+      .where(eq($pdfFileMessages.pdfFileId, pdfId));
     // delete the pdf file from the storage
     await utapi.deleteFiles(DeletePdfKey[0].key);
-    // FINAL VERSION TODO: delete the embedding via Pinecone
-
     await createAuditLog({
       entityId: pdfId,
       entityType: "pdfFile",
       entityTitle: DeletePdfKey[0].name,
-      action: "DELETE"
+      action: "DELETE",
     });
 
     return new NextResponse("ok", { status: 200 });
@@ -62,11 +64,11 @@ export async function POST(req: Request) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }

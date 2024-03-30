@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef } from "react";
 import { useChat } from "ai/react";
 import { cn } from "@/lib/utils";

@@ -1,8 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import TipTapEditor from "@/components/editor/TipTapEditor";
 import DeleteButton from "@/components/editor/DeleteButton";
 import { clerk } from "@/lib/clerk-server";
@@ -16,7 +14,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
 type Props = {
@@ -46,7 +44,7 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
-      <div className="mx-auto max-w-4xl relative">
+      <div className="relative mx-auto max-w-4xl">
         <Breadcrumb className={"w-full py-4 text-xl font-bold"}>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -71,17 +69,16 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
           </BreadcrumbList>
         </Breadcrumb>
         {/* Delete button*/}
-        <div className="absolute top-2 right-2">
+        <div className="absolute right-0 top-2 flex items-center gap-1">
           <DeleteButton postId={post.id} />
+          {/*  Analysis */}
+          <PostAnalysis postId={postId} userId={userId} />
         </div>
 
-        <div className="w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
+        <div className="w-full rounded-lg border border-stone-200 px-4 py-4 shadow-xl">
           <TipTapEditor post={post} />
         </div>
       </div>
-
-      {/*  Analysis*/}
-      <PostAnalysis postId={postId} userId={userId} />
     </div>
   );
 };

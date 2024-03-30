@@ -4,7 +4,7 @@ import useSWR from "swr";
 import React, { useState } from "react";
 import { fetcher } from "@/lib/fetcher";
 import { Button } from "@/components/ui/button";
-import { PanelLeftClose, PanelRightClose } from "lucide-react";
+import { PanelLeftClose } from "lucide-react";
 import AnalysisModal from "@/components/modals/AnalysisModal";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -25,8 +25,8 @@ const PostAnalysis = ({ postId, userId }: Props) => {
     {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
-      revalidateOnMount: true
-    }
+      revalidateOnMount: true,
+    },
   );
 
   const postAnalysis = data?.data;
@@ -39,9 +39,9 @@ const PostAnalysis = ({ postId, userId }: Props) => {
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
-          }
-        }
+            "Content-Type": "application/json",
+          },
+        },
       ).then((res) => res.json());
       const postAnalysis = data?.[0];
       if (postAnalysis) {
@@ -50,7 +50,7 @@ const PostAnalysis = ({ postId, userId }: Props) => {
       } else {
         toast.error("Failed to fetch analysis");
       }
-    }
+    },
   });
 
   if (!postAnalysis) {
@@ -67,20 +67,19 @@ const PostAnalysis = ({ postId, userId }: Props) => {
         setPostAnalysisData={setPostAnalysisData}
         isAnalysisLoading={isAnalysisLoading}
       />
-      <div className={"absolute right-2 top-16 mt-2"}>
-        <Button
-          variant={"default"}
-          size={"sm"}
-          className={"flex items-center justify-center gap-2"}
-          onClick={() => {
-            setShowAnalysisModal(true);
-            fetchPostAnalysis.mutate(Number(postId));
-          }}
-        >
-          <PanelLeftClose className={"h-6 w-6"} />
-          Analysis
-        </Button>
-      </div>
+
+      <Button
+        variant={"default"}
+        size={"sm"}
+        className={"flex items-center justify-center gap-2"}
+        onClick={() => {
+          setShowAnalysisModal(true);
+          fetchPostAnalysis.mutate(Number(postId));
+        }}
+      >
+        <PanelLeftClose className={"h-6 w-6"} />
+        Analysis
+      </Button>
     </>
   );
 };
