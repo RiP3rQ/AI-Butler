@@ -12,12 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface Props {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
-
-const CreateNewJournalPostModal = ({ open, setOpen }: Props) => {
+const CreateNewJournalPostModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>

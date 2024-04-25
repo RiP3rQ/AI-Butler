@@ -4,7 +4,7 @@ import ThemeToggleButton from "@/components/ThemeToggleButton";
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import ModuleSelector from "@/components/ModuleSelector";
@@ -13,8 +13,6 @@ import NotificationsModal from "@/components/modals/NotificationsModal";
 import AddCreditsButton from "@/components/AddCreditsButton";
 
 const Navbar = () => {
-  const [notificationsDialogOpen, setNotificationsDialogOpen] =
-    useState<boolean>(false);
   const { theme } = useTheme();
 
   return (
@@ -34,10 +32,7 @@ const Navbar = () => {
             <AddCreditsButton />
             <ThemeToggleButton />
             <AuditHistoryButton />
-            <NotificationsModal
-              open={notificationsDialogOpen}
-              setOpen={setNotificationsDialogOpen}
-            />
+            <NotificationsModal />
             <UserButton
               afterSignOutUrl="/"
               appearance={{
