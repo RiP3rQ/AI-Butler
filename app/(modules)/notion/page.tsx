@@ -1,33 +1,21 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+"use client";
 
-export default async function NotionPage() {
-  return (
-    <div className="min-h-[calc(100vh-4rem)]">
-      <div>
-        <Breadcrumb className={"w-full pt-4 text-xl font-bold"}>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Notion</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+import { useAuth } from "@clerk/nextjs";
+import { redirect, useRouter } from "next/navigation";
 
-        <Separator className={"mb-1 mt-1 w-full"} />
+export default function NotionMainPage() {
+  const { orgId, userId } = useAuth();
+  const router = useRouter();
 
-        {/*<NotionDashboard />*/}
-      </div>
-    </div>
-  );
+  console.log(orgId);
+
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  if (!orgId) {
+    return router.push("/notion/select-org");
+  } else {
+    return router.push(`/notion/organization/${orgId}`);
+  }
 }
