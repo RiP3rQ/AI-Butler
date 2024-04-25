@@ -39,6 +39,12 @@ export const AvailableModules = [
     description:
       "Upload PDFs that can be processed by AI for better understanding and insights.",
   },
+  {
+    value: "Notion",
+    Icon: TextIcon,
+    description:
+      "Create and manage your smart notes, that can be processed by AI for better understanding and powerfull insights.",
+  },
 ];
 
 const ModuleSelector = () => {
