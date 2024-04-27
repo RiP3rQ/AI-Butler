@@ -202,6 +202,7 @@ export const budgetCategory = pgTable("budget_category", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+export type BudgetCategoryType = typeof budgetCategory.$inferInsert;
 
 export const budgetTransaction = pgTable("budget_transaction", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),

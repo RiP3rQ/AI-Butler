@@ -12,6 +12,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import BudgetNavbarOptions from "@/components/budget/budget-navbar-options";
+import BudgetActionButtons from "@/components/budget/budget-action-buttons";
+import Overview from "@/components/budget/dashboard-overview";
+import History from "@/components/budget/dashboard-history";
 
 export const metadata: Metadata = {
   title: "Budget | AI-Butler",
@@ -50,8 +53,10 @@ export default async function BudgetPage() {
         <Separator className={"my-2"} />
 
         {/* display all the posts */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
-          essa
+        <div className="w-full">
+          <BudgetActionButtons />
+          <Overview />
+          <History />
         </div>
       </div>
     </div>
