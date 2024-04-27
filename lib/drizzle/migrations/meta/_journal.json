@@ -43,6 +43,13 @@
       "when": 1714073817168,
       "tag": "0005_young_quasimodo",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1714248708562,
+      "tag": "0006_yummy_rocket_racer",
+      "breakpoints": true
     }
   ]
 }

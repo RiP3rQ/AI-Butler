@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/select";
 import {
   Bot,
+  DollarSign,
   LucideIcon,
   NotebookIcon,
   StickyNoteIcon,
@@ -44,6 +45,12 @@ export const AvailableModules = [
     Icon: TextIcon,
     description:
       "Create and manage your smart notes, that can be processed by AI for better understanding and powerfull insights.",
+  },
+  {
+    value: "Budget",
+    Icon: DollarSign,
+    description:
+      "Manage your budget and expenses, get insights and suggestions on how to save money.",
   },
 ];
 
