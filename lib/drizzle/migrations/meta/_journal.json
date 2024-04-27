@@ -50,6 +50,13 @@
       "when": 1714248708562,
       "tag": "0006_yummy_rocket_racer",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1714257039069,
+      "tag": "0007_fluffy_madrox",
+      "breakpoints": true
     }
   ]
 }

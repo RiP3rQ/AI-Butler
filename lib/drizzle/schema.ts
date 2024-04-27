@@ -1,5 +1,6 @@
 import {
   boolean,
+  date,
   decimal,
   integer,
   pgEnum,
@@ -209,10 +210,7 @@ export const budgetTransaction = pgTable("budget_transaction", {
   amount: text("amount").notNull(),
   currency: text("currency").notNull(),
   description: text("description").notNull(),
-  date: timestamp("date", {
-    withTimezone: true,
-    mode: "string",
-  }).notNull(),
+  date: date("date").notNull(),
   userId: text("user_id")
     .notNull()
     .references(() => $users.id, {

@@ -5,13 +5,18 @@ import { monthHistory } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
-  const user = await currentUser();
-  if (!user) {
-    redirect("/sign-in");
-  }
+  try {
+    const user = await currentUser();
+    if (!user) {
+      redirect("/sign-in");
+    }
 
-  const periods = await getHistoryPeriods(user.id);
-  return Response.json(periods);
+    const periods = await getHistoryPeriods(user.id);
+    return Response.json(periods);
+  } catch (error) {
+    console.error(error);
+    return Response.json({ message: "Internal server error" }, { status: 500 });
+  }
 }
 
 export type GetHistoryPeriodsResponseType = Awaited<
@@ -27,11 +32,17 @@ async function getHistoryPeriods(userId: string) {
     orderBy: (monthHistory, { asc }) => [asc(monthHistory.year)],
   });
 
+  console.log("History periods", result);
+
   const years = result.map((el) => el.year);
   if (years.length === 0) {
     // Return the current year
     return [new Date().getFullYear()];
   }
 
+  console.log("Years", years);
+
   return years;
 }
+
+// TODO: FIXXX!Q!!

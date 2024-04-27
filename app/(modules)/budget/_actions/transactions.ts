@@ -29,6 +29,8 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
 
     const { amount, category, date, description, type } = parsedBody.data;
 
+    console.log(amount, category, date, description, type);
+
     const categoryRow = await db
       .select()
       .from(budgetCategory)
@@ -38,6 +40,8 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
           eq(budgetCategory.userId, user.id),
         ),
       );
+
+    console.log("categoryRow", categoryRow);
 
     if (!categoryRow[0]) {
       throw new Error("category not found");
@@ -84,6 +88,8 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
           ),
         );
     });
+
+    console.log("Transaction created successfully");
 
     return {
       status: true,

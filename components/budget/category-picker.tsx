@@ -44,6 +44,7 @@ function CategoryPicker({ type, onChange }: Props) {
   });
 
   //todo: wywalić useQuery i dodać swr i revalidate
+  // todo: loading state wraz z useSWR
 
   console.log(categoriesQuery.data);
 
