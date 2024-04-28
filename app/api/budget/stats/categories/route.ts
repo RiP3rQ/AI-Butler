@@ -53,7 +53,6 @@ export async function GET(request: Request) {
 
     // Output the results
     const results: Summary[] = Array.from(summary.values());
-    console.log(results);
 
     return Response.json(results);
   } catch (error) {

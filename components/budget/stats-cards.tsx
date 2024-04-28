@@ -35,6 +35,8 @@ function StatsCards({ from, to }: Props) {
 
   const balance = income - expense;
 
+  // todo: balance when + make green, when - make red + add signs to income and expense
+
   return (
     <div className="relative flex w-full flex-wrap gap-2 md:flex-nowrap">
       <SkeletonWrapper isLoading={statsQuery.isFetching}>

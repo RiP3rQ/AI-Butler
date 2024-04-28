@@ -32,7 +32,7 @@ async function getHistoryPeriods(userId: string) {
     orderBy: (monthHistory, { asc }) => [asc(monthHistory.year)],
   });
 
-  // console.log("History periods", result);
+  console.log("History periods", result);
 
   const years = result.map((el) => el.year);
   if (years.length === 0) {
@@ -40,7 +40,7 @@ async function getHistoryPeriods(userId: string) {
     return [new Date().getFullYear()];
   }
 
-  // console.log("Years", years);
+  console.log("Years", years);
 
   return years;
 }

@@ -100,6 +100,8 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
     [mutate],
   );
 
+  // todo: fix created undefined
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

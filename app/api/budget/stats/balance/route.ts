@@ -30,8 +30,6 @@ export async function GET(request: Request) {
 
     const stats = await getBalanceStats(user.id, fromDate, toDate);
 
-    // console.log("Final stats", stats);
-
     return Response.json(stats);
   } catch (error) {
     console.error(error);
@@ -58,23 +56,17 @@ async function getBalanceStats(userId: string, from: string, to: string) {
       ),
     );
 
-  // console.log("stats", stats);
+  const resultMapped: { [key: string]: number } = {};
 
-  // Map results to the desired format
-  const resultMap = {
-    expense: 0,
-    income: 0,
-  };
+  for (const stat of stats) {
+    const amount = parseInt(stat.amount);
 
-  stats.forEach((t) => {
-    if (t.type === "expense" || t.type === "income") {
-      resultMap[t.type] = Number(t.amount) || 0;
+    if (resultMapped.hasOwnProperty(stat.type)) {
+      resultMapped[stat.type] += amount;
+    } else {
+      resultMapped[stat.type] = amount;
     }
-  });
+  }
 
-  // console.log("resultMap", resultMap);
-
-  return resultMap;
+  return resultMapped;
 }
-
-// TODO: FIXXX!Q!!
