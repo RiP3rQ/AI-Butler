@@ -1,10 +1,13 @@
-import { neon, neonConfig, NeonQueryFunction } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { Pool } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import * as schema from "./schema";
 
 if (!process.env.DRIZZLE_DATABASE_URL) {
   throw new Error("DRIZZLE_DATABASE_URL is not defined");
 }
 
-const sql: NeonQueryFunction<boolean, boolean> = neon(process.env.DRIZZLE_DATABASE_URL as string);
+export const sql = new Pool({
+  connectionString: <string>process.env.DRIZZLE_DATABASE_URL,
+});
 
-export const db = drizzle(sql);
+export const db = drizzle(sql, { schema });

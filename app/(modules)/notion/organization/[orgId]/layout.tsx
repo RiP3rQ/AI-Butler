@@ -6,6 +6,8 @@
 //   };
 // } TODO: Metadata
 
+// todo: update clerk + refactor files
+
 import { OrgControl } from "@/app/(modules)/notion/organization/[orgId]/_components/OrgControl";
 
 const OrganizationIdLayout = ({ children }: { children: React.ReactNode }) => {

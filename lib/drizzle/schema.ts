@@ -1,5 +1,8 @@
 import {
   boolean,
+  date,
+  decimal,
+  integer,
   pgEnum,
   pgTable,
   serial,
@@ -184,4 +187,74 @@ export const $collaborators = pgTable("collaborators", {
   userId: text("user_id")
     .notNull()
     .references(() => $users.id, { onDelete: "cascade" }),
+});
+
+export const budgetCategory = pgTable("budget_category", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  name: text("name").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => $users.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  icon: text("icon").notNull(),
+  type: text("type").notNull().default("income"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+export type BudgetCategoryType = typeof budgetCategory.$inferInsert;
+
+export const budgetTransaction = pgTable("budget_transaction", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  amount: text("amount").notNull(),
+  currency: text("currency").notNull(),
+  description: text("description").notNull(),
+  date: date("date").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => $users.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  type: text("type").notNull().default("income"), // todo: relation
+  category: text("category").notNull(), // todo: relation
+  categoryIcon: text("category_icon").notNull(), // todo: relation
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// todo: relations to ecery table
+
+export const monthHistory = pgTable("month_history", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => $users.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  day: integer("day").notNull(),
+  month: integer("month").notNull(),
+  year: integer("year").notNull(),
+  income: decimal("income").notNull(),
+  expense: decimal("expense").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const yearHistory = pgTable("year_history", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => $users.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  month: integer("month").notNull(),
+  year: integer("year").notNull(),
+  income: decimal("income").notNull(),
+  expense: decimal("expense").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
