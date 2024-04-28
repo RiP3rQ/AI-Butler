@@ -42,6 +42,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeleteTransactionDialog from "@/components/budget/table/transaction-delete-dialog";
 import { GetTransactionHistoryResponseType } from "@/app/api/budget/transactions-history/route";
+import { Input } from "@/components/ui/input";
+import { DataTablePagination } from "@/components/global/table/table-paginate";
 
 // todo: refactor table
 
@@ -187,6 +189,16 @@ function TransactionTable({ from, to }: Props) {
     <div className="w-full">
       <div className="flex flex-wrap items-end justify-between gap-2 py-4">
         <div className="flex gap-2">
+          <Input
+            placeholder="Filter tasks..."
+            value={
+              (table.getColumn("description")?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn("description")?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-[150px] lg:w-[250px]"
+          />
           {table.getColumn("category") && (
             <DataTableFacetedFilter
               title="Category"
@@ -281,22 +293,7 @@ function TransactionTable({ from, to }: Props) {
           </Table>
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+          <DataTablePagination table={table} />
         </div>
       </SkeletonWrapper>
     </div>
