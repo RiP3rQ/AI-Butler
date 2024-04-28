@@ -68,6 +68,8 @@ type HistoryData = {
   day?: number;
 };
 
+//todo: refactor
+
 async function getYearHistoryData(userId: string, year: number) {
   const result = await db.query.yearHistory.findMany({
     where: and(eq(yearHistory.userId, userId), eq(yearHistory.year, year)),

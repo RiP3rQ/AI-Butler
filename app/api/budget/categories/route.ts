@@ -41,8 +41,6 @@ export async function GET(request: Request) {
       orderBy: asc(budgetCategory.name),
     });
 
-    console.log("categories", categories);
-
     return NextResponse.json(categories);
   } catch (e) {
     console.error(e);

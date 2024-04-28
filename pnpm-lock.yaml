@@ -38,6 +38,9 @@ dependencies:
   '@prisma/client':
     specifier: ^5.10.2
     version: 5.10.2(prisma@5.10.2)
+  '@radix-ui/react-alert-dialog':
+    specifier: ^1.0.5
+    version: 1.0.5(@types/react-dom@18.2.20)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0)
   '@radix-ui/react-avatar':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.20)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0)
@@ -83,6 +86,9 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^5.28.4
     version: 5.28.4(react@18.2.0)
+  '@tanstack/react-table':
+    specifier: ^8.16.0
+    version: 8.16.0(react-dom@18.2.0)(react@18.2.0)
   '@tiptap/extension-text':
     specifier: ^2.2.4
     version: 2.2.4(@tiptap/core@2.2.4)
@@ -259,6 +265,9 @@ devDependencies:
   eslint-config-next:
     specifier: 14.1.2
     version: 14.1.2(eslint@8.57.0)(typescript@5.3.3)
+  export-to-csv:
+    specifier: ^1.2.4
+    version: 1.2.4
   postcss:
     specifier: ^8.4.35
     version: 8.4.35
@@ -2071,6 +2080,32 @@ packages:
       '@babel/runtime': 7.24.0
     dev: false
 
+  /@radix-ui/react-alert-dialog@1.0.5(@types/react-dom@18.2.20)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-OrVIOcZL0tl6xibeuGt5/+UxoT2N27KCFOPjFyfXMnchxSHZ/OW7cCX2nGlIYJrbHK/fczPcFzAwvNBB6XBNMA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.24.0
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.63)(react@18.2.0)
+      '@radix-ui/react-context': 1.0.1(@types/react@18.2.63)(react@18.2.0)
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.2.20)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.20)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-slot': 1.0.2(@types/react@18.2.63)(react@18.2.0)
+      '@types/react': 18.2.63
+      '@types/react-dom': 18.2.20
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@radix-ui/react-arrow@1.0.3(@types/react-dom@18.2.20)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-wSP+pHsB/jQRaL6voubsQ/ZlrGBHHrOjmBnr19hxYgtS0WvAFwZhK2WP/YY5yF9uKECCEEDGxuLxq1NBK51wFA==}
     peerDependencies:
@@ -2902,6 +2937,23 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.28.4
       react: 18.2.0
+    dev: false
+
+  /@tanstack/react-table@8.16.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-rKRjnt8ostqN2fercRVOIH/dq7MAmOENCMvVlKx6P9Iokhh6woBGnIZEkqsY/vEJf1jN3TqLOb34xQGLVRuhAg==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      '@tanstack/table-core': 8.16.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/table-core@8.16.0:
+    resolution: {integrity: sha512-dCG8vQGk4js5v88/k83tTedWOwjGnIyONrKpHpfmSJB8jwFHl8GSu1sBBxbtACVAPtAQgwNxl0rw1d3RqRM1Tg==}
+    engines: {node: '>=12'}
     dev: false
 
   /@tiptap/core@2.2.4(@tiptap/pm@2.2.4):
@@ -5292,6 +5344,11 @@ packages:
     resolution: {integrity: sha512-9jgfSCa3dmEme2ES3mPByGXfgZ87VbP97tng1G2nWwWx6bV2nYxm2AWCrbQjXToSe+yYlqaZNtxffR9IeQr95g==}
     engines: {node: '>=14.18'}
     dev: false
+
+  /export-to-csv@1.2.4:
+    resolution: {integrity: sha512-mniFCil3DPLb4esJX00Nm6R77WbTMAqlzgYBlqN++QXZ2juNu19RMnRgmjuPH2pyRbrQvOieKg8zTp5lCwUFyQ==}
+    engines: {node: ^v12.20.0 || >=v14.13.0}
+    dev: true
 
   /expr-eval@2.0.2:
     resolution: {integrity: sha512-4EMSHGOPSwAfBiibw3ndnP0AvjDWLsMvGOvWEZ2F96IGk0bIVdjQisOHxReSkE13mHcfbuCiXw+G4y0zv6N8Eg==}

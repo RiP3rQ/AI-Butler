@@ -29,8 +29,6 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
 
     const { amount, category, date, description, type } = parsedBody.data;
 
-    console.log(amount, category, date, description, type);
-
     const categoryRow = await db
       .select()
       .from(budgetCategory)
@@ -41,13 +39,10 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
         ),
       );
 
-    console.log("categoryRow", categoryRow);
-
     if (!categoryRow[0]) {
       throw new Error("category not found");
     }
 
-    // NOTE: don't make confusion between $transaction ( prisma ) and prisma.transaction (table)
     await db.transaction(async (trx) => {
       await trx.insert(budgetTransaction).values({
         //@ts-ignore
@@ -92,3 +87,111 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
     };
   }
 }
+
+export async function DeleteTransaction(id: string) {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      redirect("/sign-in");
+    }
+
+    const transaction = await db.query.budgetTransaction.findFirst({
+      where: and(
+        eq(budgetTransaction.id, id),
+        eq(budgetTransaction.userId, user.id),
+      ),
+    });
+
+    if (!transaction) {
+      throw new Error("bad request");
+    }
+
+    await db.transaction(async (trx) => {
+      await trx
+        .delete(budgetTransaction)
+        .where(
+          and(
+            eq(budgetTransaction.id, id),
+            eq(budgetTransaction.userId, user.id),
+          ),
+        );
+      await trx.insert(monthHistory).values({
+        day: date.getUTCDate(),
+        month: date.getUTCMonth(),
+        year: date.getUTCFullYear(),
+        userId: user.id,
+        expense: type === "expense" ? String(amount) : "0",
+        income: type === "income" ? String(amount) : "0",
+      });
+
+      await trx.insert(yearHistory).values({
+        month: date.getUTCMonth(),
+        year: date.getUTCFullYear(),
+        userId: user.id,
+        expense: type === "expense" ? String(amount) : "0",
+        income: type === "income" ? String(amount) : "0",
+      });
+    });
+
+    console.log("Transaction deleted successfully");
+
+    return {
+      status: true,
+      message: "Transaction created successfully",
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      status: false,
+      message: "Category not found",
+    };
+  }
+}
+
+//     // Update month history
+//     prisma.monthHistory.update({
+//       where: {
+//         day_month_year_userId: {
+//           userId: user.id,
+//           day: transaction.date.getUTCDate(),
+//           month: transaction.date.getUTCMonth(),
+//           year: transaction.date.getUTCFullYear(),
+//         },
+//       },
+//       data: {
+//         ...(transaction.type === "expense" && {
+//           expense: {
+//             decrement: transaction.amount,
+//           },
+//         }),
+//         ...(transaction.type === "income" && {
+//           income: {
+//             decrement: transaction.amount,
+//           },
+//         }),
+//       },
+//     }),
+//     // Update year history
+//     prisma.yearHistory.update({
+//       where: {
+//         month_year_userId: {
+//           userId: user.id,
+//           month: transaction.date.getUTCMonth(),
+//           year: transaction.date.getUTCFullYear(),
+//         },
+//       },
+//       data: {
+//         ...(transaction.type === "expense" && {
+//           expense: {
+//             decrement: transaction.amount,
+//           },
+//         }),
+//         ...(transaction.type === "income" && {
+//           income: {
+//             decrement: transaction.amount,
+//           },
+//         }),
+//       },
+//     }),
+//   ]);
+// }
