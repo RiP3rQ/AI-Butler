@@ -12,7 +12,6 @@ import {
   budgetCategory,
   budgetTransaction,
   monthHistory,
-  yearHistory,
 } from "@/lib/drizzle/schema";
 
 export async function CreateTransaction(form: CreateTransactionSchemaType) {
@@ -63,14 +62,6 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
         expense: type === "expense" ? String(amount) : "0",
         income: type === "income" ? String(amount) : "0",
       });
-
-      await trx.insert(yearHistory).values({
-        month: date.getUTCMonth(),
-        year: date.getUTCFullYear(),
-        userId: user.id,
-        expense: type === "expense" ? String(amount) : "0",
-        income: type === "income" ? String(amount) : "0",
-      });
     });
 
     console.log("Transaction created successfully");
@@ -88,7 +79,11 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
   }
 }
 
-export async function DeleteTransaction(id: string) {
+export async function DeleteTransaction(
+  id: string,
+  type: string,
+  amount: number,
+) {
   try {
     const user = await currentUser();
     if (!user) {
@@ -115,22 +110,16 @@ export async function DeleteTransaction(id: string) {
             eq(budgetTransaction.userId, user.id),
           ),
         );
-      await trx.insert(monthHistory).values({
-        day: date.getUTCDate(),
-        month: date.getUTCMonth(),
-        year: date.getUTCFullYear(),
-        userId: user.id,
-        expense: type === "expense" ? String(amount) : "0",
-        income: type === "income" ? String(amount) : "0",
-      });
-
-      await trx.insert(yearHistory).values({
-        month: date.getUTCMonth(),
-        year: date.getUTCFullYear(),
-        userId: user.id,
-        expense: type === "expense" ? String(amount) : "0",
-        income: type === "income" ? String(amount) : "0",
-      });
+      await trx
+        .delete(monthHistory)
+        .where(
+          and(
+            eq(monthHistory.userId, user.id),
+            ...(type === "expense"
+              ? [eq(monthHistory.expense, String(amount))]
+              : [eq(monthHistory.income, String(amount))]),
+          ),
+        );
     });
 
     console.log("Transaction deleted successfully");
@@ -148,50 +137,4 @@ export async function DeleteTransaction(id: string) {
   }
 }
 
-//     // Update month history
-//     prisma.monthHistory.update({
-//       where: {
-//         day_month_year_userId: {
-//           userId: user.id,
-//           day: transaction.date.getUTCDate(),
-//           month: transaction.date.getUTCMonth(),
-//           year: transaction.date.getUTCFullYear(),
-//         },
-//       },
-//       data: {
-//         ...(transaction.type === "expense" && {
-//           expense: {
-//             decrement: transaction.amount,
-//           },
-//         }),
-//         ...(transaction.type === "income" && {
-//           income: {
-//             decrement: transaction.amount,
-//           },
-//         }),
-//       },
-//     }),
-//     // Update year history
-//     prisma.yearHistory.update({
-//       where: {
-//         month_year_userId: {
-//           userId: user.id,
-//           month: transaction.date.getUTCMonth(),
-//           year: transaction.date.getUTCFullYear(),
-//         },
-//       },
-//       data: {
-//         ...(transaction.type === "expense" && {
-//           expense: {
-//             decrement: transaction.amount,
-//           },
-//         }),
-//         ...(transaction.type === "income" && {
-//           income: {
-//             decrement: transaction.amount,
-//           },
-//         }),
-//       },
-//     }),
-//   ]);
-// }
+// TODO: UPDATE TRANSACTION

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/drizzle";
 import { and, asc, eq } from "drizzle-orm";
-import { monthHistory, yearHistory } from "@/lib/drizzle/schema";
+import { monthHistory } from "@/lib/drizzle/schema";
 
 const getHistoryDataSchema = z.object({
   timeframe: z.enum(["month", "year"]),
@@ -71,9 +71,9 @@ type HistoryData = {
 //todo: refactor
 
 async function getYearHistoryData(userId: string, year: number) {
-  const result = await db.query.yearHistory.findMany({
-    where: and(eq(yearHistory.userId, userId), eq(yearHistory.year, year)),
-    orderBy: asc(yearHistory.month),
+  const result = await db.query.monthHistory.findMany({
+    where: and(eq(monthHistory.userId, userId), eq(monthHistory.year, year)),
+    orderBy: asc(monthHistory.month),
   });
 
   if (!result || result.length === 0) return [];

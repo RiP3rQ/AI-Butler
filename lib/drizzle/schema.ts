@@ -242,19 +242,3 @@ export const monthHistory = pgTable("month_history", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
-
-export const yearHistory = pgTable("year_history", {
-  id: uuid("id").defaultRandom().primaryKey().notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => $users.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  month: integer("month").notNull(),
-  year: integer("year").notNull(),
-  income: decimal("income").notNull(),
-  expense: decimal("expense").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
