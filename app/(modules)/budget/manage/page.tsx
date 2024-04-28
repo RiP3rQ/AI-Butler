@@ -19,13 +19,42 @@ import { useQuery } from "@tanstack/react-query";
 import { PlusSquare, TrashIcon, TrendingDown, TrendingUp } from "lucide-react";
 import React from "react";
 import { BudgetCategoryType } from "@/lib/drizzle/schema";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import BudgetNavbarOptions from "@/components/budget/budget-navbar-options";
 
 // todo: provider for currency
 // todo: bread crumbs
 
 function page() {
   return (
-    <>
+    <div className="mx-auto max-w-7xl">
+      <Breadcrumb className={"w-full py-4 text-xl font-bold"}>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/budget">Budget</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Manage</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="flex flex-col items-center justify-between md:flex-row">
+        <BudgetNavbarOptions />
+      </div>
+
+      <Separator className={"my-2"} />
       {/* HEADER */}
       <div className="border-b bg-card">
         <div className="container flex flex-wrap items-center justify-between gap-6 py-8">
@@ -53,7 +82,7 @@ function page() {
         <CategoryList type="income" />
         <CategoryList type="expense" />
       </div>
-    </>
+    </div>
   );
 }
 

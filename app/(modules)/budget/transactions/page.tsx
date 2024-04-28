@@ -6,6 +6,16 @@ import { differenceInDays, startOfMonth } from "date-fns";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import TransactionTable from "@/components/budget/table/transation-table";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import BudgetNavbarOptions from "@/components/budget/budget-navbar-options";
+import { Separator } from "@/components/ui/separator";
 
 function TransactionsPage() {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
@@ -13,7 +23,28 @@ function TransactionsPage() {
     to: new Date(),
   });
   return (
-    <>
+    <div className="mx-auto max-w-7xl">
+      <Breadcrumb className={"w-full py-4 text-xl font-bold"}>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/budget">Budget</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Transactions</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="flex flex-col items-center justify-between md:flex-row">
+        <BudgetNavbarOptions />
+      </div>
+
+      <Separator className={"my-2"} />
+      {/* HEADER */}
       <div className="border-b bg-card">
         <div className="container flex flex-wrap items-center justify-between gap-6 py-8">
           <div>
@@ -43,7 +74,7 @@ function TransactionsPage() {
       <div className="container">
         <TransactionTable from={dateRange.from} to={dateRange.to} />
       </div>
-    </>
+    </div>
   );
 }
 

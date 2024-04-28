@@ -13,7 +13,7 @@ const items = [
 
 export default function BudgetNavbarOptions() {
   return (
-    <div className="w-full border-separate border-b bg-background">
+    <div className="w-full bg-background">
       <nav className="container flex items-center justify-between px-8">
         <div className="flex items-center gap-x-4">
           <div className="flex h-full">
