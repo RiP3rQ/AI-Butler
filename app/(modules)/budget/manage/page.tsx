@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { PlusSquare, TrashIcon, TrendingDown, TrendingUp } from "lucide-react";
 import React from "react";
-import { BudgetCategoryType } from "@/lib/drizzle/schema";
+import { BudgetCategoryType } from "@/drizzle/schema";
 import {
   Breadcrumb,
   BreadcrumbItem,

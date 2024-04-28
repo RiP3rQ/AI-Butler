@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/drizzle";
-import { monthHistory } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { monthHistory } from "@/drizzle/schema";
 import { asc, eq } from "drizzle-orm";
 
 export async function GET(request: Request) {

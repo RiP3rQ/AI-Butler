@@ -1,8 +1,8 @@
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/global/navbar";
 
 export default function ModulesLayout({
-                                        children
-                                      }: {
+  children,
+}: {
   children: React.ReactNode;
 }) {
   return (

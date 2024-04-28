@@ -20,7 +20,6 @@ them for you. AI-Butler also allows users to upload pdfs and images for further 
 - **UploadThing** - for pdfs storage
 - **Pinecone** - vector database
 - **Drizzle** - ORM neondb
-- **Prisma** - ORM mongodb
 - **Clerk Auth**
 - **TipTap** - rich text editor
 - **SWR** - data fetching

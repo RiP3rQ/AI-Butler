@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs";
-import { db } from "@/lib/drizzle";
-import { $postsAnalysis } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { postsAnalysis } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import {
   Breadcrumb,
@@ -8,17 +8,17 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import ChartsProvider from "@/components/charts/ChartsProvider";
+import ChartsProvider from "@/components/providers/charts-provider";
 
 const getData = async (userId: string) => {
   const analyses = await db
     .select()
-    .from($postsAnalysis)
-    .where(eq($postsAnalysis.userId, userId));
+    .from(postsAnalysis)
+    .where(eq(postsAnalysis.userId, userId));
   const total = analyses.reduce((acc: any, curr: any) => {
     return acc + parseInt(curr.sentimentScore);
   }, 0);

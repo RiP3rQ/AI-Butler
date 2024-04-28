@@ -41,7 +41,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateCategory } from "@/app/(modules)/budget/_actions/categories";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
-import { BudgetCategoryType } from "@/lib/drizzle/schema";
+import { BudgetCategoryType } from "@/drizzle/schema";
 
 interface Props {
   type: TransactionType;

@@ -1,13 +1,13 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
-import TipTapEditor from "@/components/editor/TipTapEditor";
-import DeleteButton from "@/components/editor/DeleteButton";
+import TipTapEditor from "@/components/editor/tip-tap-editor";
+import DeleteButton from "@/components/editor/delete-button";
 import { clerk } from "@/lib/clerk-server";
-import { db } from "@/lib/drizzle";
-import { $posts } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { posts } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
-import PostAnalysis from "@/components/journal/PostAnalysis";
+import PostAnalysis from "@/components/journal/post-analysis";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -32,15 +32,15 @@ const JournalPostPage = async ({ params: { postId } }: Props) => {
 
   const user = await clerk.users.getUser(userId);
 
-  const posts = await db
+  const postsList = await db
     .select()
-    .from($posts)
-    .where(and(eq($posts.id, parseInt(postId)), eq($posts.userId, userId)));
+    .from(posts)
+    .where(and(eq(posts.id, parseInt(postId)), eq(posts.userId, userId)));
 
-  if (posts.length != 1) {
+  if (postsList.length != 1) {
     return redirect("/dashboard");
   }
-  const post = posts[0];
+  const post = postsList[0];
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">

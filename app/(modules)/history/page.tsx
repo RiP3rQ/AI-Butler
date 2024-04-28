@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { redirect } from "next/navigation";
-import { ActivityList } from "@/components/auditLog/ActivityList";
+import { ActivityList } from "@/components/auditLog/activity-list";
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {

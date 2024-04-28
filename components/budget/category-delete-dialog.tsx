@@ -16,7 +16,7 @@ import { TransactionType } from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
 import { toast } from "sonner";
-import { BudgetCategoryType } from "@/lib/drizzle/schema";
+import { BudgetCategoryType } from "@/drizzle/schema";
 
 interface Props {
   trigger: ReactNode;

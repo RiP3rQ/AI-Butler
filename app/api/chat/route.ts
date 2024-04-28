@@ -2,8 +2,10 @@ import { PineconeIndex } from "@/lib/pinecone/pinecone";
 import openai, { getEmbedding } from "@/lib/openai";
 import { auth } from "@clerk/nextjs";
 import { ChatCompletionMessage } from "openai/resources/index.mjs";
-import prisma from "@/lib/prisma/db";
 import { OpenAIStream, StreamingTextResponse } from "ai";
+import { db } from "@/drizzle";
+import { inArray } from "drizzle-orm";
+import { note } from "@/drizzle/schema";
 
 export async function POST(req: Request) {
   try {
@@ -24,12 +26,11 @@ export async function POST(req: Request) {
       filter: { userId },
     });
 
-    const releventNotes = await prisma.note.findMany({
-      where: {
-        id: {
-          in: vectorQueryResponse.matches.map((match) => match.id),
-        },
-      },
+    const releventNotes = await db.query.note.findMany({
+      where: inArray(
+        note.id,
+        vectorQueryResponse.matches.map((match) => match.id),
+      ),
     });
 
     // ChatGPT message format

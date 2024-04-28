@@ -6,16 +6,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { db } from "@/lib/drizzle";
-import { $users, $workspaces } from "@/lib/drizzle/schema";
+import { db } from "../../../../../drizzle";
+import { users, workspaces } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 export default async function NotionPage() {
   const workspace = await db
     .select()
-    .from($workspaces)
-    .where(eq($workspaces.workspaceOwner, $users.id))
+    .from(workspaces)
+    .where(eq(workspaces.workspaceOwner,users.id))
 
   if (!workspace)
     return (

@@ -1,16 +1,16 @@
 import { auth } from "@clerk/nextjs";
-import { OpenAIApi, Configuration } from "openai-edge";
+import { Configuration, OpenAIApi } from "openai-edge";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { getContext } from "@/lib/pinecone/pineconeContext";
-import { db } from "@/lib/drizzle";
-import { $pdfFileMessages, PdfFileMessagesType } from "@/lib/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { db } from "../../../../drizzle";
+import { pdfFileMessages } from "@/drizzle/schema";
+
 import { Message } from "ai/react";
 
 export const runtime = "edge";
 
 const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 
@@ -21,11 +21,11 @@ export async function POST(req: Request) {
     if (!userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
@@ -33,11 +33,11 @@ export async function POST(req: Request) {
     if (!fileId || !fileKey) {
       return Response.json(
         {
-          error: "Invalid request"
+          error: "Invalid request",
         },
         {
-          status: 400
-        }
+          status: 400,
+        },
       );
     }
 
@@ -64,47 +64,47 @@ export async function POST(req: Request) {
       If the context does not provide the answer to question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
       AI assistant will not apologize for previous responses, but instead will indicated new information was gained.
       AI assistant will not invent anything that is not drawn directly from the context.
-      `
+      `,
     };
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
         prompt,
-        ...messages.filter((message: Message) => message.role === "user")
+        ...messages.filter((message: Message) => message.role === "user"),
       ],
-      stream: true
+      stream: true,
     });
     const stream = OpenAIStream(response, {
       onStart: async () => {
         // save user message into db
-        await db.insert($pdfFileMessages).values({
+        await db.insert(pdfFileMessages).values({
           pdfFileId: fileId,
           text: lastMessage.content,
           isUserMessage: true,
-          userId: userId
+          userId: userId,
         });
       },
       onCompletion: async (completion) => {
         // save ai message into db
-        await db.insert($pdfFileMessages).values({
+        await db.insert(pdfFileMessages).values({
           pdfFileId: fileId,
           text: completion,
           isUserMessage: false,
-          userId: "AI-BUTLER"
+          userId: "AI-BUTLER",
         });
-      }
+      },
     });
     return new StreamingTextResponse(stream);
   } catch (error) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }

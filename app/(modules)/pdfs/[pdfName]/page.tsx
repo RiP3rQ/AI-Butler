@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
-import SinglePdfContent from "@/components/pdfs/SinglePdfContent";
+import SinglePdfContent from "@/components/pdfs/single-pdf-content";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 

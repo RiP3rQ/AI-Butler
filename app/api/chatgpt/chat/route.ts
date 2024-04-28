@@ -1,7 +1,8 @@
 import { auth } from "@clerk/nextjs";
-import prisma from "@/lib/prisma/db";
-import { NextApiRequest } from "next";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";
+import { db } from "@/drizzle";
+import { chat } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export async function POST() {
   try {
@@ -11,20 +12,24 @@ export async function POST() {
       return Response.json({ error: "Not logged in." }, { status: 401 });
     }
 
-    let chat;
+    let chatContent;
 
-    chat = await prisma?.chat.create({
-      data: {
+    chatContent = await db
+      .insert(chat)
+      .values({
         userId,
-        title: "New Chat"
-      }
-    });
+        title: "New Chat",
+      })
+      .returning({
+        id: chat.id,
+        title: chat.title,
+      });
 
     await createAuditLog({
-      entityId: chat.id,
+      entityId: chatContent[0].id,
       entityType: "chat",
-      entityTitle: chat.title,
-      action: "CREATE"
+      entityTitle: chatContent[0].title,
+      action: "CREATE",
     });
 
     return Response.json({ chat }, { status: 200 });
@@ -42,10 +47,8 @@ export async function GET() {
       return Response.json({ error: "Not logged in." }, { status: 401 });
     }
 
-    const chats = await prisma?.chat.findMany({
-      where: {
-        userId
-      }
+    const chats = await db.query.chat.findMany({
+      where: eq(chat.userId, userId),
     });
 
     if (!chats) {

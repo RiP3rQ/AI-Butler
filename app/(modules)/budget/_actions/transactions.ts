@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/lib/drizzle";
+import { db } from "../../../../drizzle";
 import {
   CreateTransactionSchema,
   CreateTransactionSchemaType,
@@ -12,7 +12,7 @@ import {
   budgetCategory,
   budgetTransaction,
   monthHistory,
-} from "@/lib/drizzle/schema";
+} from "@/drizzle/schema";
 
 export async function CreateTransaction(form: CreateTransactionSchemaType) {
   try {
