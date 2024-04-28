@@ -6,6 +6,13 @@ import { budgetTransaction } from "@/lib/drizzle/schema";
 import { and, eq, gte, lte } from "drizzle-orm";
 import moment from "moment/moment";
 
+interface Summary {
+  type: string;
+  category: string;
+  categoryIcon: string;
+  totalAmount: number;
+}
+
 export async function GET(request: Request) {
   try {
     const user = await currentUser();
@@ -27,9 +34,28 @@ export async function GET(request: Request) {
 
     const stats = await getCategoriesStats(user.id, fromDate, toDate);
 
-    console.log("Counted stats", stats);
+    const summary: Map<string, Summary> = new Map();
 
-    return Response.json(stats);
+    for (const stat of stats) {
+      const key = `${stat.type}-${stat.category}`;
+
+      if (summary.has(key)) {
+        summary.get(key)!.totalAmount += parseInt(stat.amount);
+      } else {
+        summary.set(key, {
+          type: stat.type,
+          category: stat.category,
+          categoryIcon: stat.categoryIcon,
+          totalAmount: parseInt(stat.amount),
+        });
+      }
+    }
+
+    // Output the results
+    const results: Summary[] = Array.from(summary.values());
+    console.log(results);
+
+    return Response.json(results);
   } catch (error) {
     console.error(error);
     return Response.json({ message: "Internal server error" }, { status: 500 });
@@ -57,9 +83,5 @@ async function getCategoriesStats(userId: string, from: string, to: string) {
       ),
     );
 
-  console.log("stats", stats);
-
   return stats;
 }
-
-// TODO: FIXXX!Q!!

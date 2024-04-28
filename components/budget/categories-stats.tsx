@@ -66,7 +66,7 @@ function CategoriesCard({
 }) {
   const filteredData = data.filter((el: any) => el.type === type);
   const total = filteredData.reduce(
-    (acc: any, el: any) => acc + (el?.amount || 0),
+    (acc: any, el: any) => acc + (el?.totalAmount || 0),
     0,
   );
 
@@ -93,7 +93,7 @@ function CategoriesCard({
           <ScrollArea className="h-60 w-full px-4">
             <div className="flex w-full flex-col gap-4 p-4">
               {filteredData.map((item: any) => {
-                const amount = item?.amount || 0;
+                const amount = item?.totalAmount || 0;
                 const percentage = (amount * 100) / (total || amount);
 
                 return (

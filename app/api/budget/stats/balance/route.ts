@@ -30,7 +30,7 @@ export async function GET(request: Request) {
 
     const stats = await getBalanceStats(user.id, fromDate, toDate);
 
-    console.log("Final stats", stats);
+    // console.log("Final stats", stats);
 
     return Response.json(stats);
   } catch (error) {
@@ -58,7 +58,7 @@ async function getBalanceStats(userId: string, from: string, to: string) {
       ),
     );
 
-  console.log("stats", stats);
+  // console.log("stats", stats);
 
   // Map results to the desired format
   const resultMap = {
@@ -72,7 +72,7 @@ async function getBalanceStats(userId: string, from: string, to: string) {
     }
   });
 
-  console.log("resultMap", resultMap);
+  // console.log("resultMap", resultMap);
 
   return resultMap;
 }
