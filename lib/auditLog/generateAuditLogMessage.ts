@@ -1,4 +1,4 @@
-import { AuditLogType } from "@/lib/drizzle/schema";
+import { AuditLogType } from "@/drizzle/schema";
 
 export const generateLogMessage = (log: AuditLogType) => {
   const { action, entityTitle, entityType } = log;

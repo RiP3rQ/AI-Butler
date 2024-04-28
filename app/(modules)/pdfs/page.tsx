@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
-import PdfsDashboard from "@/components/pdfs/PdfsDashboard";
+import PdfsDashboard from "@/components/pdfs/pdfs-dashboard";
 
 export const metadata: Metadata = {
   title: "PDFs | AI-Butler",

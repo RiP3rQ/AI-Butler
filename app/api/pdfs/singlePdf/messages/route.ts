@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs";
-import { db } from "@/lib/drizzle";
-import { $pdfFileMessages } from "@/lib/drizzle/schema";
+import { db } from "../../../../../drizzle";
+import { pdfFileMessages } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
@@ -9,11 +9,11 @@ export async function POST(req: Request) {
     if (!userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
@@ -22,26 +22,29 @@ export async function POST(req: Request) {
     if (!pdfId) {
       return Response.json(
         {
-          error: "No pdfId provided!"
+          error: "No pdfId provided!",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
-    const _messages = await db.select().from($pdfFileMessages).where(eq($pdfFileMessages.pdfFileId, pdfId));
+    const _messages = await db
+      .select()
+      .from(pdfFileMessages)
+      .where(eq(pdfFileMessages.pdfFileId, pdfId));
 
     return Response.json({ data: _messages }, { status: 200 });
   } catch (e) {
     console.log(e);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }

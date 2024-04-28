@@ -1,5 +1,5 @@
-import { db } from "@/lib/drizzle";
-import { $posts } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { posts } from "@/drizzle/schema";
 import { uploadFileToFirebase } from "@/lib/firebase";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -18,18 +18,18 @@ export async function POST(req: Request) {
     const { postId } = await req.json();
     // extract out the dalle imageurl
     // save it to firebase
-    const posts = await db
+    const postsList = await db
       .select()
-      .from($posts)
-      .where(eq($posts.id, parseInt(postId)));
+      .from(posts)
+      .where(eq(posts.id, parseInt(postId)));
 
-    if (!posts[0].imageUrl) {
+    if (!postsList[0].imageUrl) {
       return new NextResponse("no image url", { status: 400 });
     }
 
     const firebase_url = await uploadFileToFirebase(
-      posts[0].imageUrl,
-      posts[0].name
+      postsList[0].imageUrl,
+      postsList[0].name,
     );
 
     if (!firebase_url) {
@@ -38,11 +38,11 @@ export async function POST(req: Request) {
 
     // update the post with the firebase url
     await db
-      .update($posts)
+      .update(posts)
       .set({
-        imageUrl: firebase_url
+        imageUrl: firebase_url,
       })
-      .where(eq($posts.id, parseInt(postId)));
+      .where(eq(posts.id, parseInt(postId)));
 
     return new NextResponse("ok", { status: 200 });
   } catch (error) {

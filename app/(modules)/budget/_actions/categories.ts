@@ -8,8 +8,8 @@ import {
 } from "@/lib/budgetTypes/categories";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/drizzle";
-import { budgetCategory } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { budgetCategory } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 
 export async function CreateCategory(form: CreateCategorySchemaType) {

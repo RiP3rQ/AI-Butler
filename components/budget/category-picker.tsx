@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown } from "lucide-react";
 import React, { useCallback, useEffect } from "react";
-import { BudgetCategoryType } from "@/lib/drizzle/schema";
+import { BudgetCategoryType } from "@/drizzle/schema";
 
 interface Props {
   type: TransactionType;

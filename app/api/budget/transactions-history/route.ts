@@ -2,9 +2,9 @@ import { GetFormatterForCurrency } from "@/lib/helper/dateHelper";
 import { OverviewQuerySchema } from "@/lib/budgetTypes/overview";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/drizzle";
+import { db } from "../../../../drizzle";
 import { and, desc, eq, gte, lte } from "drizzle-orm";
-import { budgetTransaction } from "@/lib/drizzle/schema";
+import { budgetTransaction } from "@/drizzle/schema";
 import moment from "moment/moment";
 
 export async function GET(request: Request) {

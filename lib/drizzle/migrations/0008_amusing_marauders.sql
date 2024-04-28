@@ -1,1 +1,0 @@
-DROP TABLE "year_history";

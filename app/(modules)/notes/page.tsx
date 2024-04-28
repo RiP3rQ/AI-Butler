@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs";
 import { Metadata } from "next";
 import React from "react";
-import NotesGrid from "@/components/notes/NotesGrid";
+import NotesGrid from "@/components/notes/notes-grid";
 import {
   Breadcrumb,
   BreadcrumbItem,

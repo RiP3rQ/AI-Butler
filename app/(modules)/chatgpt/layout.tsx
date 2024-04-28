@@ -1,4 +1,4 @@
-import Sidebar from "@/components/chatgpt/Sidebar";
+import ChatSidebar from "@/components/chatgpt/chat-sidebar";
 import { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -45,7 +45,7 @@ export default function ChatgptLayout({
           className="max-w-xs overflow-y-auto
       md:min-w-[20rem]"
         >
-          <Sidebar />
+          <ChatSidebar />
         </aside>
 
         <Separator

@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs";
-import { db } from "@/lib/drizzle";
-import { $PdfFiles } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { PdfFiles } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
@@ -10,29 +10,32 @@ export async function POST(req: Request) {
     if (!userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
     const { key } = await req.json();
 
     // get all notes for the user
-    const singlePdf = await db.select().from($PdfFiles).where(and(eq($PdfFiles.userId, userId), eq($PdfFiles.key, key)));
+    const singlePdf = await db
+      .select()
+      .from(PdfFiles)
+      .where(and(eq(PdfFiles.userId, userId), eq(PdfFiles.key, key)));
 
     return Response.json({ data: singlePdf }, { status: 200 });
   } catch (error) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }

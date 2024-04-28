@@ -3,7 +3,7 @@ import React from "react";
 import { auth } from "@clerk/nextjs";
 import { Separator } from "@/components/ui/separator";
 import { redirect } from "next/navigation";
-import PostsGrid from "@/components/journal/PostsGrid";
+import PostsGrid from "@/components/journal/posts-grid";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,8 +12,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import JournalPageActions from "@/components/journal/JournalPageActions";
-import CreateNewJournalPostModal from "@/components/modals/CreateNewJournalPostModal";
+import JournalActions from "@/components/journal/journal-actions";
+import CreateNewJournalPostModal from "@/components/modals/create-new-journal-post-modal";
 
 export const metadata: Metadata = {
   title: "Journal | AI-Butler",
@@ -44,7 +44,7 @@ export default async function JournalPage() {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="flex flex-col items-center justify-between md:flex-row">
-          <JournalPageActions />
+          <JournalActions />
         </div>
 
         <Separator className={"my-2"} />

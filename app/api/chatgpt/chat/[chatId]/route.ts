@@ -1,8 +1,9 @@
 import { auth } from "@clerk/nextjs";
-import prisma from "@/lib/prisma/db";
 import openai from "@/lib/openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";
+import { db } from "@/drizzle";
+import { chat, chatMessage } from "@/drizzle/schema";
+import { and, asc, eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
   try {
@@ -21,19 +22,17 @@ export async function POST(req: Request) {
     }
 
     // write message to database
-    await prisma.chatMessage.create({
-      data: {
-        chatId,
-        userId,
-        content: prompt
-      }
+    await db.insert(chatMessage).values({
+      chatId,
+      userId,
+      content: prompt,
     });
 
     await createAuditLog({
       entityId: chatId,
       entityType: "chatMessage",
       entityTitle: prompt,
-      action: "CREATE"
+      action: "CREATE",
     });
 
     // ChatGPT response
@@ -45,16 +44,14 @@ export async function POST(req: Request) {
         temperature: 0.7,
         frequency_penalty: 0,
         presence_penalty: 0,
-        stream: false
+        stream: false,
       })
       .then(async (res) => {
         //write response to database
-        await prisma.chatMessage.create({
-          data: {
-            chatId,
-            userId: "chatgpt",
-            content: res.choices[0].text
-          }
+        await db.insert(chatMessage).values({
+          chatId,
+          userId: "chatgpt",
+          content: res.choices[0].text,
         });
       });
 
@@ -67,7 +64,7 @@ export async function POST(req: Request) {
 
 export async function GET(
   req: Request,
-  { params }: { params: { chatId: string } }
+  { params }: { params: { chatId: string } },
 ) {
   try {
     const chatId = params.chatId;
@@ -82,13 +79,9 @@ export async function GET(
     }
 
     // write message to database
-    const messages = await prisma.chatMessage.findMany({
-      where: {
-        chatId
-      },
-      orderBy: {
-        createdAt: "asc"
-      }
+    const messages = await db.query.chatMessage.findMany({
+      where: eq(chatMessage.chatId, chatId),
+      orderBy: asc(chatMessage.createdAt),
     });
 
     return Response.json({ messages }, { status: 200 });
@@ -100,7 +93,7 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { chatId: string } }
+  { params }: { params: { chatId: string } },
 ) {
   try {
     const { userId } = auth();
@@ -114,31 +107,23 @@ export async function DELETE(
       return Response.json({ error: "Chat Id not provided." }, { status: 404 });
     }
 
-    const chat = await prisma?.chat.findFirst({
-      where: {
-        id: chatId,
-        userId
-      }
+    const chatCcntent = await db.query.chat.findFirst({
+      where: and(
+        eq(chatMessage.chatId, chatId),
+        eq(chatMessage.userId, userId),
+      ),
     });
 
-    if (!chat) {
+    if (!chatCcntent) {
       return Response.json({ error: "Chat not found." }, { status: 404 });
     }
 
     // delete all messages in chat
-    await prisma?.chatMessage.deleteMany({
-      where: {
-        chatId
-      }
-    });
+    await db.delete(chatMessage).where(eq(chatMessage.chatId, chatId));
     // delete chat itself
-    await prisma?.chat.delete({
-      where: {
-        id: chatId
-      }
-    });
+    await db.delete(chat).where(eq(chat.id, chatId));
 
-    return Response.json({ chat }, { status: 200 });
+    return Response.json({ chatCcntent }, { status: 200 });
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Internal server error" }, { status: 500 });
@@ -147,7 +132,7 @@ export async function DELETE(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { chatId: string } }
+  { params }: { params: { chatId: string } },
 ) {
   try {
     const { userId } = auth();
@@ -165,25 +150,23 @@ export async function PUT(
     if (!newName) {
       return Response.json(
         { error: "New name not provided." },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
-    // update chat name with prisma
-    const chat = await prisma?.chat.update({
-      where: {
-        id: chatId
-      },
-      data: {
-        title: newName
-      }
-    });
+    // update chat name
+    const chatContent = await db
+      .update(chat)
+      .set({
+        title: newName,
+      })
+      .where(eq(chat.id, chatId));
 
-    if (!chat) {
+    if (!chatContent) {
       return Response.json({ error: "Chat not found." }, { status: 404 });
     }
 
-    return Response.json({ chat }, { status: 200 });
+    return Response.json({ chatContent }, { status: 200 });
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Internal server error" }, { status: 500 });

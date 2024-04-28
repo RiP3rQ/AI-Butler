@@ -1,14 +1,16 @@
-import prisma from "@/lib/prisma/db";
 import { PineconeIndex } from "@/lib/pinecone/pinecone";
 import { getEmbedding } from "@/lib/openai";
 
 import {
   createNoteSchema,
   deleteNoteSchema,
-  updateNoteSchema
+  updateNoteSchema,
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";
+import { db } from "@/drizzle";
+import { note } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
   try {
@@ -20,11 +22,11 @@ export async function POST(req: Request) {
       console.error(validation.error);
       return Response.json(
         {
-          error: validation.error.issues.map((issue) => issue.message)
+          error: validation.error.issues.map((issue) => issue.message),
         },
         {
-          status: 400
-        }
+          status: 400,
+        },
       );
     }
 
@@ -33,11 +35,11 @@ export async function POST(req: Request) {
     if (!userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
@@ -46,48 +48,48 @@ export async function POST(req: Request) {
     // get the embedding for the note
     const embedding = await getEmbeddingForNote(title, content);
 
-    const note = await prisma.$transaction(async (tx: any) => {
-      // create the note
-      const note = await tx.note.create({
-        data: {
-          title,
-          content,
-          userId
-        }
+    // create the note
+    const noteContent = await db
+      .insert(note)
+      .values({
+        title,
+        content,
+        userId,
+      })
+      .returning({
+        id: note.id,
+        title: note.title,
       });
 
-      // create the audit log
-      await createAuditLog({
-        entityId: note.id,
-        entityType: "note",
-        entityTitle: note.title,
-        action: "CREATE"
-      });
-
-      // create the embedding via Pinecone
-      await PineconeIndex.upsert([
-        {
-          id: note.id,
-          values: embedding,
-          metadata: {
-            userId
-          }
-        }
-      ]);
-
-      return note;
+    // create the audit log
+    await createAuditLog({
+      entityId: noteContent[0].id,
+      entityType: "note",
+      entityTitle: noteContent[0].title,
+      action: "CREATE",
     });
 
-    return Response.json({ note }, { status: 201 });
+    // create the embedding via Pinecone
+    await PineconeIndex.upsert([
+      {
+        id: noteContent[0].id,
+        values: embedding,
+        metadata: {
+          userId,
+        },
+      },
+    ]);
+
+    return Response.json({ noteContent }, { status: 201 });
   } catch (error) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }
@@ -102,94 +104,100 @@ export async function PUT(req: Request) {
       console.error(validation.error);
       return Response.json(
         {
-          error: validation.error.issues.map((issue) => issue.message)
+          error: validation.error.issues.map((issue) => issue.message),
         },
         {
-          status: 400
-        }
+          status: 400,
+        },
       );
     }
 
     const { id, title, content } = validation.data;
     // check if the note exists
-    const note = await prisma.note.findUnique({
-      where: {
-        id
-      }
+    const noteContent = await db.query.note.findFirst({
+      where: eq(note.id, id),
     });
 
-    if (!note) {
+    if (!noteContent) {
       return Response.json(
         {
-          error: "Note not found"
+          error: "Note not found",
         },
         {
-          status: 404
-        }
+          status: 404,
+        },
       );
     }
 
     // check if the user is logged in and owns the note
     const { userId } = auth();
-    if (!userId || note.userId !== userId) {
+    if (!userId || noteContent.userId !== userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
     // get the embedding for the note update via OpenAI
     const embedding = await getEmbeddingForNote(title, content);
 
-    // prisma transaction
-    const updatedNote = await prisma.$transaction(async (tx: any) => {
-      // update the note
-      const updatedNote = await tx.note.update({
-        where: {
-          id
-        },
-        data: {
-          title,
-          content
-        }
+    // update the note
+    const updatedNote = await db
+      .update(note)
+      .set({
+        title,
+        content,
+      })
+      .where(eq(note.id, id))
+      .returning({
+        id: note.id,
+        title: note.title,
       });
 
-      // create the audit log
-      await createAuditLog({
-        entityId: updatedNote.id,
-        entityType: "note",
-        entityTitle: updatedNote.title,
-        action: "UPDATE"
-      });
-
-      // update the embedding via Pinecone
-      await PineconeIndex.upsert([
+    if (!updatedNote) {
+      return Response.json(
         {
-          id,
-          values: embedding,
-          metadata: {
-            userId
-          }
-        }
-      ]);
+          error: "Note not found",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
 
-      return updatedNote;
+    // create the audit log
+    await createAuditLog({
+      entityId: updatedNote[0].id,
+      entityType: "note",
+      entityTitle: updatedNote[0].title,
+      action: "UPDATE",
     });
+
+    // update the embedding via Pinecone
+    await PineconeIndex.upsert([
+      {
+        id,
+        values: embedding,
+        metadata: {
+          userId,
+        },
+      },
+    ]);
 
     return Response.json({ updatedNote }, { status: 201 });
   } catch (error) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }
@@ -204,77 +212,68 @@ export async function DELETE(req: Request) {
       console.error(validation.error);
       return Response.json(
         {
-          error: validation.error.issues.map((issue) => issue.message)
+          error: validation.error.issues.map((issue) => issue.message),
         },
         {
-          status: 400
-        }
+          status: 400,
+        },
       );
     }
 
     const { id } = validation.data;
     // check if the note exists
-    const note = await prisma.note.findUnique({
-      where: {
-        id
-      }
+    const noteContent = await db.query.note.findFirst({
+      where: eq(note.id, id),
     });
 
-    if (!note) {
+    if (!noteContent) {
       return Response.json(
         {
-          error: "Note not found"
+          error: "Note not found",
         },
         {
-          status: 404
-        }
+          status: 404,
+        },
       );
     }
 
     // check if the user is logged in and owns the note
     const { userId } = auth();
-    if (!userId || note.userId !== userId) {
+    if (!userId || noteContent.userId !== userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
-    // prisma transaction
-    await prisma.$transaction(async (tx: any) => {
-      // delete the note
-      await tx.note.delete({
-        where: {
-          id
-        }
-      });
+    // delete the note
+    await db.delete(note).where(eq(note.id, id));
 
-      // create the audit log
-      await createAuditLog({
-        entityId: id,
-        entityType: "note",
-        entityTitle: note.title,
-        action: "DELETE"
-      });
-
-      // delete the embedding via Pinecone
-      await PineconeIndex.deleteOne(id);
+    // create the audit log
+    await createAuditLog({
+      entityId: id,
+      entityType: "note",
+      entityTitle: noteContent.title,
+      action: "DELETE",
     });
+
+    // delete the embedding via Pinecone
+    await PineconeIndex.deleteOne(id);
 
     return Response.json({ message: "Note deleted" }, { status: 200 });
   } catch (error) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }

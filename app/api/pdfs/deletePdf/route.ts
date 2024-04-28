@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@clerk/nextjs";
-import { db } from "@/lib/drizzle";
-import { $pdfFileMessages, $PdfFiles } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { pdfFileMessages, PdfFiles } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { UTApi } from "uploadthing/server";
@@ -40,16 +40,16 @@ export async function POST(req: Request) {
 
     // delete the pdf file with the given id
     const DeletePdfKey = await db
-      .delete($PdfFiles)
-      .where(and(eq($PdfFiles.id, pdfId), eq($PdfFiles.userId, userId)))
+      .delete(PdfFiles)
+      .where(and(eq(PdfFiles.id, pdfId), eq(PdfFiles.userId, userId)))
       .returning({
-        key: $PdfFiles.key,
-        name: $PdfFiles.name,
+        key: PdfFiles.key,
+        name: PdfFiles.name,
       });
     // delete all pdf messages related to the pdf file
     await db
-      .delete($pdfFileMessages)
-      .where(eq($pdfFileMessages.pdfFileId, pdfId));
+      .delete(pdfFileMessages)
+      .where(eq(pdfFileMessages.pdfFileId, pdfId));
     // delete the pdf file from the storage
     await utapi.deleteFiles(DeletePdfKey[0].key);
     await createAuditLog({

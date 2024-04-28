@@ -1,5 +1,7 @@
 import { auth } from "@clerk/nextjs";
-import prisma from "@/lib/prisma/db";
+import { db } from "@/drizzle";
+import { eq } from "drizzle-orm";
+import { note } from "@/drizzle/schema";
 
 export async function GET(req: Request) {
   try {
@@ -8,19 +10,17 @@ export async function GET(req: Request) {
     if (!userId) {
       return Response.json(
         {
-          error: "Unauthorized"
+          error: "Unauthorized",
         },
         {
-          status: 401
-        }
+          status: 401,
+        },
       );
     }
 
     // get all notes for the user
-    const allNotes = await prisma.note.findMany({
-      where: {
-        userId
-      }
+    const allNotes = await db.query.note.findMany({
+      where: eq(note.userId, userId),
     });
 
     return Response.json({ data: allNotes }, { status: 200 });
@@ -28,11 +28,11 @@ export async function GET(req: Request) {
     console.log(error);
     return Response.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
+        status: 500,
+      },
     );
   }
 }

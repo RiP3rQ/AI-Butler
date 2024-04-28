@@ -1,7 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs";
-import { db } from "@/lib/drizzle";
-import { $auditLogs, $postsAnalysis } from "@/lib/drizzle/schema";
-import { getAuth } from "@clerk/nextjs/server";
+import { db } from "../../drizzle";
+import { auditLogs, postsAnalysis } from "@/drizzle/schema";
 
 const EntityTypes = {
   note: "note",
@@ -11,10 +10,10 @@ const EntityTypes = {
   posts: "posts",
   postsAnalysis: "postsAnalysis",
   pdfFiles: "pdfFiles",
-  pdfFileMessages: "pdfFileMessages"
+  pdfFileMessages: "pdfFileMessages",
 };
 type IEntityType =
-  "note"
+  | "note"
   | "chat"
   | "chatMessage"
   | "user"
@@ -26,7 +25,7 @@ type IEntityType =
 const Actions = {
   CREATE: "CREATE",
   UPDATE: "UPDATE",
-  DELETE: "DELETE"
+  DELETE: "DELETE",
 };
 type IActions = "CREATE" | "UPDATE" | "DELETE";
 
@@ -39,12 +38,12 @@ interface AuditLogProps {
 }
 
 export async function createAuditLog({
-                                       entityId,
-                                       entityType,
-                                       entityTitle,
-                                       action,
-                                       userIdFromProps
-                                     }: AuditLogProps) {
+  entityId,
+  entityType,
+  entityTitle,
+  action,
+  userIdFromProps,
+}: AuditLogProps) {
   try {
     const { userId: userIdFromAuth } = auth();
     console.log("userIdFromAuth", userIdFromAuth);
@@ -60,14 +59,14 @@ export async function createAuditLog({
       ? user?.firstName + " " + user?.lastName
       : user?.username;
 
-    await db.insert($auditLogs).values({
+    await db.insert(auditLogs).values({
       action,
       entityId,
       entityType,
       entityTitle,
       userId,
       userImage: user?.imageUrl,
-      userName: userName || "Unknown"
+      userName: userName || "Unknown",
     });
   } catch (error) {
     console.log("[AUDIT_LOG_ERROR]", error);

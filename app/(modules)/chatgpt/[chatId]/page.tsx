@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import ChatInput from "@/components/chatgpt/ChatInput";
-import Chat from "@/components/chatgpt/Chat";
+import ChatInput from "@/components/chatgpt/chat-input";
+import Chat from "@/components/chatgpt/chat";
 import { usePathname } from "next/navigation";
 
 type Props = {};

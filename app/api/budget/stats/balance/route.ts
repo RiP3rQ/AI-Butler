@@ -1,8 +1,8 @@
 import { OverviewQuerySchema } from "@/lib/budgetTypes/overview";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/drizzle";
-import { budgetTransaction } from "@/lib/drizzle/schema";
+import { db } from "../../../../../drizzle";
+import { budgetTransaction } from "@/drizzle/schema";
 import { and, eq, gte, lte } from "drizzle-orm";
 import moment from "moment";
 

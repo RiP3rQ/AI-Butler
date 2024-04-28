@@ -1,9 +1,9 @@
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { db } from "@/lib/drizzle";
+import { db } from "../../../../drizzle";
 import { and, asc, eq } from "drizzle-orm";
-import { budgetCategory } from "@/lib/drizzle/schema";
+import { budgetCategory } from "@/drizzle/schema";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {

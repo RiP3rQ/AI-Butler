@@ -2,9 +2,9 @@ import { Period, Timeframe } from "@/lib/types";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { db } from "@/lib/drizzle";
+import { db } from "../../../../drizzle";
 import { and, asc, eq } from "drizzle-orm";
-import { monthHistory } from "@/lib/drizzle/schema";
+import { monthHistory } from "@/drizzle/schema";
 
 const getHistoryDataSchema = z.object({
   timeframe: z.enum(["month", "year"]),

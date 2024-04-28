@@ -1,7 +1,7 @@
 import { analyzePost } from "@/lib/openai";
 import { NextResponse } from "next/server";
-import { db } from "@/lib/drizzle";
-import { $posts, $postsAnalysis } from "@/lib/drizzle/schema";
+import { db } from "../../../../drizzle";
+import { posts, postsAnalysis } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs";
 import { createAuditLog } from "@/lib/auditLog/createAuditLog";
@@ -20,15 +20,15 @@ export async function PUT(req: Request) {
     }
 
     postId = parseInt(postId);
-    const posts = await db.select().from($posts).where(eq($posts.id, postId));
+    const postsList = await db.select().from(posts).where(eq(posts.id, postId));
 
-    if (posts.length != 1) {
+    if (postsList.length != 1) {
       return new NextResponse("No post found!", { status: 500 });
     }
 
     editorState = editorState.replace(
       /<\/?(h1|h2|h3|h4|h5|h6|p|li|strong|ul|ol|em|s|code|pre)>/g,
-      ""
+      "",
     );
 
     const analysis = await analyzePost(editorState);
@@ -36,7 +36,7 @@ export async function PUT(req: Request) {
       return new NextResponse("failed to analyze", { status: 500 });
     }
     const analysisReturn = await db
-      .update($postsAnalysis)
+      .update(postsAnalysis)
       .set({
         userId,
         postId,
@@ -46,11 +46,12 @@ export async function PUT(req: Request) {
         negative: analysis.negative,
         subject: analysis.subject,
         sentimentScore: String(analysis.sentimentScore),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
-      .where(eq($postsAnalysis.postId, postId)).returning({
-        updatedId: $postsAnalysis.id,
-        updatedSummary: $postsAnalysis.summary
+      .where(eq(postsAnalysis.postId, postId))
+      .returning({
+        updatedId: postsAnalysis.id,
+        updatedSummary: postsAnalysis.summary,
       });
 
     console.log("Analyzed the post!");
@@ -60,22 +61,22 @@ export async function PUT(req: Request) {
       entityId: String(analysisReturn[0].updatedId),
       entityType: "postsAnalysis",
       entityTitle: analysisReturn[0].updatedSummary,
-      action: "UPDATE"
+      action: "UPDATE",
     });
 
     return NextResponse.json(
       {
-        success: true
+        success: true,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       {
-        success: false
+        success: false,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
