@@ -60,33 +60,22 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
         category: categoryRow[0].name,
         categoryIcon: categoryRow[0].icon,
       });
-      await trx
-        .update(monthHistory)
-        .set({
-          expense: type === "expense" ? String(amount) : "0",
-          income: type === "income" ? String(amount) : "0",
-        })
-        .where(
-          and(
-            eq(monthHistory.day, date.getUTCDate()),
-            eq(monthHistory.month, date.getUTCMonth()),
-            eq(monthHistory.year, date.getUTCFullYear()),
-            eq(monthHistory.userId, user.id),
-          ),
-        );
-      await trx
-        .update(yearHistory)
-        .set({
-          expense: type === "expense" ? String(amount) : "0",
-          income: type === "income" ? String(amount) : "0",
-        })
-        .where(
-          and(
-            eq(yearHistory.month, date.getUTCMonth()),
-            eq(yearHistory.year, date.getUTCFullYear()),
-            eq(yearHistory.userId, user.id),
-          ),
-        );
+      await trx.insert(monthHistory).values({
+        day: date.getUTCDate(),
+        month: date.getUTCMonth(),
+        year: date.getUTCFullYear(),
+        userId: user.id,
+        expense: type === "expense" ? String(amount) : "0",
+        income: type === "income" ? String(amount) : "0",
+      });
+
+      await trx.insert(yearHistory).values({
+        month: date.getUTCMonth(),
+        year: date.getUTCFullYear(),
+        userId: user.id,
+        expense: type === "expense" ? String(amount) : "0",
+        income: type === "income" ? String(amount) : "0",
+      });
     });
 
     console.log("Transaction created successfully");

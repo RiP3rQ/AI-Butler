@@ -2,7 +2,7 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/drizzle";
 import { monthHistory } from "@/lib/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   try {
@@ -24,15 +24,11 @@ export type GetHistoryPeriodsResponseType = Awaited<
 >;
 
 async function getHistoryPeriods(userId: string) {
-  const result = await db.query.monthHistory.findMany({
-    where: eq(monthHistory.userId, userId),
-    columns: {
-      year: true,
-    },
-    orderBy: (monthHistory, { asc }) => [asc(monthHistory.year)],
-  });
-
-  console.log("History periods", result);
+  const result = await db
+    .selectDistinctOn([monthHistory.year])
+    .from(monthHistory)
+    .where(eq(monthHistory.userId, userId))
+    .orderBy(asc(monthHistory.year));
 
   const years = result.map((el) => el.year);
   if (years.length === 0) {
@@ -40,9 +36,5 @@ async function getHistoryPeriods(userId: string) {
     return [new Date().getFullYear()];
   }
 
-  console.log("Years", years);
-
   return years;
 }
-
-// TODO: FIXXX!Q!!
