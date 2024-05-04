@@ -1,7 +1,7 @@
 "use client";
 
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { MAX_DATE_RANGE_DAYS } from "@/lib/constants";
+
 import { differenceInDays, startOfMonth } from "date-fns";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import BudgetNavbarOptions from "@/components/budget/budget-navbar-options";
 import { Separator } from "@/components/ui/separator";
+import { MAX_DATE_RANGE_DAYS } from "@/lib/types";
 
 function TransactionsPage() {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({

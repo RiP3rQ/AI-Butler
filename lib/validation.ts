@@ -7,7 +7,8 @@ export const createNoteSchema = z.object({
     .max(100, { message: "Title must be at most 100 characters long" }),
   content: z
     .string()
-    .min(1, { message: "Content must be at least 1 character long" }),
+    .min(1, { message: "Content must be at least 1 character long" })
+    .max(256, { message: "Content must be at most 256 characters long" }),
 });
 
 export type ICreateNoteSchema = z.infer<typeof createNoteSchema>;

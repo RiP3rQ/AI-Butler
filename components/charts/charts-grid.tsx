@@ -7,7 +7,7 @@ import LineHistoryChart from "@/components/charts/line-chart";
 import DonutHistoryChart from "@/components/charts/donut-chart";
 import BarHistoryChart from "@/components/charts/bar-chart";
 import React from "react";
-import { useChartsContext } from "@/components/providers/charts-context-provider";
+import { useChartsContext } from "@/providers/charts-context-provider";
 
 interface Props {
   analyses: any;

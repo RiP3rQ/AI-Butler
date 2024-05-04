@@ -10,6 +10,6 @@ export default {
   schema: "./drizzle/schema.ts",
   out: "./drizzle/migrations",
   dbCredentials: {
-    connectionString: process.env.DRIZZLE_DATABASE_URL!,
+    connectionString: process.env.SUPABASE_DATABASE_URL!,
   },
 } satisfies Config;

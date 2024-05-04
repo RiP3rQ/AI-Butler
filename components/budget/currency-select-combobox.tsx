@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Currencies, Currency } from "@/lib/currencies";
+import { Constants, Currency } from "@/lib/constants";
 import SkeletonWrapper from "@/components/budget/skeleton-wrapper";
 
 export function CurrencyComboBox() {
@@ -58,13 +58,13 @@ function OptionList({
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
-          {Currencies.map((currency: Currency) => (
+          {Constants.map((currency: Currency) => (
             <CommandItem
               key={currency.value}
               value={currency.value}
               onSelect={(value) => {
                 setSelectedOption(
-                  Currencies.find((priority) => priority.value === value) ||
+                  Constants.find((priority) => priority.value === value) ||
                     null,
                 );
                 setOpen(false);

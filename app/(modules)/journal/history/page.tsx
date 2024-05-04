@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import ChartsProvider from "@/components/providers/charts-provider";
+import ChartsProvider from "@/providers/charts-provider";
 
 const getData = async (userId: string) => {
   const analyses = await db

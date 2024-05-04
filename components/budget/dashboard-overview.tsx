@@ -3,10 +3,11 @@
 import CategoriesStats from "@/components/budget/categories-stats";
 import StatsCards from "@/components/budget/stats-cards";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { MAX_DATE_RANGE_DAYS } from "@/lib/constants";
+
 import { differenceInDays, startOfMonth } from "date-fns";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { MAX_DATE_RANGE_DAYS } from "@/lib/types";
 
 function Overview() {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({

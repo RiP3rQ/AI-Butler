@@ -2,7 +2,7 @@
 
 import { Expand, Eye, EyeOff, Minimize } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useChartsContext } from "@/components/providers/charts-context-provider";
+import { useChartsContext } from "@/providers/charts-context-provider";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import LineHistoryChart from "@/components/charts/line-chart";
 import React from "react";

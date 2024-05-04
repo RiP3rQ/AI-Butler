@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChartsContextProvider } from "@/components/providers/charts-context-provider";
+import { ChartsContextProvider } from "@/providers/charts-context-provider";
 import ChartsGrid from "@/components/charts/charts-grid";
 
 interface Props {
